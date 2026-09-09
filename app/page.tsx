@@ -49,9 +49,10 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-8 flex flex-col xl:flex-row gap-8 lg:gap-16 w-full relative z-10">
+        <section className="mb-24 mt-8 flex flex-col gap-12 lg:gap-16 w-full relative z-10">
           
-          <div className="flex-1 flex flex-col items-center xl:items-start text-center xl:text-left">
+          {/* Main Hero Content (Full Width) */}
+          <div className="w-full flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
@@ -60,7 +61,7 @@ export default function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-6 md:mb-8 tracking-tight w-full max-w-5xl drop-shadow-sm">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-6 md:mb-8 tracking-tight w-full drop-shadow-sm">
               <span className="block mb-2">ADVANCING</span> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-red-500 to-[#BD272D] animate-gradient-x drop-shadow-md">
                 EARLY DETECTION
@@ -68,8 +69,8 @@ export default function LandingPage() {
               <span className="block mt-2 text-3xl sm:text-4xl md:text-5xl opacity-90">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
             
-            {/* Glassmorphism Exec Summary Box */}
-            <div className="w-full max-w-4xl text-left border border-white/40 p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
+            {/* Glassmorphism Exec Summary Box (Ultra Wide) */}
+            <div className="w-full text-left border border-white/40 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
               <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
               
               <div className="flex items-center gap-3 mb-4">
@@ -78,7 +79,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="font-bold text-[#253656] uppercase text-sm tracking-widest">EXECUTIVE SUMMARY</h3>
               </div>
-              <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg">
+              <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg max-w-7xl">
                 <strong>RC3ID UNPAD</strong> berpartisipasi penuh dalam <strong>B-IDEAs 2026 Exhibition</strong>. Event ini berfokus pada inovasi dan percepatan deteksi dini untuk pengendalian penyakit menular yang lebih baik.
                 <br/><br/>
                 Selamat datang di <strong className="text-[#BD272D]">Buku Tamu Digital</strong> booth RC3ID. Silakan isi data kunjungan Anda untuk mendapatkan QR Code eksklusif sebagai tiket akses interaktif dan klaim merchandise riset kami.
@@ -101,9 +102,10 @@ export default function LandingPage() {
             </div>
           </div>
           
-          <div className="w-full xl:w-[400px] shrink-0 flex flex-col justify-center">
+          {/* Live Stats Row */}
+          <div className="w-full mt-4 flex justify-center lg:justify-start">
              <Suspense fallback={
-               <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden min-h-[250px] flex items-center justify-center">
+               <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden min-h-[200px] w-full max-w-md flex items-center justify-center">
                  <div className="animate-pulse flex flex-col items-center gap-4">
                    <Activity className="w-8 h-8 text-[#BD272D]/50" />
                    <p className="text-sm font-bold text-[#253656]/50 uppercase tracking-widest">Memuat Live Stats...</p>
