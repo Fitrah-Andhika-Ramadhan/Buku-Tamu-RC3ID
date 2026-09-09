@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'RC3ID Guestbook') }}</title>
+        <title inertia>Buku Tamu RC3ID</title>
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
 
         <!-- Fonts -->
