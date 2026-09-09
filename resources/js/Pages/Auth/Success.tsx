@@ -1,5 +1,5 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Printer } from "lucide-react";
+import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Printer, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +16,7 @@ export default function SuccessPage() {
   const participant = (props.participant as any) || null;
 
   const [ttsPlaying, setTtsPlaying] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -142,7 +143,7 @@ export default function SuccessPage() {
               onClick={(e) => {
                 if (!config.e_materi_url && !config.e_materi_file_url) {
                   e.preventDefault();
-                  alert("Materi akan segera hadir (Coming Soon)!");
+                  setShowComingSoon(true);
                 }
               }}
             >
@@ -388,6 +389,35 @@ export default function SuccessPage() {
               </div>
             </div>
           </>
+        {/* Coming Soon Modal */}
+        {showComingSoon && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setShowComingSoon(false)}></div>
+            <div className="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden animate-fade-in-up border border-slate-100">
+              <button 
+                onClick={() => setShowComingSoon(false)}
+                className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="p-8 text-center flex flex-col items-center">
+                <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 border-[6px] border-blue-100 relative">
+                  <div className="absolute inset-0 rounded-full border-2 border-blue-300 border-dashed animate-[spin_8s_linear_infinite] opacity-50"></div>
+                  <Info className="w-8 h-8 text-blue-500 relative z-10" />
+                </div>
+                <h3 className="text-2xl font-black text-[#253656] mb-3 tracking-tight">Segera Hadir!</h3>
+                <p className="text-[15px] text-[#6C7C98] mb-8 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+                  Materi presentasi dan e-book sedang dalam tahap penyelesaian dan akan segera bisa Anda unduh.
+                </p>
+                <Button 
+                  onClick={() => setShowComingSoon(false)}
+                  className="w-full h-12 bg-[#253656] hover:bg-[#1a263d] text-white font-bold rounded-xl shadow-xl shadow-[#253656]/20 transition-all duration-300 hover:-translate-y-1"
+                >
+                  Tutup Notifikasi
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
