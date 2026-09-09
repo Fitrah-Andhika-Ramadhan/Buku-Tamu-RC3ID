@@ -134,15 +134,24 @@ export default function SuccessPage() {
             </p>
 
             {/* E-Materi Button */}
-            {(config.e_materi_url || config.e_materi_file_url) && (
-              <a href={config.e_materi_type === 'file' ? config.e_materi_file_url : config.e_materi_url} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-12 px-8 bg-[#253656] hover:bg-[#1a263d] text-white font-bold rounded-xl shadow-xl shadow-[#253656]/20 transition-all duration-300 hover:-translate-y-1">
-                  <FileText className="w-5 h-5 mr-3 text-blue-300" />
-                  Unduh E-Materi RC3ID
-                  <Download className="w-4 h-4 ml-3 opacity-60" />
-                </Button>
-              </a>
-            )}
+            <a 
+              href={(config.e_materi_type === 'file' ? config.e_materi_file_url : config.e_materi_url) || '#'} 
+              target={(config.e_materi_url || config.e_materi_file_url) ? "_blank" : "_self"} 
+              rel="noreferrer" 
+              className="w-full sm:w-auto"
+              onClick={(e) => {
+                if (!config.e_materi_url && !config.e_materi_file_url) {
+                  e.preventDefault();
+                  alert("Materi akan segera hadir (Coming Soon)!");
+                }
+              }}
+            >
+              <Button className="w-full sm:w-auto h-12 px-8 bg-[#253656] hover:bg-[#1a263d] text-white font-bold rounded-xl shadow-xl shadow-[#253656]/20 transition-all duration-300 hover:-translate-y-1">
+                <FileText className="w-5 h-5 mr-3 text-blue-300" />
+                Unduh E-Materi RC3ID
+                <Download className="w-4 h-4 ml-3 opacity-60" />
+              </Button>
+            </a>
 
             {/* Merchandise Vertical Card (Shown on left ONLY if ticket is also shown) */}
             {config.show_merchandise && config.show_digital_ticket !== false && (
