@@ -5,23 +5,32 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Lock, User, Loader2 } from "lucide-react";
 
+import { loginAdmin } from "./actions";
+
 export default function AdminLogin() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
 
-    // Simulate login for mockup
-    setTimeout(() => {
+    try {
+      const result = await loginAdmin(password);
+      if (result.success) {
+        router.push("/admin");
+        router.refresh(); // Refresh to update middleware state
+      } else {
+        setError(result.error || "Gagal masuk.");
+        setIsLoading(false);
+      }
+    } catch (err) {
+      setError("Terjadi kesalahan server.");
       setIsLoading(false);
-      // We are just simulating a successful login without real auth for now
-      // Real implementation would use NextAuth or JWT
-      router.push("/admin");
-    }, 1500);
+    }
   };
 
   return (
