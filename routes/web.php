@@ -11,19 +11,12 @@ Route::post('/register', [ParticipantController::class, 'store'])->name('registe
 
 use App\Http\Controllers\AdminController;
 
-Route::get('/clear', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        return 'Cache berhasil dibersihkan! Coba buka website Anda lagi.';
-    } catch (\Exception $e) {
-        // If it fails, let's manually delete the cache files
-        $cleared = false;
-        $files = glob(base_path('bootstrap/cache/*.php'));
-        foreach ($files as $file) {
-            @unlink($file);
-            $cleared = true;
-        }
-        return $cleared ? 'File cache dihapus manual! Coba buka website Anda lagi.' : 'Tidak ada cache.';
+Route::get('/check-env', function () {
+    $envPath = base_path('.env');
+    if (file_exists($envPath)) {
+        return "File .env DITEMUKAN di: " . $envPath . "<br><br>Isinya:<br>" . nl2br(file_get_contents($envPath));
+    } else {
+        return "File .env TIDAK DITEMUKAN di: " . $envPath . "<br><br>Tolong buat file .env di folder public_html (sejajar dengan folder app, bootstrap, public).";
     }
 });
 
