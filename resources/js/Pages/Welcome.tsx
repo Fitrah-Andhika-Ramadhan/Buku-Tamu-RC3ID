@@ -232,7 +232,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
               <h4 className="text-sm font-black text-[#BD272D] uppercase tracking-[0.2em] mb-4">
                 CONTACT US
               </h4>
-              <p className="text-base mb-2 font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">event@rc3id.unpad.ac.id</p>
+              <p className="text-base mb-2 font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">cl.rc3id@unpad.ac.id</p>
               <p className="text-base font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">rc3id.unpad.ac.id</p>
             </div>
           </div>
