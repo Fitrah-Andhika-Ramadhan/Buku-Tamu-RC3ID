@@ -66,7 +66,7 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
 
             {/* Description */}
             <p className="text-lg md:text-xl text-[#6C7C98] leading-relaxed mb-10 max-w-2xl font-medium font-['Plus_Jakarta_Sans']">
-              <strong className="text-[#253656] font-bold">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-bold">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue. Daftarkan diri Anda, dapatkan <strong className="text-[#BD272D] font-bold">QR Code eksklusif</strong>, dan klaim merchandise riset kami!
+              <strong className="text-[#253656] font-bold">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-bold">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue. Daftarkan diri Anda dan langsung klaim merchandise riset kami!
             </p>
 
             {/* Feature Badges */}
@@ -74,7 +74,6 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
               {[
                 { icon: "🔬", label: "Riset Kelas Dunia" },
                 { icon: "🎁", label: "Merchandise Gratis" },
-                { icon: "📱", label: "QR Tiket Digital" },
               ].map((badge) => (
                 <div key={badge.label} className="flex items-center gap-3 px-5 py-2.5 bg-white/60 backdrop-blur-xl border border-white/80 rounded-2xl shadow-lg shadow-[#253656]/5 hover:shadow-xl hover:-translate-y-1 hover:border-[#BD272D]/40 transition-all duration-300 group cursor-default">
                   <span className="text-xl group-hover:scale-110 transition-transform">{badge.icon}</span>
@@ -140,7 +139,7 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
             {
               num: "02",
               title: "KLAIM MERCHANDISE",
-              desc: "Akses halaman khusus dan tunjukkan <strong class='font-bold text-[#BD272D]'>QR Code</strong> Anda ke staf untuk klaim hadiah.",
+              desc: "Klaim hadiah merchandise eksklusif langsung dari staf kami di booth.",
               priority: true
             }
           ].map((step, i) => (
