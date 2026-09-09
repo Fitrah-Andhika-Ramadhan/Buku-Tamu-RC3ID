@@ -30,7 +30,7 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
         
         <div className="flex flex-col items-end gap-1">
           <div className="bg-[#BD272D] text-white px-3 py-1 text-xs font-bold tracking-widest uppercase">
-            DIGITAL GUESTBOOK
+            DIGITAL MEET
           </div>
           <p className="text-[10px] text-gray-500 font-medium tracking-wider uppercase">
             VERSION 1.0 - AUGUST 2026
