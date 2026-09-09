@@ -49,7 +49,7 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-8 flex flex-col xl:flex-row gap-12 max-w-[1400px] mx-auto relative z-10">
+        <section className="mb-24 mt-8 flex flex-col xl:flex-row gap-8 lg:gap-16 w-full relative z-10">
           
           <div className="flex-1 flex flex-col items-center xl:items-start text-center xl:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
@@ -116,16 +116,19 @@ export default function LandingPage() {
 
         </section>
 
-        {/* Section Heading Style Component */}
-        <div className="mb-10">
-          <h2 className="text-base font-bold text-[#253656] uppercase tracking-widest">
-            Alur Kunjungan Booth
-          </h2>
-          <div className="w-12 h-1 bg-[#BD272D] mt-2"></div>
-        </div>
+        {/* Lower Content Grid to eliminate white space */}
+        <div className="flex flex-col xl:flex-row gap-16 w-full mt-12 relative z-10">
+          
+          {/* Left Column: Alur Kunjungan */}
+          <div className="flex-1 flex flex-col">
+            <div className="mb-10">
+              <h2 className="text-base font-bold text-[#253656] uppercase tracking-widest">
+                Alur Kunjungan Booth
+              </h2>
+              <div className="w-12 h-1 bg-[#BD272D] mt-2"></div>
+            </div>
 
-        {/* Key Recommendations / Steps Cards - Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 max-w-4xl mx-auto px-4">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 w-full">
           {[
             {
               num: "01",
@@ -154,13 +157,13 @@ export default function LandingPage() {
             </div>
           ))}
         </section>
-
-        {/* Merchandise Info Section (Centered) */}
-        <div className="flex flex-col items-center mb-20 relative">
+      </div>
+          {/* Right Column: Syarat Merchandise */}
+          <div className="w-full xl:w-[450px] shrink-0 flex flex-col items-center xl:items-start mb-20 relative">
           {/* Background glow for this section */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-full bg-gradient-to-r from-[#BD272D]/5 to-purple-500/5 blur-3xl -z-10 rounded-full"></div>
           
-          <div className="mb-8 w-full max-w-md text-center flex flex-col items-center">
+          <div className="mb-8 w-full text-center xl:text-left flex flex-col items-center xl:items-start">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#BD272D]/10 text-[#BD272D] text-xs font-extrabold uppercase tracking-widest mb-3">
               <Gift className="w-4 h-4" /> Bonus Eksklusif
             </div>
