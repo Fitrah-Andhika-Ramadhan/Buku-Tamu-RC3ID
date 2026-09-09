@@ -61,13 +61,32 @@ export default function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-12 tracking-tight w-full drop-shadow-sm">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5.5rem] font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-6 tracking-tight w-full drop-shadow-sm">
               <span className="block mb-2">ADVANCING</span> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-red-500 to-[#BD272D] animate-gradient-x drop-shadow-md">
                 EARLY DETECTION
               </span> 
               <span className="block mt-4 text-3xl sm:text-4xl md:text-[2.75rem] opacity-90 text-[#6C7C98] font-black">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
+
+            {/* Description */}
+            <p className="text-base md:text-lg text-[#6C7C98] leading-relaxed mb-8 max-w-2xl font-medium">
+              <strong className="text-[#253656]">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656]">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue. Daftarkan diri Anda, dapatkan <strong className="text-[#BD272D]">QR Code eksklusif</strong>, dan klaim merchandise riset kami!
+            </p>
+
+            {/* Feature Badges */}
+            <div className="flex flex-wrap justify-center xl:justify-start gap-3 mb-10">
+              {[
+                { icon: "🔬", label: "Riset Kelas Dunia" },
+                { icon: "🎁", label: "Merchandise Gratis" },
+                { icon: "📱", label: "QR Tiket Digital" },
+              ].map((badge) => (
+                <div key={badge.label} className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200/80 rounded-full shadow-sm hover:shadow-md hover:border-[#BD272D]/30 transition-all duration-300 group cursor-default">
+                  <span className="text-base">{badge.icon}</span>
+                  <span className="text-xs font-bold text-[#253656] uppercase tracking-wider group-hover:text-[#BD272D] transition-colors">{badge.label}</span>
+                </div>
+              ))}
+            </div>
 
             <div className="flex flex-col sm:flex-row justify-center xl:justify-start gap-4 w-full sm:w-auto">
               <Link href="/register" className="w-full sm:w-auto relative group">
