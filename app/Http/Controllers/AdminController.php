@@ -189,6 +189,7 @@ class AdminController extends Controller
                     ['emoji' => '🐦', 'label' => '@RC3IDUnpad', 'url' => 'https://x.com/RC3IDUnpad'],
                 ],
                 'show_banner' => true,
+                'show_welcome_qr' => true,
                 'banner_image_path' => null,
             ]
         ]);
@@ -211,6 +212,7 @@ class AdminController extends Controller
             'description' => $request->input('description', ''),
             'social_links' => $request->input('social_links', []),
             'show_banner' => filter_var($request->input('show_banner', true), FILTER_VALIDATE_BOOLEAN),
+            'show_welcome_qr' => filter_var($request->input('show_welcome_qr', true), FILTER_VALIDATE_BOOLEAN),
             'banner_image_path' => $bannerPath,
         ];
 

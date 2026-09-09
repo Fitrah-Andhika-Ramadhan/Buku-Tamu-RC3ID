@@ -15,6 +15,7 @@ interface FormHeaderConfig {
   description: string;
   social_links: SocialLink[];
   show_banner?: boolean;
+  show_welcome_qr?: boolean;
   banner_image_path?: string | null;
 }
 
@@ -25,6 +26,7 @@ export default function FormHeaderConfig({ config }: { config: FormHeaderConfig 
     description: config.description || "",
     social_links: config.social_links || [],
     show_banner: config.show_banner ?? true,
+    show_welcome_qr: config.show_welcome_qr ?? true,
     banner_image_path: config.banner_image_path || null,
   });
 
@@ -82,19 +84,13 @@ export default function FormHeaderConfig({ config }: { config: FormHeaderConfig 
   };
 
   return (
-    <AdminLayoutWrapper>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-[#253656]">Pengaturan Header Form</h1>
-            <p className="text-slate-500 mt-1">Atur teks judul, deskripsi, dan tautan sosial media yang tampil di bagian atas form buku tamu.</p>
-          </div>
-          {saved && (
-            <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100">
-              <CheckCircle2 className="w-4 h-4" />
-              <span className="text-sm font-bold">Tersimpan!</span>
-            </div>
-          )}
+    <AdminLayoutWrapper title="Header Form">
+      <div className="max-w-3xl mx-auto pb-12">
+        <div className="mb-8">
+          <h1 className="text-2xl font-black text-[#253656] flex items-center gap-2">
+            Desain & Header Form
+          </h1>
+          <p className="text-slate-500 mt-1 text-sm">Sesuaikan tampilan awal form buku tamu dan halaman depan.</p>
         </div>
 
         {/* Preview */}
@@ -115,7 +111,28 @@ export default function FormHeaderConfig({ config }: { config: FormHeaderConfig 
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+          {/* Halaman Depan */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="font-bold text-[#253656] flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-blue-500" /> Tampilan Halaman Depan
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">Atur QR Code akses cepat di halaman awal web.</p>
+              </div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <span className="text-sm font-medium text-slate-600">Tampilkan QR Code</span>
+                <input 
+                  type="checkbox" 
+                  className="w-4 h-4 text-[#BD272D] rounded border-slate-300 focus:ring-[#BD272D]"
+                  checked={formData.show_welcome_qr}
+                  onChange={(e) => setFormData({ ...formData, show_welcome_qr: e.target.checked })}
+                />
+              </label>
+            </div>
+          </div>
+
           {/* Banner */}
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
             <div className="flex items-center justify-between">

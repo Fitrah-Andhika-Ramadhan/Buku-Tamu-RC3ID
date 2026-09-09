@@ -1,9 +1,10 @@
 import { Link } from "@inertiajs/react";
-import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activity } from "lucide-react";
+import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activity, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
+import { QRCodeCanvas } from "qrcode.react";
 
-export default function LandingPage({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
+export default function LandingPage({ totalParticipants, totalAttending, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, showWelcomeQr?: boolean }) {
   return (
     <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
@@ -109,8 +110,11 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
              <div className="w-full relative group max-w-md">
                {/* Animated border glow */}
                <div className="absolute -inset-1 bg-gradient-to-br from-[#BD272D]/40 to-[#253656]/30 rounded-[2.5rem] blur-lg opacity-60 group-hover:opacity-100 transition duration-700"></div>
-               
-               <LiveStatsBox totalParticipants={totalParticipants} totalAttending={totalAttending} />
+               {showWelcomeQr ? (
+                 <WelcomeQrBox />
+               ) : (
+                 <LiveStatsBox totalParticipants={totalParticipants} totalAttending={totalAttending} />
+               )}
              </div>
           </div>
 
@@ -219,7 +223,7 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
             <p className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-2">
               DIGITAL GUESTBOOK SYSTEM
             </p>
-            <p className="text-base opacity-80 font-['Plus_Jakarta_Sans'] font-medium">© 2026 Tech Conference RC3ID.</p>
+            <p className="text-base opacity-80 font-['Plus_Jakarta_Sans'] font-medium">© 2026 RC3ID Universitas Padjadjaran.</p>
           </div>
           
           <div className="md:flex md:justify-end">
@@ -228,8 +232,8 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
               <h4 className="text-sm font-black text-[#BD272D] uppercase tracking-[0.2em] mb-4">
                 CONTACT US
               </h4>
-              <p className="text-base mb-2 font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">event@rc3id.org</p>
-              <p className="text-base font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">www.rc3id.org</p>
+              <p className="text-base mb-2 font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">event@rc3id.unpad.ac.id</p>
+              <p className="text-base font-['Plus_Jakarta_Sans'] font-medium text-gray-200 hover:text-white transition-colors cursor-pointer">rc3id.unpad.ac.id</p>
             </div>
           </div>
         </div>
@@ -280,6 +284,42 @@ export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParti
         </div>
            <span className="text-xs font-black text-white bg-gradient-to-r from-[#253656] to-[#1a263d] px-3 py-1.5 rounded-lg uppercase tracking-widest shadow-md">Live</span>
       </div>
+    </div>
+  );
+}
+
+export function WelcomeQrBox() {
+  const qrUrl = typeof window !== 'undefined' ? `${window.location.origin}/buku-tamu` : 'https://rc3id.unpad.ac.id/buku-tamu';
+  
+  return (
+    <div className="bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-10 shadow-2xl shadow-[#253656]/10 relative overflow-hidden font-['Outfit'] flex flex-col items-center">
+      <div className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-[#BD272D]/20 to-transparent rounded-full blur-2xl"></div>
+      
+      <h3 className="font-black text-[#253656] uppercase tracking-[0.15em] mb-6 flex items-center gap-3 text-base text-center">
+        <QrCode className="w-6 h-6 text-[#BD272D]" />
+        Scan untuk Mengisi
+      </h3>
+
+      <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-100 mb-6 group cursor-pointer hover:scale-105 transition-transform duration-300">
+        <QRCodeCanvas
+          value={qrUrl}
+          size={180}
+          fgColor="#253656"
+          bgColor="#FFFFFF"
+          level="H"
+          includeMargin={true}
+          imageSettings={{
+            src: "/logo.svg",
+            height: 48,
+            width: 48,
+            excavate: true,
+          }}
+        />
+      </div>
+      
+      <p className="text-sm font-bold text-[#6C7C98] text-center max-w-[250px] leading-relaxed">
+        Gunakan kamera HP Anda untuk memindai QR Code di atas.
+      </p>
     </div>
   );
 }

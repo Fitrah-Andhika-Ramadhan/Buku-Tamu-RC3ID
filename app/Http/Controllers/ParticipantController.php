@@ -13,9 +13,14 @@ class ParticipantController extends Controller
         $totalParticipants = Participant::count();
         $totalAttending = Participant::where('is_attending', true)->count();
 
+        $setting = \App\Models\Setting::where('key', 'form_header_config')->first();
+        $config = $setting ? $setting->value : [];
+        $showWelcomeQr = $config['show_welcome_qr'] ?? true;
+
         return Inertia::render('Welcome', [
             'totalParticipants' => $totalParticipants,
             'totalAttending' => $totalAttending,
+            'showWelcomeQr' => $showWelcomeQr,
         ]);
     }
 
