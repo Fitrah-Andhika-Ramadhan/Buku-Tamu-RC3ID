@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { Download, Printer, QrCode as QRIcon, Check, RefreshCw } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
