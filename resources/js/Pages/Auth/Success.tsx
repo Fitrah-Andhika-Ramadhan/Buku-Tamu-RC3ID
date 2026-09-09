@@ -281,8 +281,29 @@ export default function SuccessPage() {
                 </button>
               )}
             </div>
-          </div>
+          </>
+          ) : (
+            config.show_merchandise && (
+              <div className="w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 mx-auto">
+                <div className="h-48 bg-slate-200 relative overflow-hidden group">
+                  <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
+                    <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
+                    <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
+                  </div>
+                </div>
+                <div className="p-6 text-left">
+                  <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
+                    <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
+                  </h3>
+                  <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+                    Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
+                  </p>
+                </div>
+              </div>
+            )
           )}
+          </div>
         </div>
 
         {/* Old Merchandise Section Removed */}
