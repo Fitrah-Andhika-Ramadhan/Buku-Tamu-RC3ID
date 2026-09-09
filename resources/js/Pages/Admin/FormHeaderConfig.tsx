@@ -84,7 +84,7 @@ export default function FormHeaderConfig({ config }: { config: FormHeaderConfig 
   };
 
   return (
-    <AdminLayoutWrapper title="Header Form">
+    <AdminLayoutWrapper>
       <div className="max-w-3xl mx-auto pb-12">
         <div className="mb-8">
           <h1 className="text-2xl font-black text-[#253656] flex items-center gap-2">
