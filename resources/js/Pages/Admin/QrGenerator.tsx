@@ -31,8 +31,47 @@ export default function QrGenerator() {
   const [fgColor, setFgColor] = useState("#253656");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [showLogo, setShowLogo] = useState(true);
+  const [customLogoUrl, setCustomLogoUrl] = useState<string | null>(null);
+  const [defaultSquareLogo, setDefaultSquareLogo] = useState<string | null>(null);
   const [label, setLabel] = useState("Scan untuk Isi Buku Tamu RC3ID");
   const qrRef = useRef<HTMLDivElement>(null);
+
+  // Helper to pad any image into a perfect square
+  const padImageToSquare = (src: string, callback: (url: string) => void) => {
+    const img = new Image();
+    img.onload = () => {
+      // Add a little padding so the logo doesn't touch the edges of the QR cutout
+      const padding = 20; 
+      const max = Math.max(img.width, img.height) + padding * 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = max;
+      canvas.height = max;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const x = (max - img.width) / 2;
+        const y = (max - img.height) / 2;
+        ctx.drawImage(img, x, y);
+        callback(canvas.toDataURL("image/png"));
+      }
+    };
+    img.src = src;
+  };
+
+  useEffect(() => {
+    // Generate a padded square version of the default logo
+    padImageToSquare("/logo.svg", setDefaultSquareLogo);
+  }, []);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      padImageToSquare(url, (squareUrl) => {
+        setCustomLogoUrl(squareUrl);
+        setShowLogo(true);
+      });
+    }
+  };
 
   const handleDownload = () => {
     const canvas = qrRef.current?.querySelector("canvas");
@@ -154,11 +193,30 @@ export default function QrGenerator() {
               </div>
             </div>
 
+            {/* Custom Logo Upload */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+              <p className="font-bold text-[#253656] text-sm mb-2">Upload Logo Kustom (Opsional)</p>
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleLogoUpload}
+                className="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#253656] file:text-white hover:file:bg-[#1a263d] transition-colors"
+              />
+              {customLogoUrl && (
+                <button 
+                  onClick={() => { setCustomLogoUrl(null); setShowLogo(true); }}
+                  className="mt-3 text-[10px] font-bold text-red-500 hover:text-red-700 uppercase tracking-widest"
+                >
+                  Hapus Logo Kustom
+                </button>
+              )}
+            </div>
+
             {/* Logo Toggle */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-[#253656] text-sm">Logo RC3ID di Tengah</p>
+                  <p className="font-bold text-[#253656] text-sm">{customLogoUrl ? "Tampilkan Logo Kustom" : "Logo RC3ID di Tengah"}</p>
                   <p className="text-xs text-slate-400 mt-0.5">Tampilkan logo di pusat QR Code</p>
                 </div>
                 <button
@@ -208,7 +266,7 @@ export default function QrGenerator() {
                       level="H"
                       imageSettings={
                         showLogo ? {
-                          src: "/logo.svg",
+                          src: customLogoUrl || defaultSquareLogo || "/logo.svg",
                           height: 64,
                           width: 64,
                           excavate: true,
