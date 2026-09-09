@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activity, QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function LandingPage({ totalParticipants, totalAttending, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, showWelcomeQr?: boolean }) {
@@ -290,6 +290,34 @@ export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParti
 
 export function WelcomeQrBox() {
   const qrUrl = typeof window !== 'undefined' ? `${window.location.origin}/buku-tamu` : 'https://rc3id.unpad.ac.id/buku-tamu';
+  const [defaultSquareLogo, setDefaultSquareLogo] = useState<string | null>(null);
+
+  // Helper to pad any image into a perfect square
+  const padImageToSquare = (src: string, callback: (url: string) => void) => {
+    if (typeof window === 'undefined') return;
+    const img = new Image();
+    img.onload = () => {
+      const padding = 20; 
+      const max = Math.max(img.width, img.height) + padding * 2;
+      const canvas = document.createElement("canvas");
+      canvas.width = max;
+      canvas.height = max;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, max, max);
+        const x = (max - img.width) / 2;
+        const y = (max - img.height) / 2;
+        ctx.drawImage(img, x, y);
+        callback(canvas.toDataURL("image/png"));
+      }
+    };
+    img.src = src;
+  };
+
+  useEffect(() => {
+    padImageToSquare("/logo.svg", setDefaultSquareLogo);
+  }, []);
   
   return (
     <div className="bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-10 shadow-2xl shadow-[#253656]/10 relative overflow-hidden font-['Outfit'] flex flex-col items-center">
@@ -297,7 +325,7 @@ export function WelcomeQrBox() {
       
       <h3 className="font-black text-[#253656] uppercase tracking-[0.15em] mb-6 flex items-center gap-3 text-base text-center">
         <QrCode className="w-6 h-6 text-[#BD272D]" />
-        Scan untuk Mengisi
+        Scan Buku Tamu
       </h3>
 
       <div className="bg-white p-5 rounded-3xl shadow-xl border border-slate-100 mb-6 group cursor-pointer hover:scale-105 transition-transform duration-300">
@@ -309,7 +337,7 @@ export function WelcomeQrBox() {
           level="H"
           includeMargin={false}
           imageSettings={{
-            src: "/logo.svg",
+            src: defaultSquareLogo || "/logo.svg",
             height: 52,
             width: 52,
             excavate: true,
