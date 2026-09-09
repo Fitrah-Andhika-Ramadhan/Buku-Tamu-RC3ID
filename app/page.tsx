@@ -91,29 +91,23 @@ export default function LandingPage() {
         </div>
 
         {/* Key Recommendations / Steps Cards - Grid */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20 max-w-4xl mx-auto px-4">
           {[
             {
               num: "01",
               title: "ISI BUKU TAMU",
-              desc: "Isi data diri di form buku tamu digital untuk mendapatkan <strong>ID unik</strong> dan tiket akses.",
+              desc: "Isi data diri di form buku tamu digital kami dengan lengkap.",
               priority: false
             },
             {
               num: "02",
-              title: "SIMPAN QR CODE",
-              desc: "Simpan <strong>Kartu Akses</strong> yang berisi QR Code pribadi Anda di ponsel.",
-              priority: true
-            },
-            {
-              num: "03",
               title: "KLAIM MERCHANDISE",
-              desc: "Tunjukkan QR untuk validasi kunjungan dan tukarkan dengan <strong>Merchandise eksklusif</strong>.",
-              priority: false
+              desc: "Akses halaman khusus dan tunjukkan <strong>QR Code</strong> Anda ke staf untuk klaim hadiah.",
+              priority: true
             }
           ].map((step, i) => (
-            <div key={i} className={`p-6 border ${step.priority ? 'border-[#BD272D] bg-[#fff5f5]' : 'border-gray-200 bg-white'} relative`}>
-              <div className={`w-12 h-12 flex items-center justify-center font-extrabold text-xl mb-4 ${step.priority ? 'bg-[#BD272D] text-white' : 'bg-[#253656] text-white'}`}>
+            <div key={i} className={`p-6 border ${step.priority ? 'border-[#BD272D] bg-[#fff5f5]' : 'border-gray-200 bg-white'} relative rounded-xl shadow-sm hover:shadow-md transition-shadow`}>
+              <div className={`w-12 h-12 flex items-center justify-center font-extrabold text-xl mb-4 rounded-lg ${step.priority ? 'bg-[#BD272D] text-white' : 'bg-[#253656] text-white'}`}>
                 {step.num}
               </div>
               <h3 className="font-bold text-[#253656] uppercase tracking-wider mb-3 text-sm">

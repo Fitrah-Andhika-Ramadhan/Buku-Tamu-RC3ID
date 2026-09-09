@@ -220,7 +220,7 @@ export function RegistrationForm() {
                 Mengirim Data...
               </>
             ) : (
-              "Kirim & Dapatkan QR Code"
+              "Kirim & Klaim Merchandise"
             )}
           </Button>
         </div>
