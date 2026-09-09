@@ -14,12 +14,12 @@ class AdminController extends Controller
     {
         try {
             $totalRegistrants = Participant::count();
-            $totalHadir = Participant::where('status_hadir', true)->count();
+            $totalHadir = Participant::where('is_attending', true)->count();
             $totalPending = $totalRegistrants - $totalHadir;
             
             $recentParticipants = Participant::orderBy('created_at', 'desc')
                 ->take(5)
-                ->get(['id', 'full_name as nama_lengkap', 'institution as instansi', 'created_at as createdAt', 'status_hadir']);
+                ->get(['id', 'full_name as nama_lengkap', 'institution as instansi', 'created_at as createdAt', 'is_attending as status_hadir']);
 
             return Inertia::render('Admin/Dashboard', [
                 'totalRegistrants' => $totalRegistrants,
@@ -43,7 +43,18 @@ class AdminController extends Controller
     public function peserta()
     {
         try {
-            $participants = Participant::orderBy('created_at', 'desc')->get();
+            $participants = Participant::orderBy('created_at', 'desc')->get()->map(function($p) {
+                return [
+                    'id' => $p->id,
+                    'nama_lengkap' => $p->full_name,
+                    'instansi' => $p->institution,
+                    'profesi' => $p->profession,
+                    'status_hadir' => $p->is_attending,
+                    'email' => $p->email,
+                    'wa_number' => $p->wa_number,
+                    'createdAt' => $p->created_at,
+                ];
+            });
             
             return Inertia::render('Admin/Peserta', [
                 'participants' => $participants,
@@ -60,13 +71,18 @@ class AdminController extends Controller
 
     public function toggle(Request $request, $id)
     {
-        $participant = Participant::findOrFail($id);
-        $participant->update([
-            'status_hadir' => $request->status_hadir,
-            'waktu_hadir' => $request->status_hadir ? now() : null,
-        ]);
-        
-        return back()->with('success', 'Status kehadiran berhasil diubah.');
+        try {
+            $participant = Participant::findOrFail($id);
+            $participant->update([
+                'is_attending' => $request->status_hadir,
+                // 'waktu_hadir' => $request->status_hadir ? now() : null, // (waktu_hadir doesn't exist in migration, remove or ignore)
+            ]);
+            
+            return back()->with('success', 'Status kehadiran berhasil diubah.');
+        } catch (\Exception $e) {
+            Log::error('Error toggling participant: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengubah status');
+        }
     }
 
     public function formBuilder()
