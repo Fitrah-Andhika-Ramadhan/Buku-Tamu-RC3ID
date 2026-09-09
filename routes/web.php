@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [ParticipantController::class, 'index'])->name('home');
-Route::post('/register', [ParticipantController::class, 'store'])->name('register.store');
+Route::post('/daftar-tamu', [ParticipantController::class, 'store'])->name('register.store');
 Route::get('/success', [ParticipantController::class, 'success'])->name('register.success');
 
 use App\Http\Controllers\AdminController;
