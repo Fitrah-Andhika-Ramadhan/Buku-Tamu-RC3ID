@@ -20,14 +20,14 @@ const COLORS_BG = [
 ];
 
 const PRESETS = [
-  { label: "Link Form Buku Tamu", value: () => `${window.location.origin}/register` },
+  { label: "Link Form Buku Tamu", value: () => `${window.location.origin}/buku-tamu` },
   { label: "Website RC3ID", value: () => "https://rc3id.unpad.ac.id" },
   { label: "Instagram @rc3id.unpad", value: () => "https://instagram.com/rc3id.unpad" },
   { label: "YouTube RC3ID", value: () => "https://youtube.com/@RC3IDUniversitasPadjadjaran" },
 ];
 
 export default function QrGenerator() {
-  const [qrValue, setQrValue] = useState(() => `${window.location.origin}/register`);
+  const [qrValue, setQrValue] = useState(() => `${window.location.origin}/buku-tamu`);
   const [fgColor, setFgColor] = useState("#253656");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [showLogo, setShowLogo] = useState(true);
@@ -186,7 +186,7 @@ export default function QrGenerator() {
 
             {/* Reset */}
             <button
-              onClick={() => { setFgColor("#253656"); setBgColor("#FFFFFF"); setShowLogo(true); setLabel("Scan untuk Isi Buku Tamu RC3ID"); setQrValue(`${window.location.origin}/register`); }}
+              onClick={() => { setFgColor("#253656"); setBgColor("#FFFFFF"); setShowLogo(true); setLabel("Scan untuk Isi Buku Tamu RC3ID"); setQrValue(`${window.location.origin}/buku-tamu`); }}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-slate-200 bg-white rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors"
             >
               <RefreshCw className="w-4 h-4" /> Reset ke Default
