@@ -24,28 +24,6 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
         });
     };
 
-    if (wasSuccessful) {
-        return (
-            <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4 font-['Outfit'] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#BD272D] rounded-full blur-[150px] opacity-10 -z-10 animate-pulse"></div>
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
-                
-                <div className="bg-white/80 backdrop-blur-2xl border border-white p-10 md:p-16 rounded-[2.5rem] shadow-2xl shadow-[#253656]/10 text-center max-w-lg w-full relative z-10">
-                    <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
-                        <CheckCircle2 className="w-12 h-12 text-green-500" />
-                    </div>
-                    <h2 className="text-3xl font-black text-[#253656] mb-4 tracking-tight">Pendaftaran Berhasil!</h2>
-                    <p className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium mb-10 leading-relaxed">
-                        Terima kasih telah mendaftar. Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.
-                    </p>
-                    <Link href="/" className="inline-flex items-center justify-center w-full h-14 bg-gradient-to-r from-[#253656] to-[#1a263d] text-white font-bold tracking-[0.15em] uppercase rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
-                        <ArrowLeft className="w-5 h-5 mr-2" /> Kembali ke Beranda
-                    </Link>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen bg-[#f8fafc] text-[#253656] font-['Outfit'] selection:bg-[#BD272D] selection:text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
             {/* HD Background - VibeDesk Style */}
