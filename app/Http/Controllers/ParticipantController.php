@@ -21,34 +21,33 @@ class ParticipantController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'full_name' => 'required|string|max:255',
-            'wa_number' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'institution' => 'required|string|max:255',
         ]);
 
         $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', '_token']);
 
         $participant = Participant::create([
-            'full_name' => $validated['full_name'],
-            'wa_number' => $validated['wa_number'],
-            'email' => $validated['email'],
-            'institution' => $validated['institution'],
+            'full_name'   => $request->input('full_name', ''),
+            'wa_number'   => $request->input('wa_number', ''),
+            'email'       => $request->input('email', ''),
+            'institution' => $request->input('institution', ''),
             'custom_responses' => $customResponses,
         ]);
 
-        // Redirect to success page with flash session if needed, but since it's a dedicated page, just redirect.
-        // We can pass a simple session flash to prevent direct access if we wanted, but for guestbook, it's fine.
-        session()->flash('registered', true);
+        // Store participant ID in session so success page works even after refresh
+        session(['last_participant_id' => $participant->id]);
         return redirect()->route('register.success');
     }
 
     public function success()
     {
-        if (!session('registered')) {
+        $participantId = session('last_participant_id');
+        if (!$participantId) {
             return redirect('/');
         }
+
+        $participant = Participant::find($participantId);
         
         $setting = \App\Models\Setting::where('key', 'success_page_config')->first();
         $config = $setting ? $setting->value : [
@@ -63,9 +62,16 @@ class ParticipantController extends Controller
         $totalAttending = Participant::where('is_attending', true)->count();
 
         return Inertia::render('Auth/Success', [
-            'success_config' => $config,
+            'success_config'    => $config,
             'totalParticipants' => $totalParticipants,
-            'totalAttending' => $totalAttending,
+            'totalAttending'    => $totalAttending,
+            'participant'       => $participant ? [
+                'id'          => $participant->id,
+                'full_name'   => $participant->full_name,
+                'institution' => $participant->institution,
+                'wa_number'   => $participant->wa_number,
+                'is_attending'=> $participant->is_attending,
+            ] : null,
         ]);
     }
 
