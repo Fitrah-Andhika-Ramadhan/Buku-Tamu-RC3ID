@@ -300,18 +300,18 @@ export function WelcomeQrBox() {
         Scan untuk Mengisi
       </h3>
 
-      <div className="bg-white p-4 rounded-3xl shadow-lg border border-slate-100 mb-6 group cursor-pointer hover:scale-105 transition-transform duration-300">
+      <div className="bg-white p-5 rounded-3xl shadow-xl border border-slate-100 mb-6 group cursor-pointer hover:scale-105 transition-transform duration-300">
         <QRCodeCanvas
           value={qrUrl}
-          size={180}
+          size={220}
           fgColor="#253656"
           bgColor="#FFFFFF"
           level="H"
-          includeMargin={true}
+          includeMargin={false}
           imageSettings={{
             src: "/logo.svg",
-            height: 48,
-            width: 48,
+            height: 52,
+            width: 52,
             excavate: true,
           }}
         />
