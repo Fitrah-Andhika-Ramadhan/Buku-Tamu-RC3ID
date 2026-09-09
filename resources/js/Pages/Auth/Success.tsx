@@ -389,6 +389,8 @@ export default function SuccessPage() {
               </div>
             </div>
           </>
+        )}
+        
         {/* Coming Soon Modal */}
         {showComingSoon && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
