@@ -2,92 +2,125 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, QrCode, FormInput, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity } from "lucide-react";
 import { useState } from "react";
+
+const navItems = [
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard, desc: "Statistik & Ringkasan" },
+  { name: "Data Peserta", href: "/admin/peserta", icon: Users, desc: "Kelola & Validasi Kehadiran" },
+];
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Don't show sidebar on login page
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
 
-  const navItems = [
-    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-    { name: "Data Peserta", href: "/admin/peserta", icon: Users },
-    { name: "QR Generator", href: "/admin/qr", icon: QrCode },
-    { name: "Form Generator", href: "/admin/form", icon: FormInput },
-  ];
-
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Mobile Sidebar Overlay */}
+    <div className="min-h-screen bg-slate-50 flex font-sans">
+      {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200 z-50 transform transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:static lg:block`}>
+      <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-100 z-50 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:block flex flex-col shadow-xl lg:shadow-none ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        
+        {/* Logo */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <Link href="/admin" className="block">
-            <img src="/logo.svg" alt="RC3ID" className="h-8 w-auto" />
+          <Link href="/admin" className="flex items-center gap-3">
+            <img src="/logo.svg" alt="RC3ID" className="h-9 w-auto" />
           </Link>
-          <button className="lg:hidden text-slate-500" onClick={() => setIsSidebarOpen(false)}>
+          <button className="lg:hidden text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100" onClick={() => setIsSidebarOpen(false)}>
             <X className="w-5 h-5" />
           </button>
         </div>
-        
-        <div className="p-4">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 px-3">Main Menu</p>
+
+        {/* Status Badge */}
+        <div className="px-5 py-3 bg-gradient-to-r from-[#253656]/5 to-transparent border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Sistem Aktif</span>
+          </div>
+        </div>
+
+        {/* Nav */}
+        <div className="flex-1 p-4 overflow-y-auto">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-3">Main Menu</p>
           <nav className="space-y-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
               return (
-                <Link 
-                  key={item.href} 
+                <Link
+                  key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    isActive 
-                      ? "bg-[#BD272D]/10 text-[#BD272D]" 
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
                   onClick={() => setIsSidebarOpen(false)}
+                  className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all group ${
+                    isActive
+                      ? "bg-[#BD272D] text-white shadow-lg shadow-[#BD272D]/20"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-[#253656]"
+                  }`}
                 >
-                  <item.icon className={`w-5 h-5 ${isActive ? "text-[#BD272D]" : "text-slate-400"}`} />
-                  {item.name}
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${isActive ? "bg-white/20" : "bg-slate-100 group-hover:bg-[#253656]/10"}`}>
+                    <item.icon className={`w-4.5 h-4.5 ${isActive ? "text-white" : "text-slate-500 group-hover:text-[#253656]"}`} size={18} />
+                  </div>
+                  <div>
+                    <div className={`font-bold text-sm leading-none ${isActive ? "text-white" : ""}`}>{item.name}</div>
+                    <div className={`text-[10px] mt-0.5 leading-none font-medium ${isActive ? "text-white/70" : "text-slate-400"}`}>{item.desc}</div>
+                  </div>
                 </Link>
               );
             })}
           </nav>
+
+          <div className="mt-6 p-4 bg-gradient-to-br from-[#253656]/5 to-[#BD272D]/5 rounded-xl border border-slate-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Activity className="w-4 h-4 text-[#BD272D]" />
+              <span className="text-xs font-bold text-[#253656]">B-IDEAs 2026</span>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed">RC3ID UNPAD Exhibition — Digital Guestbook System</p>
+          </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full p-4 border-t border-slate-100">
-          <Link 
+        {/* Logout */}
+        <div className="p-4 border-t border-slate-100">
+          <Link
             href="/admin/login"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors w-full"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors w-full group"
           >
-            <LogOut className="w-5 h-5 text-slate-400" />
-            Logout
+            <div className="w-9 h-9 rounded-lg bg-slate-100 group-hover:bg-red-100 flex items-center justify-center transition-colors">
+              <LogOut className="w-4 h-4" />
+            </div>
+            <span>Keluar (Logout)</span>
           </Link>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
-        {/* Top Header for Mobile */}
-        <header className="lg:hidden bg-white border-b border-slate-200 p-4 flex items-center justify-between sticky top-0 z-30">
-          <img src="/logo.svg" alt="RC3ID" className="h-6 w-auto" />
-          <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-md bg-slate-100 text-slate-600">
-            <Menu className="w-5 h-5" />
-          </button>
+        {/* Mobile Header */}
+        <header className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setIsSidebarOpen(true)} className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors">
+              <Menu className="w-5 h-5" />
+            </button>
+            <img src="/logo.svg" alt="RC3ID" className="h-7 w-auto" />
+          </div>
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
+            <span className="w-2 h-2 rounded-full bg-green-500"></span>
+            Admin
+          </div>
         </header>
 
-        <div className="flex-1 overflow-auto p-4 md:p-8">
+        <div className="flex-1 overflow-auto p-5 md:p-8">
           {children}
         </div>
       </main>
