@@ -151,6 +151,27 @@ export default function SuccessPage() {
                 </Button>
               </a>
             )}
+
+            {/* Merchandise Vertical Card */}
+            {config.show_merchandise && (
+              <div className="mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5">
+                <div className="h-48 bg-slate-200 relative overflow-hidden group">
+                  <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
+                    <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
+                    <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
+                  </div>
+                </div>
+                <div className="p-6 text-left">
+                  <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
+                    <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
+                  </h3>
+                  <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+                    Dapatkan merchandise edisi terbatas khusus pengunjung booth dengan menunjukkan tiket digital Anda.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: Digital Ticket */}
@@ -269,29 +290,7 @@ export default function SuccessPage() {
           </div>
         </div>
 
-        {/* Merchandise Section */}
-        {config.show_merchandise && (
-          <div className="w-full max-w-5xl mb-10">
-            <div className="bg-gradient-to-r from-[#253656]/5 to-[#BD272D]/5 border border-white/80 backdrop-blur-sm rounded-2xl p-6 flex flex-col md:flex-row items-center gap-6">
-              <div className="w-20 h-20 bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden shrink-0">
-                <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 text-center md:text-left">
-                <h3 className="font-black text-[#253656] text-lg flex items-center gap-2 justify-center md:justify-start">
-                  <Gift className="w-5 h-5 text-[#BD272D]" /> Klaim Merchandise Eksklusif
-                </h3>
-                <p className="text-[#6C7C98] text-sm font-medium mt-1 font-['Plus_Jakarta_Sans']">
-                  Tunjukkan tiket di atas kepada staf kami untuk mendapatkan merchandise eksklusif booth RC3ID!
-                </p>
-              </div>
-              <div className="shrink-0">
-                <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#BD272D] text-white text-sm font-black rounded-full shadow-lg">
-                  🎁 Klaim Sekarang!
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Old Merchandise Section Removed */}
 
         {/* Optional Stats Sections */}
         {config.show_live_stats && (
