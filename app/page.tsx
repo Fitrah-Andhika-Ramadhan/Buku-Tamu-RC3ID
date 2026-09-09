@@ -43,7 +43,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="relative w-full px-6 md:px-12 lg:px-16 py-12 overflow-hidden">
+      <main className="relative w-full px-4 md:px-8 lg:px-12 py-12 overflow-hidden">
         {/* Decorative Background Blobs for Eye Catching Effect */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#BD272D] rounded-full blur-[150px] opacity-20 -z-10 animate-pulse"></div>
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
@@ -52,7 +52,7 @@ export default function LandingPage() {
         <section className="mb-24 mt-12 flex flex-col xl:flex-row items-center gap-12 lg:gap-16 w-full relative z-10">
           
           {/* Main Hero Content (Left Side) */}
-          <div className="flex-1 flex flex-col items-center xl:items-start text-center xl:text-left w-full">
+          <div className="flex-[3] flex flex-col items-center xl:items-start text-center xl:text-left w-full min-w-0">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
@@ -105,7 +105,7 @@ export default function LandingPage() {
           </div>
           
           {/* Live Stats Row (Right Side) */}
-          <div className="w-full xl:w-[450px] shrink-0 flex justify-center relative">
+          <div className="w-full xl:w-[340px] shrink-0 flex justify-center relative">
              {/* Premium Decorative Background behind Stats */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[120%] bg-gradient-to-tr from-[#253656]/5 to-[#BD272D]/5 rounded-full blur-3xl -z-10 animate-pulse"></div>
              
