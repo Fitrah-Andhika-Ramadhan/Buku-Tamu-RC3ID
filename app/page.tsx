@@ -3,16 +3,14 @@ import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activit
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 
+import { Suspense } from "react";
+
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default async function LandingPage() {
-  const totalRegistered = await db.participant.count();
-  const totalHadir = await db.participant.count({ where: { status_hadir: true } });
-
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
-      
       {/* Modern Animated Background */}
       <div className="fixed inset-0 -z-20 h-full w-full bg-white bg-[linear-gradient(to_right,#f1f3f6_1px,transparent_1px),linear-gradient(to_bottom,#f1f3f6_1px,transparent_1px)] bg-[size:4rem_4rem]">
         {/* Glow Effects */}
@@ -49,9 +47,9 @@ export default async function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-8 grid lg:grid-cols-12 gap-12 max-w-[1400px] mx-auto relative z-10">
+        <section className="mb-24 mt-8 flex flex-col xl:flex-row gap-12 max-w-[1400px] mx-auto relative z-10">
           
-          <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="flex-1 flex flex-col items-center xl:items-start text-center xl:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
@@ -60,7 +58,7 @@ export default async function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-4xl text-balance">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-5xl">
               ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span> FOR BETTER INFECTIOUS DISEASE CONTROL
             </h2>
             
@@ -91,45 +89,17 @@ export default async function LandingPage() {
             </div>
           </div>
           
-          <div className="lg:col-span-4 flex flex-col justify-center">
-             <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden">
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#BD272D]/10 rounded-full blur-2xl"></div>
-                
-                <h3 className="font-bold text-[#253656] uppercase tracking-widest mb-6 flex items-center gap-2 text-sm border-b border-gray-100 pb-4">
-                  <Activity className="w-5 h-5 text-[#BD272D]" />
-                  Live Booth Stats
-                </h3>
-
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
-                       <Users className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-3xl font-black text-[#253656]">{totalRegistered}</p>
-                      <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Total Pendaftar</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center shrink-0 border border-green-100">
-                       <CheckCircle2 className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-3xl font-black text-[#253656]">{totalHadir}</p>
-                      <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Pengunjung Hadir</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mt-8 pt-4 border-t border-gray-100 flex items-center gap-2">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                  </span>
-                  <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Real-time Data</span>
-                </div>
-             </div>
+          <div className="w-full xl:w-[400px] shrink-0 flex flex-col justify-center">
+             <Suspense fallback={
+               <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden min-h-[250px] flex items-center justify-center">
+                 <div className="animate-pulse flex flex-col items-center gap-4">
+                   <Activity className="w-8 h-8 text-[#BD272D]/50" />
+                   <p className="text-sm font-bold text-[#253656]/50 uppercase tracking-widest">Memuat Live Stats...</p>
+                 </div>
+               </div>
+             }>
+               <LiveStatsBox />
+             </Suspense>
           </div>
 
         </section>
@@ -231,6 +201,66 @@ export default async function LandingPage() {
           </div>
         </div>
       </footer>
+    </div>
+  );
+}
+
+async function LiveStatsBox() {
+  let totalRegistered = 0;
+  let totalHadir = 0;
+  let error = false;
+
+  try {
+    totalRegistered = await db.participant.count();
+    totalHadir = await db.participant.count({ where: { status_hadir: true } });
+  } catch (err) {
+    error = true;
+  }
+
+  return (
+    <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden">
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#BD272D]/10 rounded-full blur-2xl"></div>
+      
+      <h3 className="font-bold text-[#253656] uppercase tracking-widest mb-6 flex items-center gap-2 text-sm border-b border-gray-100 pb-4">
+        <Activity className="w-5 h-5 text-[#BD272D]" />
+        Live Booth Stats
+      </h3>
+
+      {error ? (
+        <div className="py-8 text-center text-sm font-bold text-red-500 uppercase tracking-wider">
+          Gagal Memuat Data
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
+               <Users className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-3xl font-black text-[#253656]">{totalRegistered}</p>
+              <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Total Pendaftar</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center shrink-0 border border-green-100">
+               <CheckCircle2 className="w-6 h-6 text-green-600" />
+            </div>
+            <div>
+              <p className="text-3xl font-black text-[#253656]">{totalHadir}</p>
+              <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Pengunjung Hadir</p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <div className="mt-8 pt-4 border-t border-gray-100 flex items-center gap-2">
+        <span className="relative flex h-2.5 w-2.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+        </span>
+        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{error ? "Offline" : "Real-time Data"}</span>
+      </div>
     </div>
   );
 }
