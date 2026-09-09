@@ -1,8 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { db } from "@/lib/db";
 
-export default function LandingPage() {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function LandingPage() {
+  const totalRegistered = await db.participant.count();
+  const totalHadir = await db.participant.count({ where: { status_hadir: true } });
+
   return (
     <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       
@@ -42,44 +49,89 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-8 flex flex-col items-center text-center max-w-6xl mx-auto relative z-10 px-4">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BD272D]"></span>
-            </span>
-            RC3ID pada B-IDEAs 2026 Exhibition
-          </div>
-
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-6xl px-2 text-balance">
-            ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span> FOR BETTER INFECTIOUS DISEASE CONTROL
-          </h2>
+        <section className="mb-24 mt-8 grid lg:grid-cols-12 gap-12 max-w-[1400px] mx-auto relative z-10">
           
-          {/* Glassmorphism Exec Summary Box */}
-          <div className="w-full max-w-5xl mx-auto text-left border border-white/40 p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
-            <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
-            
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-[#253656]/10 rounded-lg text-[#253656]">
-                <FileText className="w-6 h-6" />
-              </div>
-              <h3 className="font-bold text-[#253656] uppercase text-sm tracking-widest">EXECUTIVE SUMMARY</h3>
+          <div className="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#BD272D]"></span>
+              </span>
+              RC3ID pada B-IDEAs 2026 Exhibition
             </div>
-            <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg">
-              <strong>RC3ID UNPAD</strong> berpartisipasi penuh dalam <strong>B-IDEAs 2026 Exhibition</strong>. Event ini berfokus pada inovasi dan percepatan deteksi dini untuk pengendalian penyakit menular yang lebih baik.
-              <br/><br/>
-              Selamat datang di <strong className="text-[#BD272D]">Buku Tamu Digital</strong> booth RC3ID. Silakan isi data kunjungan Anda untuk mendapatkan QR Code eksklusif sebagai tiket akses interaktif dan klaim merchandise riset kami.
-            </p>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-4xl text-balance">
+              ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span> FOR BETTER INFECTIOUS DISEASE CONTROL
+            </h2>
+            
+            {/* Glassmorphism Exec Summary Box */}
+            <div className="w-full max-w-4xl text-left border border-white/40 p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
+              <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
+              
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-[#253656]/10 rounded-lg text-[#253656]">
+                  <FileText className="w-6 h-6" />
+                </div>
+                <h3 className="font-bold text-[#253656] uppercase text-sm tracking-widest">EXECUTIVE SUMMARY</h3>
+              </div>
+              <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg">
+                <strong>RC3ID UNPAD</strong> berpartisipasi penuh dalam <strong>B-IDEAs 2026 Exhibition</strong>. Event ini berfokus pada inovasi dan percepatan deteksi dini untuk pengendalian penyakit menular yang lebih baik.
+                <br/><br/>
+                Selamat datang di <strong className="text-[#BD272D]">Buku Tamu Digital</strong> booth RC3ID. Silakan isi data kunjungan Anda untuk mendapatkan QR Code eksklusif sebagai tiket akses interaktif dan klaim merchandise riset kami.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              <Link href="/register" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto h-14 md:h-16 px-6 md:px-10 bg-gradient-to-r from-[#BD272D] to-[#991f24] hover:from-[#a01f25] hover:to-[#7a181c] text-white font-black tracking-wider md:tracking-widest uppercase rounded-full shadow-lg shadow-[#BD272D]/40 hover:shadow-xl hover:shadow-[#BD272D]/50 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg group">
+                  Isi Buku Tamu
+                  <ArrowRight className="ml-2 w-4 h-4 md:ml-3 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+          
+          <div className="lg:col-span-4 flex flex-col justify-center">
+             <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#BD272D]/10 rounded-full blur-2xl"></div>
+                
+                <h3 className="font-bold text-[#253656] uppercase tracking-widest mb-6 flex items-center gap-2 text-sm border-b border-gray-100 pb-4">
+                  <Activity className="w-5 h-5 text-[#BD272D]" />
+                  Live Booth Stats
+                </h3>
+
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
+                       <Users className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-3xl font-black text-[#253656]">{totalRegistered}</p>
+                      <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Total Pendaftar</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center shrink-0 border border-green-100">
+                       <CheckCircle2 className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-3xl font-black text-[#253656]">{totalHadir}</p>
+                      <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Pengunjung Hadir</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-8 pt-4 border-t border-gray-100 flex items-center gap-2">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  </span>
+                  <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Real-time Data</span>
+                </div>
+             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto px-2">
-            <Link href="/register" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto h-14 md:h-16 px-6 md:px-10 bg-gradient-to-r from-[#BD272D] to-[#991f24] hover:from-[#a01f25] hover:to-[#7a181c] text-white font-black tracking-wider md:tracking-widest uppercase rounded-full shadow-lg shadow-[#BD272D]/40 hover:shadow-xl hover:shadow-[#BD272D]/50 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg group">
-                Isi Buku Tamu
-                <ArrowRight className="ml-2 w-4 h-4 md:ml-3 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
-              </Button>
-            </Link>
-          </div>
         </section>
 
         {/* Section Heading Style Component */}
