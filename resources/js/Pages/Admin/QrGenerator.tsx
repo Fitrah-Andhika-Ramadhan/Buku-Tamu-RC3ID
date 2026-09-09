@@ -81,11 +81,26 @@ export default function QrGenerator() {
     const canvas = qrRef.current?.querySelector("canvas");
     if (!canvas) return;
 
-    // We can just download the canvas directly
-    const link = document.createElement("a");
-    link.download = "qrcode-rc3id.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
+    // Create a new canvas with padding to act as a white frame
+    const padding = 32; // Thick padding for a nice frame
+    const finalCanvas = document.createElement("canvas");
+    finalCanvas.width = canvas.width + (padding * 2);
+    finalCanvas.height = canvas.height + (padding * 2);
+    
+    const ctx = finalCanvas.getContext("2d");
+    if (ctx) {
+      // Fill the entire frame with white
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      
+      // Draw the original QR code in the center
+      ctx.drawImage(canvas, padding, padding);
+      
+      const link = document.createElement("a");
+      link.download = "qrcode-rc3id.png";
+      link.href = finalCanvas.toDataURL("image/png");
+      link.click();
+    }
   };
 
   const handlePrint = () => {
