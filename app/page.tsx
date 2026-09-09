@@ -49,10 +49,10 @@ export default function LandingPage() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-12 flex flex-col xl:flex-row items-center gap-8 xl:gap-10 w-full relative z-10">
+        <section className="mb-24 mt-12 flex flex-col xl:flex-row items-center justify-center gap-12 w-full relative z-10">
           
           {/* Main Hero Content (Left Side) */}
-          <div className="flex-[2] flex flex-col items-center xl:items-start text-center xl:text-left w-full min-w-0">
+          <div className="flex-[3] flex flex-col items-center xl:items-start text-center xl:text-left w-full min-w-0">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
@@ -104,27 +104,10 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Center Illustration — fills the empty white box */}
-          <div className="hidden xl:flex flex-[1.5] items-center justify-center relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#BD272D]/5 to-[#253656]/5 rounded-3xl blur-3xl"></div>
-            <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl shadow-[#253656]/10 border border-white/60">
-              <img 
-                src="/hero-illustration.png" 
-                alt="RC3ID Research Illustration"
-                className="w-full h-full object-cover"
-              />
-              {/* Overlay gradient for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#253656]/60 via-transparent to-transparent"></div>
-              {/* Bottom text overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="text-white text-xs font-bold uppercase tracking-widest opacity-80">Research Center for Care and Control</p>
-                <p className="text-white/60 text-[10px] font-medium mt-0.5">Infectious Diseases — Universitas Padjadjaran</p>
-              </div>
-            </div>
-          </div>
-          
-          {/* Live Stats (Right Side) */}
-          <div className="w-full xl:w-[300px] shrink-0 flex justify-center relative">
+
+
+          {/* Live Stats (Center-Right) */}
+          <div className="w-full xl:flex-[2] flex justify-center relative">
              {/* Premium Decorative Background behind Stats */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[120%] bg-gradient-to-tr from-[#253656]/5 to-[#BD272D]/5 rounded-full blur-3xl -z-10 animate-pulse"></div>
              
