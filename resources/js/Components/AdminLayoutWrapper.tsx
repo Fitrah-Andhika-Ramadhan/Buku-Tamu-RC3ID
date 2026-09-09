@@ -1,13 +1,14 @@
 "use client";
 
 import { Link, usePage } from "@inertiajs/react";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard, desc: "Statistik & Ringkasan" },
   { name: "Data Peserta", href: "/admin/peserta", icon: Users, desc: "Kelola & Validasi Kehadiran" },
   { name: "Form Builder", href: "/admin/form-builder", icon: Activity, desc: "Atur Form Dinamis" },
+  { name: "Halaman Sukses", href: "/admin/success-config", icon: CheckCircle2, desc: "Atur Tampilan Sukses" },
 ];
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {

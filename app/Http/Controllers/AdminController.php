@@ -83,14 +83,62 @@ class AdminController extends Controller
 
     public function saveFormBuilder(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'fields' => 'required|array'
         ]);
 
-        $setting = Setting::firstOrCreate(['key' => 'guestbook_form_fields']);
-        $setting->value = $request->fields;
-        $setting->save();
+        Setting::updateOrCreate(
+            ['key' => 'guestbook_form_fields'],
+            ['value' => $validated['fields']]
+        );
 
-        return back()->with('success', 'Form berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Form fields saved successfully.');
+    }
+
+    public function successConfig()
+    {
+        $setting = Setting::where('key', 'success_page_config')->first();
+        return Inertia::render('Admin/SuccessConfig', [
+            'config' => $setting ? $setting->value : [
+                'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
+                'e_materi_type' => 'url', // url or file
+                'e_materi_url' => '',
+                'e_materi_file_url' => '',
+                'show_merchandise' => true,
+                'merchandise_photo_url' => '/merchandise.png'
+            ]
+        ]);
+    }
+
+    public function saveSuccessConfig(Request $request)
+    {
+        $validated = $request->validate([
+            'success_message' => 'required|string',
+            'e_materi_type' => 'required|string|in:url,file',
+            'e_materi_url' => 'nullable|string',
+            'show_merchandise' => 'required|boolean',
+        ]);
+
+        $setting = Setting::where('key', 'success_page_config')->first();
+        $currentConfig = $setting ? $setting->value : [];
+
+        $config = array_merge($currentConfig, $validated);
+
+        if ($request->hasFile('e_materi_file')) {
+            $path = $request->file('e_materi_file')->store('public/materi');
+            $config['e_materi_file_url'] = \Illuminate\Support\Facades\Storage::url($path);
+        }
+
+        if ($request->hasFile('merchandise_photo')) {
+            $path = $request->file('merchandise_photo')->store('public/merchandise');
+            $config['merchandise_photo_url'] = \Illuminate\Support\Facades\Storage::url($path);
+        }
+
+        Setting::updateOrCreate(
+            ['key' => 'success_page_config'],
+            ['value' => $config]
+        );
+
+        return redirect()->back()->with('success', 'Success page settings saved successfully.');
     }
 }

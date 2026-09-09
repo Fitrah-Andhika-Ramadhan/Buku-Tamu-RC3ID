@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download } from "lucide-react";
 import { Link, router } from "@inertiajs/react";
 
@@ -11,6 +11,8 @@ type Participant = {
   profesi: string | null;
   status_hadir: boolean;
   waktu_hadir: Date | null;
+  email: string;
+  wa_number: string;
   createdAt: Date;
 };
 
@@ -109,7 +111,11 @@ export function ParticipantTable({ participants }: { participants: Participant[]
               </tr>
             ) : (
               filtered.map((p) => (
-                <tr key={p.id} className={`hover:bg-slate-50/80 transition-colors`}>
+                <React.Fragment key={p.id}>
+                <tr className={`hover:bg-slate-50/80 transition-colors cursor-pointer group`} onClick={() => {
+                  const el = document.getElementById(`details-${p.id}`);
+                  if(el) el.classList.toggle('hidden');
+                }}>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-[#253656]/10 flex items-center justify-center text-sm font-black text-[#253656] shrink-0 uppercase">
@@ -138,10 +144,13 @@ export function ParticipantTable({ participants }: { participants: Participant[]
                       </span>
                     )}
                   </td>
-                  <td className="px-5 py-4 text-center">
+                  <td className="px-5 py-4 text-center" onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center justify-center gap-2">
                       <button
-                        onClick={() => handleToggle(p.id, p.status_hadir)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggle(p.id, p.status_hadir);
+                        }}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-50 ${
                           p.status_hadir
                             ? "bg-slate-100 hover:bg-slate-200 text-slate-600"
@@ -155,12 +164,36 @@ export function ParticipantTable({ participants }: { participants: Participant[]
                         target="_blank"
                         className="p-1.5 rounded-lg text-slate-300 hover:text-[#BD272D] hover:bg-red-50 transition-colors"
                         title="Lihat Tiket"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         <ExternalLink className="w-4 h-4" />
                       </Link>
                     </div>
                   </td>
                 </tr>
+                <tr id={`details-${p.id}`} className="hidden bg-slate-50 border-b border-slate-100">
+                  <td colSpan={4} className="px-6 py-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div className="space-y-1">
+                        <p className="font-bold text-slate-700">Kontak & Info Utama</p>
+                        <p className="text-slate-600"><span className="text-slate-400">Email:</span> {p.email}</p>
+                        <p className="text-slate-600"><span className="text-slate-400">WA:</span> {p.wa_number}</p>
+                      </div>
+                      {(p as any).custom_responses && Object.keys((p as any).custom_responses).length > 0 && (
+                        <div className="space-y-2">
+                          <p className="font-bold text-slate-700">Jawaban Form Tambahan</p>
+                          {Object.entries((p as any).custom_responses).map(([key, value]) => (
+                            <div key={key} className="bg-white p-2 rounded border border-slate-200">
+                              <p className="text-xs text-slate-400 font-semibold uppercase">{key}</p>
+                              <p className="text-slate-700 text-sm mt-0.5">{Array.isArray(value) ? value.join(', ') : String(value)}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </React.Fragment>
               ))
             )}
           </tbody>

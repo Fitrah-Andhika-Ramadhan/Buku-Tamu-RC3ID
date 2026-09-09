@@ -38,6 +38,27 @@ class ParticipantController extends Controller
             'custom_responses' => $customResponses,
         ]);
 
-        return redirect()->back()->with('success', 'Pendaftaran berhasil!');
+        // Redirect to success page with flash session if needed, but since it's a dedicated page, just redirect.
+        // We can pass a simple session flash to prevent direct access if we wanted, but for guestbook, it's fine.
+        session()->flash('registered', true);
+        return redirect()->route('register.success');
+    }
+
+    public function success()
+    {
+        if (!session('registered')) {
+            return redirect('/');
+        }
+        
+        $setting = \App\Models\Setting::where('key', 'success_page_config')->first();
+        $config = $setting ? $setting->value : [
+            'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
+            'e_materi_url' => '#',
+            'show_merchandise' => true,
+        ];
+
+        return Inertia::render('Auth/Success', [
+            'success_config' => $config
+        ]);
     }
 }

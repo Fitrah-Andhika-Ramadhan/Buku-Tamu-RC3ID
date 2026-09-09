@@ -8,6 +8,7 @@ use Inertia\Inertia;
 
 Route::get('/', [ParticipantController::class, 'index'])->name('home');
 Route::post('/register', [ParticipantController::class, 'store'])->name('register.store');
+Route::get('/success', [ParticipantController::class, 'success'])->name('register.success');
 
 use App\Http\Controllers\AdminController;
 
@@ -29,6 +30,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     // Form Builder Routes
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
+    Route::get('/success-config', [AdminController::class, 'successConfig'])->name('admin.success.config');
+    Route::post('/success-config', [AdminController::class, 'saveSuccessConfig'])->name('admin.success.config.save');
+    Route::post('/scan', [AdminController::class, 'scan'])->name('admin.scan');
 });
 
 require __DIR__.'/auth.php';
