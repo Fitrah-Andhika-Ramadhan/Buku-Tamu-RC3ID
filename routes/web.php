@@ -11,6 +11,15 @@ Route::post('/register', [ParticipantController::class, 'store'])->name('registe
 
 use App\Http\Controllers\AdminController;
 
+Route::get('/install', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Tabel database MYSQL berhasil dibuat! Output: ' . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Exception $e) {
+        return 'Gagal: ' . $e->getMessage();
+    }
+});
+
 Route::get('/check-env', function () {
     $envPath = base_path('.env');
     if (file_exists($envPath)) {
