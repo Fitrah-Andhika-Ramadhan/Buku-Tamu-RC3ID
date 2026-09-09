@@ -32,7 +32,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
     Route::get('/success-config', [AdminController::class, 'successConfig'])->name('admin.success.config');
     Route::post('/success-config', [AdminController::class, 'saveSuccessConfig'])->name('admin.success.config.save');
+    Route::get('/form-header', [AdminController::class, 'formHeaderConfig'])->name('admin.form.header');
+    Route::post('/form-header', [AdminController::class, 'saveFormHeaderConfig'])->name('admin.form.header.save');
     Route::post('/scan', [AdminController::class, 'scan'])->name('admin.scan');
+    Route::get('/qr-generator', function() {
+        return \Inertia\Inertia::render('Admin/QrGenerator');
+    })->name('admin.qr.generator');
 });
 
 require __DIR__.'/auth.php';

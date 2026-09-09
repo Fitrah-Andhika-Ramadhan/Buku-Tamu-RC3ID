@@ -2,7 +2,21 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { FormEventHandler, useState } from 'react';
 import { ArrowLeft, CheckCircle2, FileText, Send } from 'lucide-react';
 
-export default function Register({ formFields = [] }: { formFields?: any[] }) {
+interface SocialLink { emoji: string; label: string; url: string; }
+interface FormHeader {
+  title_line1: string;
+  title_line2: string;
+  description: string;
+  social_links: SocialLink[];
+}
+
+export default function Register({ formFields = [], formHeader }: { formFields?: any[], formHeader?: FormHeader }) {
+  const header: FormHeader = formHeader || {
+    title_line1: 'Form Buku Tamu',
+    title_line2: 'Booth RC3ID',
+    description: 'Selamat datang di booth RC3ID.',
+    social_links: [],
+  };
     // Generate initial dynamic data state
     const initialDynamicData: Record<string, string> = {};
     formFields.forEach(field => {
@@ -49,22 +63,23 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
                         <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#BD272D]/30 rounded-full blur-2xl"></div>
                         <div className="relative z-10">
                             <h1 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight leading-tight">
-                                Form Buku Tamu <br/> <span className="text-[#BD272D] drop-shadow-md">Booth RC3ID</span>
+                                {header.title_line1} <br/> <span className="text-[#BD272D] drop-shadow-md">{header.title_line2}</span>
                             </h1>
                             <div className="text-blue-100 font-['Plus_Jakarta_Sans'] text-sm md:text-base leading-relaxed max-w-3xl font-medium space-y-4">
-                                <p>Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!</p>
-                                <p>Kami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi, yang berfokus pada kelompok kerja Tuberkulosis (TB), HIV, dan DF-ONE (Dengue and other Febrile pathOgen iNfEctions).</p>
-                                <p>Silakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.</p>
+                                {header.description.split('\n\n').map((para: string, i: number) => (
+                                    <p key={i}>{para}</p>
+                                ))}
                                 
-                                <hr className="border-white/20 my-4" />
-                                
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm text-blue-200">
-                                    <a href="https://rc3id.unpad.ac.id" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🌐 rc3id.unpad.ac.id</a>
-                                    <a href="https://instagram.com/rc3id.unpad" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">📸 @rc3id.unpad</a>
-                                    <a href="https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">💼 LinkedIn RC3ID</a>
-                                    <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🎥 YouTube RC3ID</a>
-                                    <a href="https://x.com/RC3IDUnpad" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🐦 @RC3IDUnpad</a>
-                                </div>
+                                {header.social_links.length > 0 && (
+                                    <>
+                                        <hr className="border-white/20 my-4" />
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm text-blue-200">
+                                            {header.social_links.map((link: SocialLink, i: number) => (
+                                                <a key={i} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">{link.emoji} {link.label}</a>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

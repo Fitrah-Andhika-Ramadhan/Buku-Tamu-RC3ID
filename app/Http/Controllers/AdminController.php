@@ -141,4 +141,40 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Success page settings saved successfully.');
     }
+
+    public function formHeaderConfig()
+    {
+        $setting = Setting::where('key', 'form_header_config')->first();
+        return Inertia::render('Admin/FormHeaderConfig', [
+            'config' => $setting ? $setting->value : [
+                'title_line1' => 'Form Buku Tamu',
+                'title_line2' => 'Booth RC3ID',
+                'description' => "Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!\n\nKami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi.\n\nSilakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.",
+                'social_links' => [
+                    ['emoji' => '🌐', 'label' => 'rc3id.unpad.ac.id', 'url' => 'https://rc3id.unpad.ac.id'],
+                    ['emoji' => '📸', 'label' => '@rc3id.unpad', 'url' => 'https://instagram.com/rc3id.unpad'],
+                    ['emoji' => '💼', 'label' => 'LinkedIn RC3ID', 'url' => 'https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/'],
+                    ['emoji' => '🎥', 'label' => 'YouTube RC3ID', 'url' => 'https://youtube.com/@RC3IDUniversitasPadjadjaran'],
+                    ['emoji' => '🐦', 'label' => '@RC3IDUnpad', 'url' => 'https://x.com/RC3IDUnpad'],
+                ]
+            ]
+        ]);
+    }
+
+    public function saveFormHeaderConfig(Request $request)
+    {
+        $config = [
+            'title_line1' => $request->input('title_line1', 'Form Buku Tamu'),
+            'title_line2' => $request->input('title_line2', 'Booth RC3ID'),
+            'description' => $request->input('description', ''),
+            'social_links' => $request->input('social_links', []),
+        ];
+
+        Setting::updateOrCreate(
+            ['key' => 'form_header_config'],
+            ['value' => $config]
+        );
+
+        return redirect()->back()->with('success', 'Form header settings saved successfully.');
+    }
 }

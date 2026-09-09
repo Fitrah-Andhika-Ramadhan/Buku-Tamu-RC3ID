@@ -106,6 +106,92 @@ export default function SuccessPage() {
         <div className="w-full max-w-4xl mt-12 mb-8">
           <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
         </div>
+
+        {/* RC3ID UNPAD Stats Section */}
+        <div className="w-full max-w-4xl mb-16">
+          <div className="relative">
+            {/* Background glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#253656]/5 to-[#BD272D]/5 rounded-[2.5rem] blur-xl"></div>
+
+            <div className="relative bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-[#253656]/10 overflow-hidden font-['Outfit']">
+              {/* Decorative dots pattern */}
+              <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(circle_at_center,#253656_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+              <div className="absolute -top-16 -right-16 w-48 h-48 bg-gradient-to-br from-[#BD272D]/10 to-transparent rounded-full blur-3xl"></div>
+              <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-gradient-to-tr from-[#253656]/10 to-transparent rounded-full blur-3xl"></div>
+
+              {/* Header */}
+              <div className="relative z-10 text-center mb-10">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#BD272D]/10 text-[#BD272D] text-xs font-black uppercase tracking-[0.2em] mb-4">
+                  🔬 Tentang RC3ID UNPAD
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black text-[#253656] tracking-tight">
+                  Riset Kelas Dunia dari <span className="text-[#BD272D]">Bandung</span>
+                </h2>
+                <p className="text-[#6C7C98] mt-3 font-medium font-['Plus_Jakarta_Sans'] text-sm md:text-base max-w-xl mx-auto leading-relaxed">
+                  Research Center for Care and Control of Infectious Diseases, Universitas Padjadjaran — garda terdepan dalam penanggulangan penyakit infeksi di Indonesia.
+                </p>
+              </div>
+
+              {/* Stats Grid */}
+              <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                {[
+                  { value: "2017", label: "Tahun Berdiri", icon: "🏛️", color: "from-blue-50 to-blue-100/50", border: "border-blue-200", text: "text-blue-700" },
+                  { value: "3", label: "Kelompok Riset", icon: "🔬", color: "from-red-50 to-red-100/50", border: "border-red-200", text: "text-[#BD272D]" },
+                  { value: "100+", label: "Publikasi Ilmiah", icon: "📄", color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-200", text: "text-emerald-700" },
+                  { value: "UNPAD", label: "Universitas Padjadjaran", icon: "🎓", color: "from-amber-50 to-amber-100/50", border: "border-amber-200", text: "text-amber-700" },
+                ].map((stat, i) => (
+                  <div key={i} className={`bg-gradient-to-br ${stat.color} border ${stat.border} rounded-2xl p-4 md:p-5 text-center group hover:scale-105 transition-transform duration-300`}>
+                    <div className="text-2xl md:text-3xl mb-2">{stat.icon}</div>
+                    <p className={`text-xl md:text-2xl font-black ${stat.text} tracking-tight`}>{stat.value}</p>
+                    <p className="text-xs font-bold text-[#6C7C98] uppercase tracking-wider mt-1 leading-tight">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Research Focus */}
+              <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                {[
+                  {
+                    icon: "🦠",
+                    title: "Tuberkulosis (TB)",
+                    desc: "Riset diagnostik, terapi, dan pencegahan TB termasuk TB-RO dengan pendekatan One Health.",
+                    color: "from-[#253656] to-[#1a263d]",
+                  },
+                  {
+                    icon: "🩸",
+                    title: "HIV",
+                    desc: "Penelitian tatalaksana HIV, resistansi obat, dan upaya penurunan angka kejadian baru di komunitas.",
+                    color: "from-[#BD272D] to-[#991f24]",
+                  },
+                  {
+                    icon: "🦟",
+                    title: "DF-ONE (Dengue & Febrile)",
+                    desc: "Studi Dengue dan penyakit febril lainnya dengan inovasi uji diagnostik cepat berbasis data.",
+                    color: "from-[#1a6b5a] to-[#144d40]",
+                  },
+                ].map((focus, i) => (
+                  <div key={i} className={`bg-gradient-to-br ${focus.color} rounded-2xl p-5 text-white group hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}>
+                    <div className="text-3xl mb-3">{focus.icon}</div>
+                    <h3 className="font-black text-white text-sm uppercase tracking-wider mb-2">{focus.title}</h3>
+                    <p className="text-white/75 text-xs font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">{focus.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom CTA */}
+              <div className="relative z-10 border-t border-gray-200/60 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-xs text-[#6C7C98] font-medium font-['Plus_Jakarta_Sans'] text-center sm:text-left">
+                  Ikuti perkembangan riset & inovasi terbaru RC3ID melalui kanal resmi kami.
+                </p>
+                <div className="flex items-center gap-3 flex-wrap justify-center">
+                  <a href="https://rc3id.unpad.ac.id" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-[#253656] text-white text-xs font-bold hover:bg-[#1a263d] transition-colors shadow-md">🌐 Website</a>
+                  <a href="https://instagram.com/rc3id.unpad" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-[#BD272D] text-white text-xs font-bold hover:bg-[#991f24] transition-colors shadow-md">📸 Instagram</a>
+                  <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" target="_blank" rel="noreferrer" className="px-4 py-2 rounded-full bg-[#1a6b5a] text-white text-xs font-bold hover:bg-[#144d40] transition-colors shadow-md">🎥 YouTube</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );

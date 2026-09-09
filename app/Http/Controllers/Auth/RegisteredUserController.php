@@ -22,8 +22,24 @@ class RegisteredUserController extends Controller
     public function create(): Response
     {
         $setting = \App\Models\Setting::where('key', 'guestbook_form_fields')->first();
+        $headerSetting = \App\Models\Setting::where('key', 'form_header_config')->first();
+
+        $defaultHeader = [
+            'title_line1' => 'Form Buku Tamu',
+            'title_line2' => 'Booth RC3ID',
+            'description' => "Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!\n\nKami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi.\n\nSilakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.",
+            'social_links' => [
+                ['emoji' => '🌐', 'label' => 'rc3id.unpad.ac.id', 'url' => 'https://rc3id.unpad.ac.id'],
+                ['emoji' => '📸', 'label' => '@rc3id.unpad', 'url' => 'https://instagram.com/rc3id.unpad'],
+                ['emoji' => '💼', 'label' => 'LinkedIn RC3ID', 'url' => 'https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/'],
+                ['emoji' => '🎥', 'label' => 'YouTube RC3ID', 'url' => 'https://youtube.com/@RC3IDUniversitasPadjadjaran'],
+                ['emoji' => '🐦', 'label' => '@RC3IDUnpad', 'url' => 'https://x.com/RC3IDUnpad'],
+            ]
+        ];
+
         return Inertia::render('Auth/Register', [
-            'formFields' => $setting ? $setting->value : []
+            'formFields' => $setting ? $setting->value : [],
+            'formHeader' => $headerSetting ? $headerSetting->value : $defaultHeader,
         ]);
     }
 
