@@ -209,8 +209,8 @@ export default function QrGenerator() {
                       imageSettings={
                         showLogo ? {
                           src: "/logo.svg",
-                          height: 36,
-                          width: 100,
+                          height: 64,
+                          width: 64,
                           excavate: true,
                         } : undefined
                       }
