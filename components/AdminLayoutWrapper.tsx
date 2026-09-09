@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -80,6 +80,28 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               );
             })}
           </nav>
+
+          {/* Secondary Tools */}
+          <div className="mt-6">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 px-3">Tools</p>
+            <Link
+              href="/admin/qr"
+              onClick={() => setIsSidebarOpen(false)}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${
+                pathname === "/admin/qr"
+                  ? "bg-slate-100 text-[#253656]"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"
+              }`}
+            >
+              <div className="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center shrink-0">
+                <QrCode size={15} className="text-slate-400" />
+              </div>
+              <div>
+                <div className="font-semibold text-sm leading-none">QR Generator</div>
+                <div className="text-[10px] mt-0.5 text-slate-400">Generate QR untuk berbagi</div>
+              </div>
+            </Link>
+          </div>
 
           <div className="mt-6 p-4 bg-gradient-to-br from-[#253656]/5 to-[#BD272D]/5 rounded-xl border border-slate-100">
             <div className="flex items-center gap-2 mb-2">
