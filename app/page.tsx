@@ -51,7 +51,7 @@ export default function LandingPage() {
             RC3ID pada B-IDEAs 2026 Exhibition
           </div>
 
-          <h2 className="text-5xl md:text-7xl lg:text-[5.5rem] xl:text-[6.5rem] font-extrabold text-[#253656] leading-[1.05] mb-10 uppercase tracking-tight w-full">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.1] mb-8 uppercase tracking-tight w-full max-w-5xl">
             ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span><br className="hidden lg:block" /> FOR BETTER INFECTIOUS DISEASE CONTROL
           </h2>
           
