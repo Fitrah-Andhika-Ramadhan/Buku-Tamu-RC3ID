@@ -157,12 +157,29 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
                                 </label>
                                 
                                 {field.name === 'sosmed' && (
-                                    <div className="text-sm text-[#6C7C98] font-['Plus_Jakarta_Sans'] mb-4 leading-relaxed bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
-                                        <p className="mb-2">Website: <a href="https://rc3id.unpad.ac.id" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">rc3id.unpad.ac.id</a></p>
-                                        <p className="mb-2">Instagram: <a href="https://instagram.com/rc3id.unpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">@rc3id.unpad</a></p>
-                                        <p className="mb-2">LinkedIn: <a href="https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/" className="text-[#BD272D] font-bold hover:underline break-all" target="_blank" rel="noreferrer">linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/</a></p>
-                                        <p className="mb-2">YouTube: <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" className="text-[#BD272D] font-bold hover:underline break-all" target="_blank" rel="noreferrer">youtube.com/@RC3IDUniversitasPadjadjaran</a></p>
-                                        <p>X (Twitter): <a href="https://x.com/RC3IDUnpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">x.com/RC3IDUnpad</a></p>
+                                    <div className="text-sm text-[#6C7C98] font-['Plus_Jakarta_Sans'] -mt-1 mb-2 leading-relaxed px-1">
+                                        <div className="flex flex-col gap-1.5">
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="w-24 shrink-0 font-medium">Website:</span> 
+                                                <a href="https://rc3id.unpad.ac.id" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">rc3id.unpad.ac.id</a>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="w-24 shrink-0 font-medium">Instagram:</span> 
+                                                <a href="https://instagram.com/rc3id.unpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">@rc3id.unpad</a>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="w-24 shrink-0 font-medium">LinkedIn:</span> 
+                                                <a href="https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/" className="text-[#BD272D] font-bold hover:underline break-words" target="_blank" rel="noreferrer">linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/</a>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="w-24 shrink-0 font-medium">YouTube:</span> 
+                                                <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" className="text-[#BD272D] font-bold hover:underline break-words" target="_blank" rel="noreferrer">youtube.com/@RC3IDUniversitasPadjadjaran</a>
+                                            </div>
+                                            <div className="flex flex-col sm:flex-row sm:gap-2">
+                                                <span className="w-24 shrink-0 font-medium">X (Twitter):</span> 
+                                                <a href="https://x.com/RC3IDUnpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">x.com/RC3IDUnpad</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 )}
 
