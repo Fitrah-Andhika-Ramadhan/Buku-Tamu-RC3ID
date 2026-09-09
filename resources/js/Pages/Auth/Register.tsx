@@ -97,10 +97,9 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                         {/* Nama & WA */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nama Lengkap (beserta gelar) <span className="text-[#BD272D]">*</span></label>
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nama Lengkap (beserta gelar)</label>
                                 <input
                                     type="text"
-                                    required
                                     value={data.full_name}
                                     onChange={e => setData('full_name', e.target.value)}
                                     className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
@@ -109,10 +108,9 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                 {errors.full_name && <p className="text-sm text-red-500 font-bold">{errors.full_name}</p>}
                             </div>
                             <div className="space-y-3">
-                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nomor WhatsApp Aktif <span className="text-[#BD272D]">*</span></label>
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nomor WhatsApp Aktif</label>
                                 <input
                                     type="tel"
-                                    required
                                     value={data.wa_number}
                                     onChange={e => setData('wa_number', e.target.value)}
                                     className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
@@ -125,10 +123,9 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                         {/* Email & Institusi */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-3">
-                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Alamat Email <span className="text-[#BD272D]">*</span></label>
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Alamat Email</label>
                                 <input
-                                    type="email"
-                                    required
+                                    type="text"
                                     value={data.email}
                                     onChange={e => setData('email', e.target.value)}
                                     className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
@@ -137,10 +134,9 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                 {errors.email && <p className="text-sm text-red-500 font-bold">{errors.email}</p>}
                             </div>
                             <div className="space-y-3">
-                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Institusi <span className="text-[#BD272D]">*</span></label>
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Institusi</label>
                                 <input
                                     type="text"
-                                    required
                                     value={data.institution}
                                     onChange={e => setData('institution', e.target.value)}
                                     className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
@@ -186,7 +182,6 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
 
                                 {field.type === 'textarea' ? (
                                     <textarea
-                                        required={field.required}
                                         value={(data as any)[field.name] || ''}
                                         onChange={e => setData(field.name as any, e.target.value)}
                                         className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm min-h-[120px]"
@@ -204,7 +199,6 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                                         checked={(data as any)[field.name] === option}
                                                         onChange={e => setData(field.name as any, e.target.value)}
                                                         className="w-6 h-6 border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
-                                                        required={field.required}
                                                     />
                                                 </div>
                                                 <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
