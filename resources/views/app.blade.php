@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title inertia>Buku Tamu RC3ID</title>
-        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
