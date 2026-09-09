@@ -5,14 +5,24 @@ import Link from "next/link";
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-  const totalRegistrants = await db.participant.count();
-  const totalHadir = await db.participant.count({ where: { status_hadir: true } });
-  const totalPending = totalRegistrants - totalHadir;
+  let totalRegistrants = 0;
+  let totalHadir = 0;
+  let totalPending = 0;
+  let isDbError = false;
+
+  try {
+    totalRegistrants = await db.participant.count();
+    totalHadir = await db.participant.count({ where: { status_hadir: true } });
+    totalPending = totalRegistrants - totalHadir;
+  } catch (err) {
+    console.error("Database connection failed in Admin Dashboard:", err);
+    isDbError = true;
+  }
 
   const statCards = [
-    { title: "Total Pendaftar", value: totalRegistrants, icon: Users, color: "bg-blue-50 text-blue-600 border-blue-100" },
-    { title: "Sudah Hadir", value: totalHadir, icon: CheckCircle2, color: "bg-green-50 text-green-600 border-green-100" },
-    { title: "Belum Hadir", value: totalPending, icon: Clock, color: "bg-orange-50 text-orange-600 border-orange-100" },
+    { title: "Total Pendaftar", value: isDbError ? "Error" : totalRegistrants, icon: Users, color: "bg-blue-50 text-blue-600 border-blue-100" },
+    { title: "Sudah Hadir", value: isDbError ? "Error" : totalHadir, icon: CheckCircle2, color: "bg-green-50 text-green-600 border-green-100" },
+    { title: "Belum Hadir", value: isDbError ? "Error" : totalPending, icon: Clock, color: "bg-orange-50 text-orange-600 border-orange-100" },
   ];
 
   return (
@@ -21,6 +31,18 @@ export default async function AdminDashboard() {
         <h1 className="text-2xl md:text-3xl font-bold text-[#253656]">Dashboard</h1>
         <p className="text-slate-500 mt-1">Ringkasan statistik kunjungan booth B-IDEAs 2026.</p>
       </div>
+
+      {isDbError && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-2xl flex items-start gap-4 shadow-sm animate-pulse">
+          <div className="bg-red-100 p-2 rounded-full shrink-0">
+            <span className="text-xl">⚠️</span>
+          </div>
+          <div>
+            <h2 className="font-bold text-lg mb-1">Database Hostinger Menolak Koneksi!</h2>
+            <p className="text-sm font-medium">Dashboard gagal mengambil data karena password/IP database di Hostinger Anda masih salah. Silakan pastikan DATABASE_URL Anda menggunakan `localhost` dan password tanpa simbol khusus.</p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {statCards.map((stat, i) => (
