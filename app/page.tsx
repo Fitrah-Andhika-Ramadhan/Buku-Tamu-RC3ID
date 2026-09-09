@@ -51,13 +51,13 @@ export default function LandingPage() {
             RC3ID pada B-IDEAs 2026 Exhibition
           </div>
 
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.1] mb-8 uppercase tracking-tight w-full max-w-5xl">
-            ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span><br className="hidden lg:block" /> FOR BETTER INFECTIOUS DISEASE CONTROL
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-5xl px-2">
+            ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span><br className="hidden md:block" /> FOR BETTER INFECTIOUS DISEASE CONTROL
           </h2>
           
           {/* Glassmorphism Exec Summary Box */}
-          <div className="w-full max-w-5xl mx-auto text-left border border-white/40 p-8 md:p-10 rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
-            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
+          <div className="w-full max-w-5xl mx-auto text-left border border-white/40 p-5 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
+            <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
             
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-[#253656]/10 rounded-lg text-[#253656]">
@@ -65,18 +65,18 @@ export default function LandingPage() {
               </div>
               <h3 className="font-bold text-[#253656] uppercase text-sm tracking-widest">EXECUTIVE SUMMARY</h3>
             </div>
-            <p className="text-[#6C7C98] leading-relaxed text-lg">
+            <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg">
               <strong>RC3ID UNPAD</strong> berpartisipasi penuh dalam <strong>B-IDEAs 2026 Exhibition</strong>. Event ini berfokus pada inovasi dan percepatan deteksi dini untuk pengendalian penyakit menular yang lebih baik.
               <br/><br/>
               Selamat datang di <strong className="text-[#BD272D]">Buku Tamu Digital</strong> booth RC3ID. Silakan isi data kunjungan Anda untuk mendapatkan QR Code eksklusif sebagai tiket akses interaktif dan klaim merchandise riset kami.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full sm:w-auto px-2">
             <Link href="/register" className="w-full sm:w-auto">
-              <Button className="w-full sm:w-auto h-16 px-10 bg-gradient-to-r from-[#BD272D] to-[#991f24] hover:from-[#a01f25] hover:to-[#7a181c] text-white font-black tracking-widest uppercase rounded-full shadow-lg shadow-[#BD272D]/40 hover:shadow-xl hover:shadow-[#BD272D]/50 hover:-translate-y-1 transition-all duration-300 text-lg group">
-                Isi Buku Tamu Sekarang
-                <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              <Button className="w-full sm:w-auto h-14 md:h-16 px-6 md:px-10 bg-gradient-to-r from-[#BD272D] to-[#991f24] hover:from-[#a01f25] hover:to-[#7a181c] text-white font-black tracking-wider md:tracking-widest uppercase rounded-full shadow-lg shadow-[#BD272D]/40 hover:shadow-xl hover:shadow-[#BD272D]/50 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg group">
+                Isi Buku Tamu
+                <ArrowRight className="ml-2 w-4 h-4 md:ml-3 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
               </Button>
             </Link>
           </div>
