@@ -55,6 +55,8 @@ class AdminController extends Controller
                 'isDbError' => true,
             ]);
         }
+    }
+
     public function toggle(Request $request, $id)
     {
         $participant = Participant::findOrFail($id);
