@@ -10,15 +10,13 @@ Route::get('/', [ParticipantController::class, 'index'])->name('home');
 Route::post('/register', [ParticipantController::class, 'store'])->name('register.store');
 
 use App\Http\Controllers\AdminController;
-use Illuminate\Support\Facades\Artisan;
 
-Route::get('/install', function () {
-    try {
-        Artisan::call('migrate', ['--force' => true]);
-        return 'Tabel database berhasil dibuat! Silakan hapus route ini nanti. Output: ' . Artisan::output();
-    } catch (\Exception $e) {
-        return 'Gagal: ' . $e->getMessage();
+Route::get('/debug', function () {
+    $logFile = storage_path('logs/laravel.log');
+    if (file_exists($logFile)) {
+        return nl2br(file_get_contents($logFile));
     }
+    return 'Log file not found.';
 });
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
