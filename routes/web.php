@@ -11,12 +11,20 @@ Route::post('/register', [ParticipantController::class, 'store'])->name('registe
 
 use App\Http\Controllers\AdminController;
 
-Route::get('/debug', function () {
-    $logFile = storage_path('logs/laravel.log');
-    if (file_exists($logFile)) {
-        return nl2br(file_get_contents($logFile));
+Route::get('/clear', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return 'Cache berhasil dibersihkan! Coba buka website Anda lagi.';
+    } catch (\Exception $e) {
+        // If it fails, let's manually delete the cache files
+        $cleared = false;
+        $files = glob(base_path('bootstrap/cache/*.php'));
+        foreach ($files as $file) {
+            @unlink($file);
+            $cleared = true;
+        }
+        return $cleared ? 'File cache dihapus manual! Coba buka website Anda lagi.' : 'Tidak ada cache.';
     }
-    return 'Log file not found.';
 });
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
