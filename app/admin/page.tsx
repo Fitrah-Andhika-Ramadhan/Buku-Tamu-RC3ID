@@ -121,6 +121,52 @@ export default async function AdminDashboard() {
         </div>
       )}
 
+      {/* Grafik Peserta */}
+      {!isDbError && totalRegistrants > 0 && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="font-bold text-[#253656]">Grafik Kehadiran</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Komposisi peserta hadir vs belum hadir</p>
+            </div>
+          </div>
+          <div className="flex items-end justify-center gap-10">
+            {/* Bar: Total */}
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-2xl font-black text-[#253656]">{totalRegistrants}</span>
+              <div className="w-16 rounded-t-xl bg-gradient-to-t from-[#253656] to-[#3a5080]" style={{ height: "120px" }}></div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total</span>
+            </div>
+            {/* Bar: Hadir */}
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-2xl font-black text-green-600">{totalHadir}</span>
+              <div
+                className="w-16 rounded-t-xl bg-gradient-to-t from-green-500 to-green-400 transition-all duration-700"
+                style={{ height: `${Math.max(8, (totalHadir / totalRegistrants) * 120)}px` }}
+              ></div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir</span>
+            </div>
+            {/* Bar: Pending */}
+            <div className="flex flex-col items-center gap-3">
+              <span className="text-2xl font-black text-orange-500">{totalPending}</span>
+              <div
+                className="w-16 rounded-t-xl bg-gradient-to-t from-orange-400 to-orange-300 transition-all duration-700"
+                style={{ height: `${Math.max(8, (totalPending / totalRegistrants) * 120)}px` }}
+              ></div>
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pending</span>
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="flex justify-center gap-6 mt-6 pt-5 border-t border-slate-100">
+            <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#253656]"></span><span className="text-xs text-slate-500 font-medium">Total Pendaftar</span></div>
+            <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-green-500"></span><span className="text-xs text-slate-500 font-medium">Sudah Hadir</span></div>
+            <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-orange-400"></span><span className="text-xs text-slate-500 font-medium">Belum Hadir</span></div>
+          </div>
+        </div>
+      )}
+
+
       {/* Bottom Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
