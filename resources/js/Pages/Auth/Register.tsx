@@ -1,121 +1,233 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { ArrowLeft, CheckCircle2, FileText, Send } from 'lucide-react';
 
-export default function Register() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
+export default function Register({ formFields = [] }: { formFields?: any[] }) {
+    // Generate initial dynamic data state
+    const initialDynamicData: Record<string, string> = {};
+    formFields.forEach(field => {
+        initialDynamicData[field.name] = '';
+    });
+
+    const { data, setData, post, processing, errors, reset, wasSuccessful } = useForm({
+        full_name: '',
+        wa_number: '',
         email: '',
-        password: '',
-        password_confirmation: '',
+        institution: '',
+        ...initialDynamicData
     });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+            onSuccess: () => reset(),
         });
     };
 
-    return (
-        <GuestLayout>
-            <Head title="Register" />
-
-            <form onSubmit={submit}>
-                <div>
-                    <InputLabel htmlFor="name" value="Name" />
-
-                    <TextInput
-                        id="name"
-                        name="name"
-                        value={data.name}
-                        className="mt-1 block w-full"
-                        autoComplete="name"
-                        isFocused={true}
-                        onChange={(e) => setData('name', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.name} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="email" value="Email" />
-
-                    <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        onChange={(e) => setData('email', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.email} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
-
-                    <TextInput
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) => setData('password', e.target.value)}
-                        required
-                    />
-
-                    <InputError message={errors.password} className="mt-2" />
-                </div>
-
-                <div className="mt-4">
-                    <InputLabel
-                        htmlFor="password_confirmation"
-                        value="Confirm Password"
-                    />
-
-                    <TextInput
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        onChange={(e) =>
-                            setData('password_confirmation', e.target.value)
-                        }
-                        required
-                    />
-
-                    <InputError
-                        message={errors.password_confirmation}
-                        className="mt-2"
-                    />
-                </div>
-
-                <div className="mt-4 flex items-center justify-end">
-                    <Link
-                        href={route('login')}
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                        Already registered?
+    if (wasSuccessful) {
+        return (
+            <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4 font-['Outfit'] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#BD272D] rounded-full blur-[150px] opacity-10 -z-10 animate-pulse"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#253656] rounded-full blur-[150px] opacity-10 -z-10"></div>
+                
+                <div className="bg-white/80 backdrop-blur-2xl border border-white p-10 md:p-16 rounded-[2.5rem] shadow-2xl shadow-[#253656]/10 text-center max-w-lg w-full relative z-10">
+                    <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8 border-4 border-white shadow-xl">
+                        <CheckCircle2 className="w-12 h-12 text-green-500" />
+                    </div>
+                    <h2 className="text-3xl font-black text-[#253656] mb-4 tracking-tight">Pendaftaran Berhasil!</h2>
+                    <p className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium mb-10 leading-relaxed">
+                        Terima kasih telah mendaftar. Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.
+                    </p>
+                    <Link href="/" className="inline-flex items-center justify-center w-full h-14 bg-gradient-to-r from-[#253656] to-[#1a263d] text-white font-bold tracking-[0.15em] uppercase rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                        <ArrowLeft className="w-5 h-5 mr-2" /> Kembali ke Beranda
                     </Link>
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Register
-                    </PrimaryButton>
                 </div>
-            </form>
-        </GuestLayout>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-[#f8fafc] text-[#253656] font-['Outfit'] selection:bg-[#BD272D] selection:text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* HD Background - VibeDesk Style */}
+            <div className="fixed inset-0 -z-20 h-full w-full bg-[#f8fafc]">
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
+                <div className="absolute left-[10%] top-[10%] z-0 h-[400px] w-[400px] rounded-full bg-[#BD272D] opacity-[0.10] blur-[100px] animate-pulse pointer-events-none"></div>
+                <div className="absolute right-[-5%] bottom-[10%] z-0 h-[500px] w-[500px] rounded-full bg-[#253656] opacity-[0.08] blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "2s" }}></div>
+                <div className="absolute bottom-1/2 left-[20%] z-0 h-[300px] w-[300px] rounded-full bg-cyan-500 opacity-[0.03] blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: "4s" }}></div>
+            </div>
+
+            <div className="max-w-3xl mx-auto relative z-10">
+                <Link href="/" className="inline-flex items-center text-sm font-bold text-[#6C7C98] hover:text-[#BD272D] transition-colors uppercase tracking-[0.15em] mb-8">
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
+                </Link>
+
+                <div className="bg-white/70 backdrop-blur-3xl border border-white shadow-2xl shadow-[#253656]/10 rounded-[2.5rem] overflow-hidden">
+                    {/* Header */}
+                    <div className="bg-gradient-to-r from-[#253656] to-[#1a263d] p-8 md:p-12 relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:16px_16px]"></div>
+                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#BD272D]/30 rounded-full blur-2xl"></div>
+                        <div className="relative z-10">
+                            <h1 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight leading-tight">
+                                Form Buku Tamu <br/> <span className="text-[#BD272D] drop-shadow-md">Booth RC3ID</span>
+                            </h1>
+                            <p className="text-blue-100 font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl font-medium">
+                                Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!
+                                <br/><br/>
+                                Silakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Form */}
+                    <form onSubmit={submit} className="p-8 md:p-12 space-y-8">
+                        {/* Nama & WA */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nama Lengkap (beserta gelar) <span className="text-[#BD272D]">*</span></label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={data.full_name}
+                                    onChange={e => setData('full_name', e.target.value)}
+                                    className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
+                                    placeholder="Prof. Dr. Nama Lengkap, Sp.PD"
+                                />
+                                {errors.full_name && <p className="text-sm text-red-500 font-bold">{errors.full_name}</p>}
+                            </div>
+                            <div className="space-y-3">
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Nomor WhatsApp Aktif <span className="text-[#BD272D]">*</span></label>
+                                <input
+                                    type="tel"
+                                    required
+                                    value={data.wa_number}
+                                    onChange={e => setData('wa_number', e.target.value)}
+                                    className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
+                                    placeholder="081234567890"
+                                />
+                                {errors.wa_number && <p className="text-sm text-red-500 font-bold">{errors.wa_number}</p>}
+                            </div>
+                        </div>
+
+                        {/* Email & Institusi */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-3">
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Alamat Email <span className="text-[#BD272D]">*</span></label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={data.email}
+                                    onChange={e => setData('email', e.target.value)}
+                                    className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
+                                    placeholder="email@instansi.com"
+                                />
+                                {errors.email && <p className="text-sm text-red-500 font-bold">{errors.email}</p>}
+                            </div>
+                            <div className="space-y-3">
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">Institusi <span className="text-[#BD272D]">*</span></label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={data.institution}
+                                    onChange={e => setData('institution', e.target.value)}
+                                    className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
+                                    placeholder="Nama Rumah Sakit / Universitas / Dinas"
+                                />
+                                {errors.institution && <p className="text-sm text-red-500 font-bold">{errors.institution}</p>}
+                            </div>
+                        </div>
+
+                        {/* Dynamic Fields */}
+                        {formFields.map((field, index) => (
+                            <div key={index} className="space-y-3">
+                                <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">
+                                    {field.label} {field.required && <span className="text-[#BD272D]">*</span>}
+                                </label>
+
+                                {field.type === 'textarea' ? (
+                                    <textarea
+                                        required={field.required}
+                                        value={(data as any)[field.name] || ''}
+                                        onChange={e => setData(field.name as any, e.target.value)}
+                                        className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm min-h-[120px]"
+                                        placeholder={`Masukkan ${field.label}`}
+                                    />
+                                ) : field.type === 'radio' ? (
+                                    <div className="space-y-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
+                                        {field.options?.map((option: string, idx: number) => (
+                                            <label key={idx} className="flex items-start gap-4 cursor-pointer group">
+                                                <div className="relative flex items-center justify-center mt-1">
+                                                    <input 
+                                                        type="radio" 
+                                                        name={field.name} 
+                                                        value={option} 
+                                                        checked={(data as any)[field.name] === option}
+                                                        onChange={e => setData(field.name as any, e.target.value)}
+                                                        className="w-6 h-6 border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
+                                                        required={field.required}
+                                                    />
+                                                </div>
+                                                <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                ) : field.type === 'checkbox' ? (
+                                    <div className="space-y-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
+                                        {field.options?.map((option: string, idx: number) => {
+                                            const currentValues = (data as any)[field.name] ? (data as any)[field.name].split(', ') : [];
+                                            const isChecked = currentValues.includes(option);
+                                            return (
+                                                <label key={idx} className="flex items-start gap-4 cursor-pointer group">
+                                                    <div className="relative flex items-center justify-center mt-1">
+                                                        <input 
+                                                            type="checkbox" 
+                                                            name={field.name} 
+                                                            value={option}
+                                                            checked={isChecked}
+                                                            onChange={e => {
+                                                                if (e.target.checked) {
+                                                                    setData(field.name as any, [...currentValues, option].join(', '));
+                                                                } else {
+                                                                    setData(field.name as any, currentValues.filter((v: string) => v !== option).join(', '));
+                                                                }
+                                                            }}
+                                                            className="w-6 h-6 rounded border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
+                                                        />
+                                                    </div>
+                                                    <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
+                                                </label>
+                                            )
+                                        })}
+                                    </div>
+                                ) : (
+                                    <input
+                                        type={field.type}
+                                        required={field.required}
+                                        value={(data as any)[field.name] || ''}
+                                        onChange={e => setData(field.name as any, e.target.value)}
+                                        className="w-full bg-white/50 border border-gray-200 focus:border-[#BD272D] focus:ring-4 focus:ring-[#BD272D]/10 rounded-2xl px-5 py-4 font-['Plus_Jakarta_Sans'] font-medium transition-all shadow-sm"
+                                        placeholder={`Masukkan ${field.label}`}
+                                    />
+                                )}
+                                {errors[field.name as keyof typeof errors] && <p className="text-sm text-red-500 font-bold">{errors[field.name as keyof typeof errors]}</p>}
+                            </div>
+                        ))}
+
+                        <div className="pt-6 border-t border-gray-100 flex items-center justify-end">
+                            <button
+                                type="submit"
+                                disabled={processing}
+                                className="relative group w-full md:w-auto overflow-hidden rounded-full"
+                            >
+                                <div className="absolute -inset-1 bg-gradient-to-r from-[#BD272D] to-rose-400 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500"></div>
+                                <div className="relative h-16 px-12 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-[0.15em] uppercase rounded-full border border-white/20 flex items-center justify-center gap-3 transition-all duration-300 hover:-translate-y-1 shadow-xl disabled:opacity-70 disabled:hover:translate-y-0">
+                                    {processing ? 'Menyimpan...' : 'Kirim Form & Klaim'}
+                                    <Send className="w-5 h-5" />
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 }

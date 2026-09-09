@@ -24,13 +24,19 @@ class ParticipantController extends Controller
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'wa_number' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'email' => 'required|email|max:255',
             'institution' => 'required|string|max:255',
-            'profession' => 'nullable|string|max:255',
-            'collaboration' => 'nullable|string|max:255',
         ]);
 
-        $participant = Participant::create($validated);
+        $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', '_token']);
+
+        $participant = Participant::create([
+            'full_name' => $validated['full_name'],
+            'wa_number' => $validated['wa_number'],
+            'email' => $validated['email'],
+            'institution' => $validated['institution'],
+            'custom_responses' => $customResponses,
+        ]);
 
         return redirect()->back()->with('success', 'Pendaftaran berhasil!');
     }

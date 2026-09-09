@@ -21,7 +21,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        $setting = \App\Models\Setting::where('key', 'guestbook_form_fields')->first();
+        return Inertia::render('Auth/Register', [
+            'formFields' => $setting ? $setting->value : []
+        ]);
     }
 
     /**

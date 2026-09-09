@@ -1,131 +1,228 @@
-import { Button } from "@/components/ui/button";
-import { Plus, GripVertical, Settings2, Trash2, Eye, Save } from "lucide-react";
+import { useState } from 'react';
+import { Head, useForm } from '@inertiajs/react';
+import { AdminLayoutWrapper } from '@/Components/AdminLayoutWrapper';
+import { Save, Plus, Trash2, GripVertical, CheckCircle2 } from 'lucide-react';
 
-export default function FormGeneratorMockup() {
-  const mockFields = [
-    { id: 1, type: "text", label: "Nama Lengkap (beserta gelar)", required: true },
-    { id: 2, type: "text", label: "Nomor WhatsApp Aktif", required: true },
-    { id: 3, type: "email", label: "Alamat Email", required: true },
-    { id: 4, type: "text", label: "Institusi", required: true },
-    { id: 5, type: "text", label: "Profesi / Bidang Spesialisasi", required: true },
-    { id: 6, type: "checkbox", label: "Peluang Kolaborasi", required: true },
-  ];
+interface FormField {
+    id: string;
+    type: 'text' | 'email' | 'tel' | 'textarea' | 'radio' | 'checkbox';
+    label: string;
+    name: string;
+    required: boolean;
+    options?: string[];
+}
 
-  return (
-    <div className="max-w-5xl mx-auto space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[#253656]">Form Generator</h1>
-          <p className="text-slate-500 mt-1 text-sm">Desain formulir registrasi buku tamu Anda (Mockup UI).</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant="outline" className="text-slate-600">
-            <Eye className="w-4 h-4 mr-2" />
-            Preview Form
-          </Button>
-          <Button className="bg-[#253656] hover:bg-[#1a263d] text-white">
-            <Save className="w-4 h-4 mr-2" />
-            Simpan Form
-          </Button>
-        </div>
-      </div>
+export default function FormBuilder({ formFields }: { formFields: FormField[] }) {
+    const [fields, setFields] = useState<FormField[]>(formFields || []);
 
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Main Editor */}
-        <div className="flex-1 space-y-4">
-          <div className="bg-white border-t-[10px] border-[#BD272D] rounded-2xl shadow-sm p-8 border-l border-r border-b border-gray-200">
-            <input 
-              type="text" 
-              className="w-full text-3xl font-bold text-[#253656] border-b border-transparent hover:border-gray-200 focus:border-[#BD272D] focus:outline-none pb-2 transition-colors bg-transparent"
-              defaultValue="Form Buku Tamu Booth RC3ID"
-            />
-            <textarea 
-              className="w-full text-slate-500 mt-4 border-b border-transparent hover:border-gray-200 focus:border-[#BD272D] focus:outline-none pb-2 transition-colors resize-none bg-transparent"
-              rows={3}
-              defaultValue="Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th B-IDEAs 2026!"
-            />
-          </div>
+    const { data, setData, post, processing, recentlySuccessful } = useForm({
+        fields: formFields || [],
+    });
 
-          {mockFields.map((field) => (
-            <div key={field.id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex gap-4 group hover:border-[#BD272D]/50 transition-colors relative">
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab bg-white p-1 rounded border border-gray-200 shadow-sm">
-                <GripVertical className="w-5 h-5 text-gray-400" />
-              </div>
-              <div className="flex-1 space-y-4">
-                <div className="flex gap-4">
-                  <input 
-                    type="text" 
-                    className="flex-1 bg-gray-50 border border-transparent focus:bg-white focus:border-[#BD272D] rounded-lg px-4 py-3 font-medium text-[#253656] outline-none transition-colors"
-                    defaultValue={field.label}
-                  />
-                  <select className="bg-white border border-gray-200 rounded-lg px-4 py-3 text-slate-600 outline-none focus:border-[#BD272D]">
-                    <option value="text" selected={field.type === "text"}>Jawaban Singkat</option>
-                    <option value="email" selected={field.type === "email"}>Email</option>
-                    <option value="checkbox" selected={field.type === "checkbox"}>Kotak Centang</option>
-                  </select>
+    const addField = () => {
+        const newField: FormField = {
+            id: Date.now().toString(),
+            type: 'text',
+            label: 'New Field',
+            name: 'new_field_' + Date.now(),
+            required: false,
+        };
+        const updated = [...fields, newField];
+        setFields(updated);
+        setData('fields', updated);
+    };
+
+    const updateField = (id: string, updates: Partial<FormField>) => {
+        const updated = fields.map(f => (f.id === id ? { ...f, ...updates } : f));
+        setFields(updated);
+        setData('fields', updated);
+    };
+
+    const removeField = (id: string) => {
+        const updated = fields.filter(f => f.id !== id);
+        setFields(updated);
+        setData('fields', updated);
+    };
+
+    const moveField = (index: number, direction: 'up' | 'down') => {
+        if (direction === 'up' && index === 0) return;
+        if (direction === 'down' && index === fields.length - 1) return;
+
+        const newIndex = direction === 'up' ? index - 1 : index + 1;
+        const updated = [...fields];
+        const temp = updated[index];
+        updated[index] = updated[newIndex];
+        updated[newIndex] = temp;
+        
+        setFields(updated);
+        setData('fields', updated);
+    };
+
+    const handleSave = (e: React.FormEvent) => {
+        e.preventDefault();
+        post(route('admin.form.builder.save'));
+    };
+
+    return (
+        <AdminLayoutWrapper>
+            <Head title="Form Builder" />
+
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+                <div>
+                    <h1 className="text-3xl font-black text-[#253656] tracking-tight mb-2">Form Builder</h1>
+                    <p className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium">Buat dan atur form pertanyaan dinamis untuk peserta buku tamu.</p>
                 </div>
-                <div className="text-sm text-gray-400 border-b border-gray-100 pb-2 border-dashed">
-                  {field.type === "checkbox" ? (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 border border-gray-300 rounded-sm"></div> Opsi 1</div>
-                      <div className="flex items-center gap-2"><div className="w-4 h-4 border border-gray-300 rounded-sm"></div> Opsi 2</div>
-                    </div>
-                  ) : "Teks jawaban pengguna..."}
+                
+                <div className="flex items-center gap-3">
+                    {recentlySuccessful && (
+                        <div className="flex items-center text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100">
+                            <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                            <span className="text-sm font-bold">Tersimpan!</span>
+                        </div>
+                    )}
+                    <button
+                        onClick={addField}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#253656] font-bold rounded-xl shadow-sm hover:shadow-md border border-gray-200 hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Tambah Field
+                    </button>
+                    <button
+                        onClick={handleSave}
+                        disabled={processing}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-bold rounded-xl shadow-md hover:shadow-lg border border-transparent hover:-translate-y-0.5 active:scale-[0.98] transition-all disabled:opacity-70"
+                    >
+                        <Save className="w-4 h-4" />
+                        Simpan Form
+                    </button>
                 </div>
-                <div className="flex items-center justify-end gap-4 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <span className="font-medium">Wajib diisi</span>
-                    <div className={`w-10 h-5 rounded-full relative cursor-pointer ${field.required ? 'bg-[#BD272D]' : 'bg-gray-200'}`}>
-                      <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${field.required ? 'right-1' : 'left-1'}`}></div>
-                    </div>
-                  </div>
-                  <div className="w-px h-6 bg-gray-200"></div>
-                  <button className="text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-5 h-5" /></button>
-                </div>
-              </div>
             </div>
-          ))}
 
-          <Button className="w-full py-8 border-2 border-dashed border-gray-300 bg-white hover:bg-gray-50 text-gray-500 rounded-2xl flex flex-col items-center gap-2 shadow-none">
-            <Plus className="w-6 h-6" />
-            <span className="font-medium">Tambah Pertanyaan Baru</span>
-          </Button>
-        </div>
+            <div className="bg-white/70 backdrop-blur-3xl rounded-[2rem] p-6 sm:p-8 shadow-xl shadow-[#253656]/5 border border-white relative z-10">
+                {fields.length === 0 ? (
+                    <div className="text-center py-16">
+                        <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-sm">
+                            <Plus className="w-8 h-8 text-gray-300" />
+                        </div>
+                        <h3 className="text-lg font-bold text-[#253656] mb-2">Belum ada field khusus</h3>
+                        <p className="text-[#6C7C98] text-sm max-w-md mx-auto">Klik "Tambah Field" di atas untuk mulai membuat pertanyaan dinamis untuk buku tamu Anda.</p>
+                    </div>
+                ) : (
+                    <div className="space-y-6">
+                        {fields.map((field, index) => (
+                            <div key={field.id} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm relative group transition-all hover:shadow-md hover:border-blue-100">
+                                
+                                {/* Drag Handles & Actions */}
+                                <div className="absolute top-4 right-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-100">
+                                        <button 
+                                            type="button"
+                                            onClick={() => moveField(index, 'up')}
+                                            disabled={index === 0}
+                                            className="p-1.5 text-gray-400 hover:text-[#253656] disabled:opacity-30 disabled:hover:text-gray-400 rounded-md hover:bg-white"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" /></svg>
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            onClick={() => moveField(index, 'down')}
+                                            disabled={index === fields.length - 1}
+                                            className="p-1.5 text-gray-400 hover:text-[#253656] disabled:opacity-30 disabled:hover:text-gray-400 rounded-md hover:bg-white"
+                                        >
+                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                        </button>
+                                    </div>
+                                    <button 
+                                        type="button"
+                                        onClick={() => removeField(field.id)}
+                                        className="p-2.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors border border-transparent hover:border-red-100"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
 
-        {/* Sidebar Tools */}
-        <div className="w-full lg:w-72 space-y-4">
-          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm sticky top-24">
-            <h3 className="font-bold text-[#253656] mb-4 flex items-center gap-2">
-              <Settings2 className="w-5 h-5 text-[#BD272D]" />
-              Pengaturan Form
-            </h3>
-            
-            <div className="space-y-6">
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Tema Warna</label>
-                <div className="flex gap-2">
-                  {['#BD272D', '#253656', '#10b981', '#f59e0b', '#8b5cf6'].map(color => (
-                    <button key={color} className="w-8 h-8 rounded-full border-2 border-white shadow-sm ring-1 ring-gray-200" style={{ backgroundColor: color }}></button>
-                  ))}
-                </div>
-              </div>
+                                <div className="flex gap-4">
+                                    <div className="pt-2 cursor-move text-gray-300 hover:text-[#253656] transition-colors">
+                                        <GripVertical className="w-5 h-5" />
+                                    </div>
+                                    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4">
+                                        
+                                        {/* Label */}
+                                        <div className="lg:col-span-4 space-y-2">
+                                            <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Label Pertanyaan</label>
+                                            <input
+                                                type="text"
+                                                value={field.label}
+                                                onChange={(e) => updateField(field.id, { label: e.target.value })}
+                                                className="w-full bg-gray-50/50 border border-gray-200 focus:border-[#253656] focus:ring-2 focus:ring-[#253656]/10 rounded-xl px-4 py-2.5 font-medium transition-all"
+                                                placeholder="Contoh: Darimana Anda mengetahui acara ini?"
+                                            />
+                                        </div>
 
-              <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Pesan Setelah Submit</label>
-                <textarea 
-                  className="w-full border border-gray-200 rounded-lg p-3 text-sm text-slate-600 focus:outline-none focus:border-[#BD272D]"
-                  rows={3}
-                  defaultValue="Terima kasih telah mendaftar. Silakan tunjukkan QR Code Anda ke meja registrasi."
-                ></textarea>
-              </div>
-              
-              <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-100 text-xs text-yellow-800 leading-relaxed">
-                <strong>Catatan:</strong> Halaman ini adalah versi Mockup UI (purwarupa). Fitur Drag & Drop dan penyimpanan database dinamis belum diaktifkan pada versi ini.
-              </div>
+                                        {/* Name */}
+                                        <div className="lg:col-span-3 space-y-2">
+                                            <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Variable Name</label>
+                                            <input
+                                                type="text"
+                                                value={field.name}
+                                                onChange={(e) => updateField(field.id, { name: e.target.value.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase() })}
+                                                className="w-full bg-gray-50/50 border border-gray-200 focus:border-[#253656] focus:ring-2 focus:ring-[#253656]/10 rounded-xl px-4 py-2.5 font-mono text-sm transition-all"
+                                                placeholder="contoh_field"
+                                            />
+                                        </div>
+
+                                        {/* Type */}
+                                        <div className="lg:col-span-3 space-y-2">
+                                            <label className="text-xs font-black text-gray-400 uppercase tracking-wider">Tipe Input</label>
+                                            <select
+                                                value={field.type}
+                                                onChange={(e) => updateField(field.id, { type: e.target.value as any })}
+                                                className="w-full bg-gray-50/50 border border-gray-200 focus:border-[#253656] focus:ring-2 focus:ring-[#253656]/10 rounded-xl px-4 py-2.5 font-medium transition-all"
+                                            >
+                                                <option value="text">Teks Pendek</option>
+                                                <option value="textarea">Teks Panjang (Textarea)</option>
+                                                <option value="email">Email</option>
+                                                <option value="tel">Telepon / Angka</option>
+                                                <option value="radio">Pilihan Tunggal (Radio)</option>
+                                                <option value="checkbox">Pilihan Ganda (Checkbox)</option>
+                                            </select>
+                                        </div>
+
+                                        {/* Required Checkbox */}
+                                        <div className="lg:col-span-2 space-y-2 flex flex-col justify-end pb-3">
+                                            <label className="flex items-center gap-3 cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={field.required}
+                                                    onChange={(e) => updateField(field.id, { required: e.target.checked })}
+                                                    className="w-5 h-5 rounded-md border-gray-300 text-[#BD272D] focus:ring-[#BD272D]"
+                                                />
+                                                <span className="text-sm font-bold text-[#253656]">Wajib Diisi</span>
+                                            </label>
+                                        </div>
+
+                                        {/* Options for Radio/Checkbox */}
+                                        {(field.type === 'radio' || field.type === 'checkbox') && (
+                                            <div className="lg:col-span-12 mt-2 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                                <label className="text-xs font-black text-gray-500 uppercase tracking-wider mb-2 block">Pilihan Jawaban (Pisahkan dengan koma)</label>
+                                                <input
+                                                    type="text"
+                                                    value={field.options?.join(', ') || ''}
+                                                    onChange={(e) => updateField(field.id, { 
+                                                        options: e.target.value.split(',').map(s => s.trim()).filter(Boolean)
+                                                    })}
+                                                    className="w-full bg-white border border-gray-200 focus:border-[#253656] focus:ring-2 focus:ring-[#253656]/10 rounded-xl px-4 py-2.5 transition-all"
+                                                    placeholder="Pilihan 1, Pilihan 2, Pilihan 3"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+        </AdminLayoutWrapper>
+    );
 }

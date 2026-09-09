@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
@@ -66,5 +67,30 @@ class AdminController extends Controller
         ]);
         
         return back()->with('success', 'Status kehadiran berhasil diubah.');
+    }
+
+    public function formBuilder()
+    {
+        $setting = Setting::firstOrCreate(
+            ['key' => 'guestbook_form_fields'],
+            ['value' => []]
+        );
+
+        return Inertia::render('Admin/FormBuilder', [
+            'formFields' => $setting->value ?? []
+        ]);
+    }
+
+    public function saveFormBuilder(Request $request)
+    {
+        $request->validate([
+            'fields' => 'required|array'
+        ]);
+
+        $setting = Setting::firstOrCreate(['key' => 'guestbook_form_fields']);
+        $setting->value = $request->fields;
+        $setting->save();
+
+        return back()->with('success', 'Form berhasil diperbarui.');
     }
 }

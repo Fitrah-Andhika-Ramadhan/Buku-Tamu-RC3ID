@@ -18,5 +18,12 @@ class Participant extends Model
         'profession',
         'collaboration',
         'is_attending',
+        'social_media',
+        'custom_responses',
+    ];
+
+    protected $casts = [
+        'is_attending' => 'boolean',
+        'custom_responses' => 'array',
     ];
 }

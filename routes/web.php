@@ -20,23 +20,15 @@ Route::get('/install', function () {
     }
 });
 
-Route::get('/check-env', function () {
-    $envPath = base_path('.env');
-    if (file_exists($envPath)) {
-        return "File .env DITEMUKAN di: " . $envPath . "<br><br>Isinya:<br>" . nl2br(file_get_contents($envPath));
-    } else {
-        return "File .env TIDAK DITEMUKAN di: " . $envPath . "<br><br>Tolong buat file .env di folder public_html (sejajar dengan folder app, bootstrap, public).";
-    }
-});
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::put('/peserta/{id}/toggle', [AdminController::class, 'toggle'])->name('admin.peserta.toggle');
     
-    // Add these later if needed:
-    // Route::get('/form', [AdminController::class, 'form'])->name('admin.form');
-    // Route::get('/qr', [AdminController::class, 'qr'])->name('admin.qr');
+    // Form Builder Routes
+    Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
+    Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
 });
 
 require __DIR__.'/auth.php';
