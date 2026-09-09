@@ -1,5 +1,6 @@
 import { Users, CheckCircle2, Clock, ArrowRight, Activity, AlertTriangle, UserCheck } from "lucide-react";
 import { Link } from "@inertiajs/react";
+import AdminLayoutWrapper from "@/Components/AdminLayoutWrapper";
 
 export default function AdminDashboard({
   totalRegistrants = 0,
@@ -95,6 +96,18 @@ export default function AdminDashboard({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
+            {!isDbError && totalRegistrants === 0 && (
+                <div className="bg-white/60 backdrop-blur-2xl p-16 rounded-[2.5rem] border border-white shadow-xl shadow-[#253656]/5 flex flex-col items-center justify-center text-center h-full min-h-[400px]">
+                    <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6 border-8 border-white shadow-sm">
+                        <Users className="w-10 h-10 text-blue-300" />
+                    </div>
+                    <h2 className="text-2xl font-black text-[#253656] tracking-tight mb-2">Belum Ada Data Peserta</h2>
+                    <p className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium max-w-sm leading-relaxed">
+                        Data statistik kehadiran dan grafik komposisi peserta akan muncul di sini secara otomatis setelah ada pengunjung yang mendaftar.
+                    </p>
+                </div>
+            )}
+
             {/* Progress Bar */}
             {!isDbError && totalRegistrants > 0 && (
                 <div className="bg-white/60 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white shadow-xl shadow-[#253656]/5">
@@ -229,3 +242,7 @@ export default function AdminDashboard({
     </div>
   );
 }
+
+AdminDashboard.layout = (page: React.ReactNode) => (
+  <AdminLayoutWrapper>{page}</AdminLayoutWrapper>
+);
