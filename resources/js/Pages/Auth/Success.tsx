@@ -320,10 +320,10 @@ export default function SuccessPage() {
 
               <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                 {[
-                  { value: "2017", label: "Tahun Berdiri", icon: "🏛️", color: "from-blue-50 to-blue-100/50", border: "border-blue-200", text: "text-blue-700" },
-                  { value: "3", label: "Kelompok Riset", icon: "🔬", color: "from-red-50 to-red-100/50", border: "border-red-200", text: "text-[#BD272D]" },
-                  { value: "100+", label: "Publikasi Ilmiah", icon: "📄", color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-200", text: "text-emerald-700" },
-                  { value: "UNPAD", label: "Universitas Padjadjaran", icon: "🎓", color: "from-amber-50 to-amber-100/50", border: "border-amber-200", text: "text-amber-700" },
+                  { value: config.stat_tahun_berdiri || "2017", label: "Tahun Berdiri", icon: "🏛️", color: "from-blue-50 to-blue-100/50", border: "border-blue-200", text: "text-blue-700" },
+                  { value: config.stat_kelompok_riset || "3", label: "Kelompok Riset", icon: "🔬", color: "from-red-50 to-red-100/50", border: "border-red-200", text: "text-[#BD272D]" },
+                  { value: config.stat_publikasi || "100+", label: "Publikasi Ilmiah", icon: "📄", color: "from-emerald-50 to-emerald-100/50", border: "border-emerald-200", text: "text-emerald-700" },
+                  { value: config.stat_nama_univ || "UNPAD", label: "Universitas Padjadjaran", icon: "🎓", color: "from-amber-50 to-amber-100/50", border: "border-amber-200", text: "text-amber-700" },
                 ].map((stat, i) => (
                   <div key={i} className={`bg-gradient-to-br ${stat.color} border ${stat.border} rounded-2xl p-4 md:p-5 text-center hover:scale-105 transition-transform duration-300`}>
                     <div className="text-2xl md:text-3xl mb-2">{stat.icon}</div>

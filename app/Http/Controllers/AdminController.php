@@ -148,6 +148,10 @@ class AdminController extends Controller
         $config = array_merge($currentConfig, $validated);
         $config['tts_enabled'] = filter_var($request->input('tts_enabled', false), FILTER_VALIDATE_BOOLEAN);
         $config['tts_text'] = $request->input('tts_text', '');
+        $config['stat_tahun_berdiri'] = $request->input('stat_tahun_berdiri', '2017');
+        $config['stat_kelompok_riset'] = $request->input('stat_kelompok_riset', '3');
+        $config['stat_publikasi'] = $request->input('stat_publikasi', '100+');
+        $config['stat_nama_univ'] = $request->input('stat_nama_univ', 'UNPAD');
 
         if ($request->hasFile('e_materi_file')) {
             $path = $request->file('e_materi_file')->store('public/materi');

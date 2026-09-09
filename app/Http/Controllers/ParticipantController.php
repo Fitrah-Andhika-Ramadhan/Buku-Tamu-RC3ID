@@ -33,6 +33,7 @@ class ParticipantController extends Controller
             'email'       => $request->input('email', ''),
             'institution' => $request->input('institution', ''),
             'custom_responses' => $customResponses,
+            'is_attending' => true,
         ]);
 
         // Store participant ID in session so success page works even after refresh
