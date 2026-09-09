@@ -84,18 +84,18 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
             </div>
 
             <div className="flex flex-col sm:flex-row justify-center xl:justify-start gap-4 w-full sm:w-auto">
-              <Link href="/register" className="w-full sm:w-auto relative group">
+              <div className="w-full sm:w-auto relative group">
                 {/* Glowing animated shadow */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#BD272D] to-rose-400 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse"></div>
-                <Button className="relative w-full sm:w-auto h-16 md:h-18 px-12 md:px-16 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-[0.15em] uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden shadow-2xl shadow-[#BD272D]/40">
+                <Link href="/register" className="flex items-center justify-center relative w-full sm:w-auto h-16 md:h-18 px-12 md:px-16 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-[0.15em] uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden shadow-2xl shadow-[#BD272D]/40">
                   <span className="relative z-10 flex items-center">
                     Isi Buku Tamu Sekarang
                     <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </span>
                   {/* Shiny sweep effect */}
                   <div className="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
-                </Button>
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
 
