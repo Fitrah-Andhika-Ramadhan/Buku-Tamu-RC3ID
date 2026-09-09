@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList } from "lucide-react";
+import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3 } from "lucide-react";
+import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Link, router } from "@inertiajs/react";
 
 type Participant = {
@@ -21,7 +22,7 @@ export function ParticipantTable({ participants }: { participants: Participant[]
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"all" | "hadir" | "pending">("all");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [viewMode, setViewMode] = useState<"list" | "spreadsheet">("list");
+  const [viewMode, setViewMode] = useState<"list" | "spreadsheet" | "chart">("list");
 
   const toggleRow = (id: string) => {
     setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
@@ -55,6 +56,54 @@ export function ParticipantTable({ participants }: { participants: Participant[]
     });
     return Array.from(keys);
   }, [participants]);
+
+  const attendanceData = [
+    { name: 'Hadir', value: totalHadir, fill: '#10b981' },
+    { name: 'Pending', value: participants.length - totalHadir, fill: '#f59e0b' }
+  ];
+
+  const professionData = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    participants.forEach(p => {
+      const prof = p.profesi || 'Lainnya';
+      counts[prof] = (counts[prof] || 0) + 1;
+    });
+    return Object.entries(counts).map(([name, count]) => ({ name, count })).sort((a,b) => b.count - a.count);
+  }, [participants]);
+
+  const instansiData = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    participants.forEach(p => {
+      const inst = p.instansi || 'Lainnya';
+      counts[inst] = (counts[inst] || 0) + 1;
+    });
+    return Object.entries(counts).map(([name, count]) => ({ name, count })).sort((a,b) => b.count - a.count).slice(0, 10);
+  }, [participants]);
+
+  const customChartsData = React.useMemo(() => {
+    const charts: { question: string; data: { name: string; count: number }[] }[] = [];
+    customHeaders.forEach(header => {
+      const counts: Record<string, number> = {};
+      participants.forEach(p => {
+        if (p.custom_responses && p.custom_responses[header]) {
+          let val = p.custom_responses[header];
+          if (Array.isArray(val)) {
+            val.forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+          } else {
+            counts[String(val)] = (counts[String(val)] || 0) + 1;
+          }
+        }
+      });
+      const uniqueKeys = Object.keys(counts);
+      if (uniqueKeys.length > 0 && uniqueKeys.length <= 15) {
+        charts.push({
+          question: header,
+          data: Object.entries(counts).map(([name, count]) => ({ name, count })).sort((a,b) => b.count - a.count)
+        });
+      }
+    });
+    return charts;
+  }, [participants, customHeaders]);
 
   const handleExportCSV = () => {
     if (filtered.length === 0) {
@@ -126,6 +175,13 @@ export function ParticipantTable({ participants }: { participants: Participant[]
                 title="Tampilan Spreadsheet"
               >
                 <Table className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={() => setViewMode("chart")}
+                className={`p-1.5 rounded-lg transition-colors ${viewMode === "chart" ? "bg-white shadow-sm text-[#253656]" : "text-slate-400 hover:text-slate-600"}`}
+                title="Tampilan Grafik"
+              >
+                <BarChart3 className="w-4 h-4" />
               </button>
             </div>
             
@@ -297,7 +353,7 @@ export function ParticipantTable({ participants }: { participants: Participant[]
             </tbody>
           </table>
         </div>
-      ) : (
+      ) : viewMode === "spreadsheet" ? (
         // --- SPREADSHEET VIEW ---
         <div className="overflow-x-auto w-full max-h-[600px] bg-white">
           <table className="w-full text-left text-sm border-collapse whitespace-nowrap">
@@ -363,6 +419,88 @@ export function ParticipantTable({ participants }: { participants: Participant[]
               )}
             </tbody>
           </table>
+        </div>
+      ) : (
+        // --- CHART VIEW ---
+        <div className="p-6 bg-slate-50/50">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Kehadiran Pie Chart */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center">
+              <h3 className="font-bold text-[#253656] mb-4 w-full">Status Kehadiran</h3>
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={attendanceData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
+                      {attendanceData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex gap-6 mt-2">
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#10b981]"></div><span className="text-sm font-bold text-slate-600">Hadir ({totalHadir})</span></div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div><span className="text-sm font-bold text-slate-600">Pending ({participants.length - totalHadir})</span></div>
+              </div>
+            </div>
+
+            {/* Profesi Bar Chart */}
+            {professionData.length > 0 && (
+              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <h3 className="font-bold text-[#253656] mb-4">Profesi Peserta</h3>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={professionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                      <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                      <Bar dataKey="count" fill="#253656" radius={[4, 4, 0, 0]} barSize={40} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+
+            {/* Instansi Bar Chart */}
+            {instansiData.length > 0 && (
+              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <h3 className="font-bold text-[#253656] mb-4">Instansi (Top 10)</h3>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={instansiData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={60} />
+                      <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                      <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                      <Bar dataKey="count" fill="#BD272D" radius={[4, 4, 0, 0]} barSize={30} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+
+            {/* Custom Questions Charts */}
+            {customChartsData.map((chart, idx) => (
+              <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <h3 className="font-bold text-[#253656] mb-4 truncate" title={chart.question}>{chart.question}</h3>
+                <div className="h-[250px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chart.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={60} />
+                      <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                      <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                      <Bar dataKey="count" fill={['#253656', '#BD272D', '#10b981', '#f59e0b', '#8b5cf6'][idx % 5]} radius={[4, 4, 0, 0]} barSize={40} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            ))}
+
+          </div>
         </div>
       )}
 
