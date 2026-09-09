@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Participant {
+  id               String    @id @default(uuid())
+  id_peserta       String    @unique
+  nama_lengkap     String
+  no_wa            String
+  email            String    @unique
+  instansi         String
+  kota             String
+  kategori         String
+  qr_code          String    @unique
+  is_checked_in    Boolean   @default(false)
+  waktu_check_in   DateTime?
+  petugas_check_in String?
+  is_merch_claimed Boolean   @default(false)
+  waktu_klaim      DateTime?
+  petugas_klaim    String?
+  tes_score        Float?
+  is_tes_passed    Boolean   @default(false)
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+}
+
+model Admin {
+  id         String   @id @default(uuid())
+  username   String   @unique
+  password   String
+  role       String   @default("ADMIN")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
