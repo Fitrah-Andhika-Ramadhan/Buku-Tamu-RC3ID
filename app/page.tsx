@@ -11,12 +11,14 @@ export const revalidate = 0;
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
-      {/* Modern Animated Background */}
-      <div className="fixed inset-0 -z-20 h-full w-full bg-white bg-[linear-gradient(to_right,#f1f3f6_1px,transparent_1px),linear-gradient(to_bottom,#f1f3f6_1px,transparent_1px)] bg-[size:4rem_4rem]">
-        {/* Glow Effects */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-[#BD272D]/5 blur-[120px] animate-[pulse_8s_ease-in-out_infinite]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#253656]/5 blur-[150px] animate-[pulse_12s_ease-in-out_infinite_alternate]"></div>
-        <div className="absolute top-[40%] left-[60%] w-[30vw] h-[30vw] rounded-full bg-purple-500/5 blur-[100px] animate-[pulse_10s_ease-in-out_infinite_alternate-reverse]"></div>
+      {/* Premium Animated Mesh Gradient Background */}
+      <div className="fixed inset-0 -z-20 h-full w-full bg-[#f8fafc]">
+        <div className="absolute inset-0 opacity-30 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]"></div>
+        
+        {/* Dynamic Glowing Orbs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-br from-[#BD272D]/10 to-rose-400/5 blur-[120px] animate-[pulse_10s_ease-in-out_infinite]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tl from-[#253656]/10 to-blue-400/5 blur-[150px] animate-[pulse_15s_ease-in-out_infinite_alternate]"></div>
+        <div className="absolute top-[30%] left-[50%] w-[40vw] h-[40vw] rounded-full bg-gradient-to-tr from-purple-500/5 to-pink-500/5 blur-[100px] animate-[pulse_12s_ease-in-out_infinite_alternate-reverse]"></div>
       </div>
 
       {/* Top Accent Bar */}
@@ -58,8 +60,12 @@ export default function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-5xl">
-              ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span> FOR BETTER INFECTIOUS DISEASE CONTROL
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-6 md:mb-8 tracking-tight w-full max-w-5xl drop-shadow-sm">
+              <span className="block mb-2">ADVANCING</span> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-red-500 to-[#BD272D] animate-gradient-x drop-shadow-md">
+                EARLY DETECTION
+              </span> 
+              <span className="block mt-2 text-3xl sm:text-4xl md:text-5xl opacity-90">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
             
             {/* Glassmorphism Exec Summary Box */}
@@ -80,10 +86,16 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Link href="/register" className="w-full sm:w-auto">
-                <Button className="w-full sm:w-auto h-14 md:h-16 px-6 md:px-10 bg-gradient-to-r from-[#BD272D] to-[#991f24] hover:from-[#a01f25] hover:to-[#7a181c] text-white font-black tracking-wider md:tracking-widest uppercase rounded-full shadow-lg shadow-[#BD272D]/40 hover:shadow-xl hover:shadow-[#BD272D]/50 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg group">
-                  Isi Buku Tamu
-                  <ArrowRight className="ml-2 w-4 h-4 md:ml-3 md:w-5 md:h-5 group-hover:translate-x-2 transition-transform" />
+              <Link href="/register" className="w-full sm:w-auto relative group">
+                {/* Glowing animated shadow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#BD272D] to-rose-400 rounded-full blur opacity-40 group-hover:opacity-70 transition duration-500 group-hover:duration-200 animate-pulse"></div>
+                <Button className="relative w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-widest uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden">
+                  <span className="relative z-10 flex items-center">
+                    Isi Buku Tamu
+                    <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  </span>
+                  {/* Shiny sweep effect */}
+                  <div className="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
                 </Button>
               </Link>
             </div>
@@ -128,51 +140,68 @@ export default function LandingPage() {
               priority: true
             }
           ].map((step, i) => (
-            <div key={i} className={`p-6 border ${step.priority ? 'border-[#BD272D] bg-[#fff5f5]' : 'border-gray-200 bg-white'} relative rounded-xl shadow-sm hover:shadow-md transition-shadow`}>
-              <div className={`w-12 h-12 flex items-center justify-center font-extrabold text-xl mb-4 rounded-lg ${step.priority ? 'bg-[#BD272D] text-white' : 'bg-[#253656] text-white'}`}>
+            <div key={i} className={`p-8 border ${step.priority ? 'border-[#BD272D]/30 bg-gradient-to-br from-[#fff5f5] to-white' : 'border-white/60 bg-white/60 backdrop-blur-xl'} relative rounded-3xl shadow-xl shadow-[#253656]/5 hover:shadow-2xl hover:shadow-[#253656]/10 hover:-translate-y-2 transition-all duration-300 overflow-hidden group`}>
+              {/* Subtle hover gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-[#BD272D]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <div className={`relative w-14 h-14 flex items-center justify-center font-extrabold text-2xl mb-6 rounded-2xl ${step.priority ? 'bg-gradient-to-br from-[#BD272D] to-[#991f24] text-white shadow-lg shadow-[#BD272D]/30' : 'bg-gradient-to-br from-[#253656] to-[#1a263d] text-white shadow-lg shadow-[#253656]/20'}`}>
                 {step.num}
               </div>
-              <h3 className="font-bold text-[#253656] uppercase tracking-wider mb-3 text-sm">
+              <h3 className="relative font-black text-[#253656] uppercase tracking-wider mb-4 text-base">
                 {step.title}
               </h3>
-              <p className="text-[#6C7C98] text-sm leading-relaxed" dangerouslySetInnerHTML={{__html: step.desc}}></p>
+              <p className="relative text-[#6C7C98] text-base leading-relaxed font-medium" dangerouslySetInnerHTML={{__html: step.desc}}></p>
             </div>
           ))}
         </section>
 
         {/* Merchandise Info Section (Centered) */}
-        <div className="flex flex-col items-center mb-20">
+        <div className="flex flex-col items-center mb-20 relative">
+          {/* Background glow for this section */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-full bg-gradient-to-r from-[#BD272D]/5 to-purple-500/5 blur-3xl -z-10 rounded-full"></div>
+          
           <div className="mb-8 w-full max-w-md text-center flex flex-col items-center">
-            <h2 className="text-base font-bold text-[#253656] uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#BD272D]/10 text-[#BD272D] text-xs font-extrabold uppercase tracking-widest mb-3">
+              <Gift className="w-4 h-4" /> Bonus Eksklusif
+            </div>
+            <h2 className="text-2xl font-black text-[#253656] uppercase tracking-tight">
               Syarat Merchandise
             </h2>
-            <div className="w-12 h-1 bg-[#BD272D] mt-2"></div>
           </div>
 
-          {/* Figure/Chart Box Style for Info */}
-          <div className="border border-gray-200 rounded-sm w-full max-w-md shadow-lg shadow-[#253656]/5">
-            <div className="bg-[#253656] p-4 border-b border-gray-200 text-center">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center justify-center gap-2">
-                <Gift className="w-5 h-5 text-[#BD272D]" /> INFO KETENTUAN KLAIM
-              </h3>
-            </div>
-            <div className="p-6 bg-white">
-              <ul className="space-y-4">
-                {[
-                  "Telah mengisi buku tamu",
-                  "Status Hadir (di-scan panitia)",
-                  "Menyelesaikan Kuis / Survey Booth"
-                ].map((req, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-[#253656] font-medium">
-                    <CheckCircle2 className="w-5 h-5 text-[#BD272D] shrink-0" />
-                    <span>{req}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-5 border-t border-gray-100 text-center">
-                <p className="text-xs text-[#6C7C98] italic">
-                  "Merchandise eksklusif diberikan bagi pengunjung booth yang memenuhi kriteria di atas, selama persediaan masih ada."
-                </p>
+          {/* Premium Glassmorphism Box for Info */}
+          <div className="relative group w-full max-w-md">
+            {/* Glowing border effect */}
+            <div className="absolute -inset-0.5 bg-gradient-to-br from-[#BD272D] to-[#253656] rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
+            
+            <div className="relative bg-white/80 backdrop-blur-xl border border-white p-1 rounded-[2rem] shadow-2xl shadow-[#253656]/10 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#253656] to-[#1a263d] p-5 rounded-t-[1.75rem] text-center relative overflow-hidden">
+                {/* Subtle pattern overlay */}
+                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:10px_10px]"></div>
+                <h3 className="relative text-sm font-black text-white uppercase tracking-widest flex items-center justify-center gap-2">
+                  Info Ketentuan Klaim
+                </h3>
+              </div>
+              <div className="p-8">
+                <ul className="space-y-5 relative z-10">
+                  {[
+                    "Telah mengisi buku tamu digital",
+                    "Status Hadir diverifikasi staf",
+                    "Menyelesaikan Kuis / Survey Booth"
+                  ].map((req, i) => (
+                    <li key={i} className="flex items-center gap-4 group/item">
+                      <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-red-50 border border-red-100 shrink-0 group-hover/item:scale-110 transition-transform">
+                        <CheckCircle2 className="w-4 h-4 text-[#BD272D]" />
+                      </div>
+                      <span className="text-sm text-[#253656] font-bold">{req}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-8 pt-6 border-t border-gray-200/60 text-center relative z-10">
+                  <p className="text-xs text-[#6C7C98] font-medium leading-relaxed">
+                    "Merchandise eksklusif diberikan bagi pengunjung booth yang memenuhi kriteria di atas, <strong className="text-[#BD272D]">selama persediaan masih ada</strong>."
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -227,8 +256,12 @@ async function LiveStatsBox() {
       </h3>
 
       {error ? (
-        <div className="py-8 text-center text-sm font-bold text-red-500 uppercase tracking-wider">
-          Gagal Memuat Data
+        <div className="py-10 flex flex-col items-center justify-center text-center">
+          <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4 border border-amber-200 shadow-inner">
+             <Activity className="w-8 h-8 text-amber-500" />
+          </div>
+          <h4 className="font-bold text-[#253656] text-lg mb-2">Sinkronisasi Tertunda</h4>
+          <p className="text-sm text-[#6C7C98] max-w-[200px]">Menunggu koneksi database berhasil dipulihkan.</p>
         </div>
       ) : (
         <div className="space-y-6">
@@ -254,12 +287,17 @@ async function LiveStatsBox() {
         </div>
       )}
       
-      <div className="mt-8 pt-4 border-t border-gray-100 flex items-center gap-2">
-        <span className="relative flex h-2.5 w-2.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-        </span>
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{error ? "Offline" : "Real-time Data"}</span>
+      <div className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="relative flex h-3 w-3">
+            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${error ? 'bg-amber-400' : 'bg-green-400'}`}></span>
+            <span className={`relative inline-flex rounded-full h-3 w-3 ${error ? 'bg-amber-500' : 'bg-green-500'}`}></span>
+          </span>
+          <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{error ? "Offline Mode" : "Real-time Data"}</span>
+        </div>
+        {!error && (
+           <span className="text-[10px] font-bold text-[#253656] bg-gray-100 px-2 py-1 rounded-md uppercase tracking-wider">Live</span>
+        )}
       </div>
     </div>
   );
