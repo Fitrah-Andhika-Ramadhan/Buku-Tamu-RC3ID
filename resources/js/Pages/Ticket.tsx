@@ -35,7 +35,7 @@ export default function Ticket({ participant }: { participant: any }) {
         
         {/* Back button */}
         <div className="flex items-center justify-between print:hidden">
-          <Link href="/" className="flex items-center gap-2 text-sm font-bold text-[#6C7C98] hover:text-[#253656] transition-colors bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-gray-200 shadow-sm">
+          <Link href="/success" className="flex items-center gap-2 text-sm font-bold text-[#6C7C98] hover:text-[#253656] transition-colors bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-gray-200 shadow-sm">
             ← Kembali
           </Link>
         </div>
