@@ -10,6 +10,16 @@ Route::get('/', [ParticipantController::class, 'index'])->name('home');
 Route::post('/register', [ParticipantController::class, 'store'])->name('register.store');
 
 use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Artisan;
+
+Route::get('/install', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return 'Tabel database berhasil dibuat! Silakan hapus route ini nanti. Output: ' . Artisan::output();
+    } catch (\Exception $e) {
+        return 'Gagal: ' . $e->getMessage();
+    }
+});
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
