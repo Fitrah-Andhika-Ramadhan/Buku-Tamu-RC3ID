@@ -119,6 +119,16 @@ export default function Ticket({ participant }: { participant: any }) {
           </button>
         </div>
 
+        {/* Benefit Info */}
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 print:hidden">
+          <p className="text-sm font-bold text-[#253656] mb-2 flex items-center gap-2">
+            💡 Simpan tiket ini!
+          </p>
+          <p className="text-xs text-[#6C7C98] leading-relaxed font-medium">
+            Tiket digital ini dapat digunakan untuk mengakses kembali seluruh benefit Anda, termasuk <strong>klaim merchandise eksklusif</strong>, <strong>unduh e-materi</strong>, dan <strong>verifikasi kehadiran</strong> di booth RC3ID. Simpan link atau screenshot tiket ini agar tetap bisa digunakan kapan saja.
+          </p>
+        </div>
+
       </div>
     </div>
   );
