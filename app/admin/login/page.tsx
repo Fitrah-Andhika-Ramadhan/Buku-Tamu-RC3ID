@@ -81,7 +81,8 @@ export default function AdminLogin() {
                   required
                   className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all outline-none"
                   placeholder="••••••••"
-                  defaultValue="rc3id2026"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
