@@ -12,6 +12,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     show_merchandise: config.show_merchandise ?? true,
     tts_enabled: config.tts_enabled ?? true,
     tts_text: config.tts_text || "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
+    show_live_stats: config.show_live_stats ?? false,
     stat_tahun_berdiri: config.stat_tahun_berdiri || "2017",
     stat_kelompok_riset: config.stat_kelompok_riset || "3",
     stat_publikasi: config.stat_publikasi || "100+",
@@ -34,6 +35,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     data.append("show_merchandise", formData.show_merchandise ? "1" : "0");
     data.append("tts_enabled", formData.tts_enabled ? "1" : "0");
     data.append("tts_text", formData.tts_text || "");
+    data.append("show_live_stats", formData.show_live_stats ? "1" : "0");
     data.append("stat_tahun_berdiri", formData.stat_tahun_berdiri);
     data.append("stat_kelompok_riset", formData.stat_kelompok_riset);
     data.append("stat_publikasi", formData.stat_publikasi);
@@ -224,54 +226,68 @@ export default function SuccessConfig({ config }: { config: any }) {
 
             {/* RC3ID Stats */}
             <div className="space-y-4">
-              <div>
-                <label className="text-sm font-bold text-[#253656] flex items-center gap-2 mb-1">
-                  📊 Statistik RC3ID (tampil di halaman sukses)
+              <div className="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                  <label className="text-sm font-bold text-[#253656] flex items-center gap-2 mb-1">
+                    📊 Tampilkan Statistik RC3ID (Halaman Sukses)
+                  </label>
+                  <p className="text-xs text-slate-500">Tampilkan section statistik RC3ID di bagian bawah halaman sukses.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={formData.show_live_stats}
+                    onChange={(e) => setFormData({ ...formData, show_live_stats: e.target.checked })}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#BD272D]"></div>
                 </label>
-                <p className="text-xs text-slate-400">Pastikan data ini akurat sesuai profil RC3ID UNPAD yang sebenarnya.</p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tahun Berdiri</label>
-                  <input
-                    type="text"
-                    value={formData.stat_tahun_berdiri}
-                    onChange={(e) => setFormData({ ...formData, stat_tahun_berdiri: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
-                    placeholder="2017"
-                  />
+
+              {formData.show_live_stats && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pl-4 border-l-2 border-[#BD272D]/20 mt-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Tahun Berdiri</label>
+                    <input
+                      type="text"
+                      value={formData.stat_tahun_berdiri}
+                      onChange={(e) => setFormData({ ...formData, stat_tahun_berdiri: e.target.value })}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
+                      placeholder="2017"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Kelompok Riset</label>
+                    <input
+                      type="text"
+                      value={formData.stat_kelompok_riset}
+                      onChange={(e) => setFormData({ ...formData, stat_kelompok_riset: e.target.value })}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
+                      placeholder="3"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Publikasi Ilmiah</label>
+                    <input
+                      type="text"
+                      value={formData.stat_publikasi}
+                      onChange={(e) => setFormData({ ...formData, stat_publikasi: e.target.value })}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
+                      placeholder="100+"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nama Universitas</label>
+                    <input
+                      type="text"
+                      value={formData.stat_nama_univ}
+                      onChange={(e) => setFormData({ ...formData, stat_nama_univ: e.target.value })}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
+                      placeholder="UNPAD"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Kelompok Riset</label>
-                  <input
-                    type="text"
-                    value={formData.stat_kelompok_riset}
-                    onChange={(e) => setFormData({ ...formData, stat_kelompok_riset: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
-                    placeholder="3"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Publikasi Ilmiah</label>
-                  <input
-                    type="text"
-                    value={formData.stat_publikasi}
-                    onChange={(e) => setFormData({ ...formData, stat_publikasi: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
-                    placeholder="100+"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nama Universitas</label>
-                  <input
-                    type="text"
-                    value={formData.stat_nama_univ}
-                    onChange={(e) => setFormData({ ...formData, stat_nama_univ: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] transition-all bg-slate-50 text-sm font-bold text-center"
-                    placeholder="UNPAD"
-                  />
-                </div>
-              </div>
+              )}
             </div>
 
           </div>
