@@ -8,25 +8,18 @@ datasource db {
 }
 
 model Participant {
-  id               String    @id @default(uuid())
-  id_peserta       String    @unique
-  nama_lengkap     String
-  no_wa            String
-  email            String    @unique
-  instansi         String
-  kota             String
-  kategori         String
-  qr_code          String    @unique
-  is_checked_in    Boolean   @default(false)
-  waktu_check_in   DateTime?
-  petugas_check_in String?
-  is_merch_claimed Boolean   @default(false)
-  waktu_klaim      DateTime?
-  petugas_klaim    String?
-  tes_score        Float?
-  is_tes_passed    Boolean   @default(false)
-  created_at       DateTime  @default(now())
-  updated_at       DateTime  @updatedAt
+  id                 String    @id @default(uuid())
+  nama_lengkap       String
+  email              String    @unique
+  no_wa              String
+  instansi           String
+  profesi            String
+  peluang_kolaborasi String
+  sosmed_follow      String
+  qr_code            String    @unique
+  status_hadir       Boolean   @default(false)
+  waktu_hadir        DateTime?
+  createdAt          DateTime  @default(now())
 }
 
 model Admin {
