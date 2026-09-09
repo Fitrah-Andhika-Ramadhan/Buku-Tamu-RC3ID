@@ -9,6 +9,7 @@ use Inertia\Inertia;
 Route::get('/', [ParticipantController::class, 'index'])->name('home');
 Route::post('/daftar-tamu', [ParticipantController::class, 'store'])->name('register.store');
 Route::get('/success', [ParticipantController::class, 'success'])->name('register.success');
+Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 
 use App\Http\Controllers\AdminController;
 

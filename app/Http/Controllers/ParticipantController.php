@@ -66,4 +66,19 @@ class ParticipantController extends Controller
             'totalAttending' => $totalAttending,
         ]);
     }
+
+    public function ticket($id)
+    {
+        $participant = Participant::findOrFail($id);
+        
+        return Inertia::render('Ticket', [
+            'participant' => [
+                'id' => $participant->id,
+                'nama_lengkap' => $participant->full_name,
+                'instansi' => $participant->institution,
+                'wa_number' => $participant->wa_number,
+                'is_attending' => $participant->is_attending,
+            ]
+        ]);
+    }
 }

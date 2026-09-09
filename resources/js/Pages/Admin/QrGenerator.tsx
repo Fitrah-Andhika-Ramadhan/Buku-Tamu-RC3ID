@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { Download, Printer, QrCode as QRIcon, Check, RefreshCw } from "lucide-react";
-import QRCode from "react-qr-code";
+import { QRCodeCanvas } from "qrcode.react";
 
 const COLORS_FG = [
   { color: "#253656", label: "Navy" },
@@ -35,28 +35,14 @@ export default function QrGenerator() {
   const qrRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = () => {
-    const svg = qrRef.current?.querySelector("svg");
-    if (!svg) return;
+    const canvas = qrRef.current?.querySelector("canvas");
+    if (!canvas) return;
 
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    const img = new Image();
-    canvas.width = 400;
-    canvas.height = 400;
-
-    img.onload = () => {
-      if (!ctx) return;
-      ctx.fillStyle = bgColor;
-      ctx.fillRect(0, 0, 400, 400);
-      ctx.drawImage(img, 0, 0, 400, 400);
-
-      const link = document.createElement("a");
-      link.download = "qrcode-rc3id.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    };
-    img.src = "data:image/svg+xml;base64," + btoa(svgData);
+    // We can just download the canvas directly
+    const link = document.createElement("a");
+    link.download = "qrcode-rc3id.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
   };
 
   const handlePrint = () => {
@@ -214,20 +200,21 @@ export default function QrGenerator() {
                 <div className="p-6 flex flex-col items-center">
                   {/* QR Code with optional logo overlay */}
                   <div className="relative p-4 rounded-2xl border-2 border-dashed border-slate-200 mb-4" style={{ backgroundColor: bgColor }}>
-                    <QRCode
+                    <QRCodeCanvas
                       value={qrValue || "https://rc3id.unpad.ac.id"}
                       size={200}
                       fgColor={fgColor}
                       bgColor={bgColor}
                       level="H"
+                      imageSettings={
+                        showLogo ? {
+                          src: "/logo.svg",
+                          height: 36,
+                          width: 100,
+                          excavate: true,
+                        } : undefined
+                      }
                     />
-                    {showLogo && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-12 h-12 bg-white rounded-xl p-1.5 shadow-lg border border-slate-100">
-                          <img src="/logo.svg" alt="RC3ID" className="w-full h-full object-contain" />
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   {label && (

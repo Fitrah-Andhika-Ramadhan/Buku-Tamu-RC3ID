@@ -53,6 +53,9 @@ class AdminController extends Controller
                     'email' => $p->email,
                     'wa_number' => $p->wa_number,
                     'createdAt' => $p->created_at,
+                    'custom_responses' => $p->custom_responses,
+                    'collaboration' => $p->collaboration,
+                    'social_media' => $p->social_media,
                 ];
             });
             
