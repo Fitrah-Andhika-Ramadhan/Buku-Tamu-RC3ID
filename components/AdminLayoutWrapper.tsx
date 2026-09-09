@@ -29,7 +29,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-100 z-50 flex flex-col shadow-xl transform transition-transform duration-300 lg:shadow-sm lg:static lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+      <aside className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-100 z-50 flex flex-col shadow-xl transform transition-transform duration-300 lg:shadow-sm lg:sticky lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
         
         {/* Logo */}
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
