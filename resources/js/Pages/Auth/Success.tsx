@@ -103,10 +103,10 @@ export default function SuccessPage() {
       <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center font-['Outfit'] relative z-10">
 
         {/* ===== TOP: Success + Ticket ===== */}
-        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start mb-12">
+        <div className={`w-full max-w-5xl grid grid-cols-1 ${config.show_digital_ticket !== false ? 'lg:grid-cols-2' : 'max-w-2xl mx-auto'} gap-8 md:gap-12 items-start mb-12`}>
           
           {/* Left: Success Message */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className={`flex flex-col items-center ${config.show_digital_ticket !== false ? 'lg:items-start text-center lg:text-left' : 'text-center'}`}>
             <div className="w-24 h-24 bg-green-50 rounded-full border-[6px] border-green-100 flex items-center justify-center mb-6 shadow-inner relative animate-fade-in-up">
                <div className="absolute inset-0 rounded-full border-4 border-green-400 border-dashed animate-[spin_10s_linear_infinite] opacity-30"></div>
                <CheckCircle2 className="w-12 h-12 text-green-500 relative z-10" />
@@ -137,7 +137,7 @@ export default function SuccessPage() {
               </div>
             )}
 
-            <p className="text-base text-[#6C7C98] mb-6 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed max-w-md">
+            <p className={`text-base text-[#6C7C98] mb-6 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed ${config.show_digital_ticket !== false ? 'max-w-md' : 'max-w-lg'}`}>
               Data Anda telah tersimpan. {config.success_message}
             </p>
 
@@ -154,7 +154,7 @@ export default function SuccessPage() {
 
             {/* Merchandise Vertical Card */}
             {config.show_merchandise && (
-              <div className="mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5">
+              <div className={`mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 ${config.show_digital_ticket === false ? 'mx-auto' : ''}`}>
                 <div className="h-48 bg-slate-200 relative overflow-hidden group">
                   <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
@@ -167,7 +167,7 @@ export default function SuccessPage() {
                     <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
                   </h3>
                   <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
-                    Dapatkan merchandise edisi terbatas khusus pengunjung booth dengan menunjukkan tiket digital Anda.
+                    Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
                   </p>
                 </div>
               </div>
@@ -175,7 +175,8 @@ export default function SuccessPage() {
           </div>
 
           {/* Right: Digital Ticket */}
-          <div className="flex flex-col gap-4">
+          {config.show_digital_ticket !== false && (
+            <div className="flex flex-col gap-4">
             {/* Ticket Card */}
             <div id="ticket-printable" ref={ticketRef} className="relative">
               {/* Glow */}
@@ -288,6 +289,7 @@ export default function SuccessPage() {
               )}
             </div>
           </div>
+          )}
         </div>
 
         {/* Old Merchandise Section Removed */}

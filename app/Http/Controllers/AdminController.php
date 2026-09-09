@@ -149,6 +149,7 @@ class AdminController extends Controller
         $config['tts_enabled'] = filter_var($request->input('tts_enabled', false), FILTER_VALIDATE_BOOLEAN);
         $config['tts_text'] = $request->input('tts_text', '');
         $config['show_live_stats'] = filter_var($request->input('show_live_stats', false), FILTER_VALIDATE_BOOLEAN);
+        $config['show_digital_ticket'] = filter_var($request->input('show_digital_ticket', true), FILTER_VALIDATE_BOOLEAN);
         $config['stat_tahun_berdiri'] = $request->input('stat_tahun_berdiri', '2017');
         $config['stat_kelompok_riset'] = $request->input('stat_kelompok_riset', '3');
         $config['stat_publikasi'] = $request->input('stat_publikasi', '100+');

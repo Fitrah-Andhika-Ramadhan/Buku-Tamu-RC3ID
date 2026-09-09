@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
-import { CheckCircle2, FileText, Gift, Save } from "lucide-react";
+import { CheckCircle2, FileText, Gift, Save, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SuccessConfig({ config }: { config: any }) {
@@ -10,6 +10,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     e_materi_type: config.e_materi_type || "url",
     e_materi_url: config.e_materi_url || "",
     show_merchandise: config.show_merchandise ?? true,
+    show_digital_ticket: config.show_digital_ticket ?? true,
     tts_enabled: config.tts_enabled ?? true,
     tts_text: config.tts_text || "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
     show_live_stats: config.show_live_stats ?? false,
@@ -33,6 +34,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     data.append("e_materi_type", formData.e_materi_type);
     data.append("e_materi_url", formData.e_materi_url || "");
     data.append("show_merchandise", formData.show_merchandise ? "1" : "0");
+    data.append("show_digital_ticket", formData.show_digital_ticket ? "1" : "0");
     data.append("tts_enabled", formData.tts_enabled ? "1" : "0");
     data.append("tts_text", formData.tts_text || "");
     data.append("show_live_stats", formData.show_live_stats ? "1" : "0");
@@ -179,6 +181,29 @@ export default function SuccessConfig({ config }: { config: any }) {
                   <p className="text-xs text-slate-400 mt-2">Unggah file PDF atau presentasi langsung ke server.</p>
                 </div>
               )}
+            </div>
+
+            <hr className="border-slate-100" />
+
+            {/* Digital Ticket Toggle */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                  <label className="text-sm font-bold text-[#253656] flex items-center gap-2 mb-1">
+                    <Ticket className="w-4 h-4 text-blue-500" /> Tampilkan Tiket Digital
+                  </label>
+                  <p className="text-xs text-slate-500">Tampilkan kartu tiket digital di sebelah kanan halaman sukses yang bisa di-print/download.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={formData.show_digital_ticket}
+                    onChange={(e) => setFormData({ ...formData, show_digital_ticket: e.target.checked })}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
             </div>
 
             <hr className="border-slate-100" />
