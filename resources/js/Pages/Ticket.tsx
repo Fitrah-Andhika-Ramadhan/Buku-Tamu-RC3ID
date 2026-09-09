@@ -33,6 +33,13 @@ export default function Ticket({ participant }: { participant: any }) {
 
       <div className="relative z-10 w-full max-w-md space-y-6">
         
+        {/* Back button */}
+        <div className="flex items-center justify-between print:hidden">
+          <Link href="/" className="flex items-center gap-2 text-sm font-bold text-[#6C7C98] hover:text-[#253656] transition-colors bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-gray-200 shadow-sm">
+            ← Kembali
+          </Link>
+        </div>
+
         {/* Status Badge */}
         {participant.is_attending && (
           <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl flex items-center justify-center gap-2 shadow-sm print:hidden">
