@@ -10,6 +10,8 @@ export default function SuccessConfig({ config }: { config: any }) {
     e_materi_type: config.e_materi_type || "url",
     e_materi_url: config.e_materi_url || "",
     show_merchandise: config.show_merchandise ?? true,
+    tts_enabled: config.tts_enabled ?? true,
+    tts_text: config.tts_text || "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
     e_materi_file: null as File | null,
     merchandise_photo: null as File | null,
   });
@@ -26,6 +28,8 @@ export default function SuccessConfig({ config }: { config: any }) {
     data.append("e_materi_type", formData.e_materi_type);
     data.append("e_materi_url", formData.e_materi_url || "");
     data.append("show_merchandise", formData.show_merchandise ? "1" : "0");
+    data.append("tts_enabled", formData.tts_enabled ? "1" : "0");
+    data.append("tts_text", formData.tts_text || "");
     if (formData.e_materi_file) {
       data.append("e_materi_file", formData.e_materi_file);
     }
@@ -50,6 +54,60 @@ export default function SuccessConfig({ config }: { config: any }) {
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           <div className="p-6 space-y-6">
             
+            {/* TTS Sound Setting */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between bg-amber-50 p-4 rounded-xl border border-amber-200">
+                <div>
+                  <label className="text-sm font-bold text-[#253656] flex items-center gap-2 mb-1">
+                    🔊 Suara Ucapan Terima Kasih (Text-to-Speech)
+                  </label>
+                  <p className="text-xs text-slate-500">Aktifkan suara yang diputar otomatis setelah pengunjung berhasil mendaftar.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={formData.tts_enabled}
+                    onChange={(e) => setFormData({ ...formData, tts_enabled: e.target.checked })}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                </label>
+              </div>
+
+              {formData.tts_enabled && (
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Teks yang akan diucapkan</label>
+                  <textarea
+                    value={formData.tts_text}
+                    onChange={(e) => setFormData({ ...formData, tts_text: e.target.value })}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 transition-all bg-slate-50 text-sm"
+                    placeholder="Terima kasih sudah mengisi buku tamu kami..."
+                  />
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-slate-400">Teks ini akan dibacakan oleh browser setelah submit berhasil.</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if ('speechSynthesis' in window) {
+                          window.speechSynthesis.cancel();
+                          const u = new SpeechSynthesisUtterance(formData.tts_text);
+                          u.lang = 'id-ID';
+                          u.rate = 0.95;
+                          window.speechSynthesis.speak(u);
+                        }
+                      }}
+                      className="text-xs font-bold text-amber-600 hover:text-amber-700 border border-amber-300 bg-amber-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                    >
+                      🔊 Test Suara
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <hr className="border-slate-100" />
+
             {/* Success Message */}
             <div className="space-y-2">
               <label className="text-sm font-bold text-[#253656] flex items-center gap-2">

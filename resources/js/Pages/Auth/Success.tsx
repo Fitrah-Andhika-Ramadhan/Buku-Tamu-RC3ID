@@ -1,15 +1,53 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import { CheckCircle2, Gift, FileText, Download, ArrowLeft } from "lucide-react";
+import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
+import { useEffect, useState } from "react";
 
 export default function SuccessPage() {
   const { props } = usePage();
-  // We'll pass success_config from Controller later, but for now we can provide defaults
   const config = (props.success_config as any) || {
     success_message: "Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.",
     e_materi_url: "#",
     show_merchandise: true,
+    tts_enabled: true,
+    tts_text: "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
+  };
+
+  const [ttsPlayed, setTtsPlayed] = useState(false);
+  const [ttsPlaying, setTtsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (config.tts_enabled && config.tts_text && 'speechSynthesis' in window) {
+      // Small delay so browser is ready
+      const timer = setTimeout(() => {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(config.tts_text);
+        utterance.lang = 'id-ID';
+        utterance.rate = 0.9;
+        utterance.pitch = 1.05;
+        utterance.volume = 1;
+        utterance.onstart = () => setTtsPlaying(true);
+        utterance.onend = () => { setTtsPlaying(false); setTtsPlayed(true); };
+        utterance.onerror = () => setTtsPlaying(false);
+        window.speechSynthesis.speak(utterance);
+        setTtsPlayed(true);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const replayTts = () => {
+    if ('speechSynthesis' in window && config.tts_text) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(config.tts_text);
+      utterance.lang = 'id-ID';
+      utterance.rate = 0.9;
+      utterance.pitch = 1.05;
+      utterance.onstart = () => setTtsPlaying(true);
+      utterance.onend = () => setTtsPlaying(false);
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   return (
@@ -54,6 +92,21 @@ export default function SuccessPage() {
             <h1 className="text-4xl md:text-5xl font-black text-[#253656] mb-4 tracking-tight drop-shadow-sm">
               Berhasil!
             </h1>
+
+            {/* TTS Indicator */}
+            {config.tts_enabled && (
+              <div className={`flex items-center gap-2 mb-4 px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                ttsPlaying
+                  ? 'bg-amber-100 text-amber-700 border border-amber-300 animate-pulse'
+                  : 'bg-slate-100 text-slate-500 border border-slate-200 cursor-pointer hover:bg-amber-50 hover:text-amber-600'
+              }`}
+                onClick={!ttsPlaying ? replayTts : undefined}
+              >
+                <Volume2 className={`w-4 h-4 ${ttsPlaying ? 'animate-bounce' : ''}`} />
+                {ttsPlaying ? 'Memutar suara...' : 'Putar Ulang Suara'}
+              </div>
+            )}
+
             <p className="text-lg text-[#6C7C98] mb-8 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed max-w-md">
               Data Anda telah tersimpan di sistem kami. {config.success_message}
             </p>

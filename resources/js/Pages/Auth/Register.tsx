@@ -8,6 +8,8 @@ interface FormHeader {
   title_line2: string;
   description: string;
   social_links: SocialLink[];
+  show_banner?: boolean;
+  banner_image_path?: string | null;
 }
 
 export default function Register({ formFields = [], formHeader }: { formFields?: any[], formHeader?: FormHeader }) {
@@ -57,6 +59,12 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                 </header>
 
                 <div className="bg-white/70 backdrop-blur-3xl border border-white shadow-2xl shadow-[#253656]/10 rounded-[2.5rem] overflow-hidden">
+                    {/* Banner Image */}
+                    {header.show_banner && header.banner_image_path && (
+                        <div className="w-full">
+                            <img src={header.banner_image_path} alt="Banner" className="w-full h-auto object-cover" />
+                        </div>
+                    )}
                     {/* Header */}
                     <div className="bg-gradient-to-r from-[#253656] to-[#1a263d] p-8 md:p-12 relative overflow-hidden">
                         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:16px_16px]"></div>

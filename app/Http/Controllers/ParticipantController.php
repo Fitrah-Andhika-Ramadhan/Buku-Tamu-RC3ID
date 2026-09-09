@@ -55,6 +55,8 @@ class ParticipantController extends Controller
             'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
             'e_materi_url' => '#',
             'show_merchandise' => true,
+            'tts_enabled' => true,
+            'tts_text' => 'Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!',
         ];
 
         $totalParticipants = Participant::count();

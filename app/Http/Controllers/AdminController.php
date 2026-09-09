@@ -120,11 +120,13 @@ class AdminController extends Controller
         return Inertia::render('Admin/SuccessConfig', [
             'config' => $setting ? $setting->value : [
                 'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
-                'e_materi_type' => 'url', // url or file
+                'e_materi_type' => 'url',
                 'e_materi_url' => '',
                 'e_materi_file_url' => '',
                 'show_merchandise' => true,
-                'merchandise_photo_url' => '/merchandise.png'
+                'merchandise_photo_url' => '/merchandise.png',
+                'tts_enabled' => true,
+                'tts_text' => 'Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!',
             ]
         ]);
     }
@@ -136,12 +138,16 @@ class AdminController extends Controller
             'e_materi_type' => 'required|string|in:url,file',
             'e_materi_url' => 'nullable|string',
             'show_merchandise' => 'required|boolean',
+            'tts_enabled' => 'nullable|boolean',
+            'tts_text' => 'nullable|string|max:1000',
         ]);
 
         $setting = Setting::where('key', 'success_page_config')->first();
         $currentConfig = $setting ? $setting->value : [];
 
         $config = array_merge($currentConfig, $validated);
+        $config['tts_enabled'] = filter_var($request->input('tts_enabled', false), FILTER_VALIDATE_BOOLEAN);
+        $config['tts_text'] = $request->input('tts_text', '');
 
         if ($request->hasFile('e_materi_file')) {
             $path = $request->file('e_materi_file')->store('public/materi');
@@ -175,18 +181,31 @@ class AdminController extends Controller
                     ['emoji' => '💼', 'label' => 'LinkedIn RC3ID', 'url' => 'https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/'],
                     ['emoji' => '🎥', 'label' => 'YouTube RC3ID', 'url' => 'https://youtube.com/@RC3IDUniversitasPadjadjaran'],
                     ['emoji' => '🐦', 'label' => '@RC3IDUnpad', 'url' => 'https://x.com/RC3IDUnpad'],
-                ]
+                ],
+                'show_banner' => true,
+                'banner_image_path' => null,
             ]
         ]);
     }
 
     public function saveFormHeaderConfig(Request $request)
     {
+        $setting = Setting::where('key', 'form_header_config')->first();
+        $currentConfig = $setting ? $setting->value : [];
+
+        $bannerPath = $currentConfig['banner_image_path'] ?? null;
+        if ($request->hasFile('banner_image')) {
+            $path = $request->file('banner_image')->store('banners', 'public');
+            $bannerPath = '/storage/' . $path;
+        }
+
         $config = [
             'title_line1' => $request->input('title_line1', 'Form Buku Tamu'),
             'title_line2' => $request->input('title_line2', 'Booth RC3ID'),
             'description' => $request->input('description', ''),
             'social_links' => $request->input('social_links', []),
+            'show_banner' => filter_var($request->input('show_banner', true), FILTER_VALIDATE_BOOLEAN),
+            'banner_image_path' => $bannerPath,
         ];
 
         Setting::updateOrCreate(
