@@ -1,6 +1,6 @@
 import { Users, CheckCircle2, Clock, ArrowRight, Activity, AlertTriangle, UserCheck } from "lucide-react";
 import { Link } from "@inertiajs/react";
-import AdminLayoutWrapper from "@/Components/AdminLayoutWrapper";
+import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 
 export default function AdminDashboard({
   totalRegistrants = 0,
