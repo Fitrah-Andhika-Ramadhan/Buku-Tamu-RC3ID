@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useRouter } from "next/navigation";
+import { router } from "@inertiajs/react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -21,7 +21,6 @@ const registerSchema = z.object({
 type RegistrationData = z.infer<typeof registerSchema>;
 
 export function RegistrationForm() {
-  const router = useRouter();
   const [errorMsg, setErrorMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -42,30 +41,22 @@ export function RegistrationForm() {
 
     // Convert array of string to comma separated string for DB
     const payload = {
-      ...data,
-      peluang_kolaborasi: data.peluang_kolaborasi.join(", ")
+      full_name: data.nama_lengkap,
+      wa_number: data.no_wa,
+      email: data.email,
+      institution: data.instansi,
+      profession: data.profesi,
+      collaboration: data.peluang_kolaborasi.join(", "),
+      sosmed_follow: data.sosmed_follow
     };
 
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.error || "Gagal melakukan registrasi");
-      }
-
-      // If success, redirect to the participant card page
-      router.push(`/p/${result.participantId}`);
-    } catch (error: any) {
-      setErrorMsg(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
+    router.post("/register", payload, {
+      onError: (errors) => {
+        setErrorMsg(Object.values(errors).join(", "));
+        setIsSubmitting(false);
+      },
+      onFinish: () => setIsSubmitting(false)
+    });
   };
 
   const peluangOptions = [

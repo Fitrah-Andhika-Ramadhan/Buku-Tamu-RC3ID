@@ -1,14 +1,9 @@
 import { Link } from "@inertiajs/react";
 import { ArrowRight, Ticket, Gift, Clock, FileText, CheckCircle2, Users, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { db } from "@/lib/db";
-
 import { Suspense } from "react";
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-export default function LandingPage() {
+export default function LandingPage({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
   return (
     <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
@@ -115,16 +110,7 @@ export default function LandingPage() {
                {/* Animated border glow */}
                <div className="absolute -inset-0.5 bg-gradient-to-br from-[#BD272D]/30 to-[#253656]/20 rounded-3xl blur opacity-50 group-hover:opacity-100 transition duration-1000"></div>
                
-               <Suspense fallback={
-                 <div className="bg-white/90 backdrop-blur-2xl border border-white/40 rounded-3xl p-8 shadow-2xl shadow-[#253656]/10 relative overflow-hidden min-h-[300px] w-full flex items-center justify-center">
-                   <div className="animate-pulse flex flex-col items-center gap-4">
-                     <Activity className="w-10 h-10 text-[#BD272D]/40" />
-                     <p className="text-sm font-bold text-[#253656]/40 uppercase tracking-widest">Menyiapkan Dashboard...</p>
-                   </div>
-                 </div>
-               }>
-                 <LiveStatsBox />
-               </Suspense>
+               <LiveStatsBox totalParticipants={totalParticipants} totalAttending={totalAttending} />
              </div>
           </div>
 
@@ -252,18 +238,7 @@ export default function LandingPage() {
   );
 }
 
-async function LiveStatsBox() {
-  let totalRegistered = 0;
-  let totalHadir = 0;
-  let error = false;
-
-  try {
-    totalRegistered = await db.participant.count();
-    totalHadir = await db.participant.count({ where: { status_hadir: true } });
-  } catch (err) {
-    error = true;
-  }
-
+function LiveStatsBox({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
   return (
     <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden">
       <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#BD272D]/10 rounded-full blur-2xl"></div>
@@ -273,22 +248,13 @@ async function LiveStatsBox() {
         Live Booth Stats
       </h3>
 
-      {error ? (
-        <div className="py-10 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mb-4 border border-amber-200 shadow-inner">
-             <Activity className="w-8 h-8 text-amber-500" />
-          </div>
-          <h4 className="font-bold text-[#253656] text-lg mb-2">Sinkronisasi Tertunda</h4>
-          <p className="text-sm text-[#6C7C98] max-w-[200px]">Menunggu koneksi database berhasil dipulihkan.</p>
-        </div>
-      ) : (
         <div className="space-y-6">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center shrink-0 border border-blue-100">
                <Users className="w-6 h-6 text-blue-600" />
             </div>
             <div>
-              <p className="text-3xl font-black text-[#253656]">{totalRegistered}</p>
+              <p className="text-3xl font-black text-[#253656]">{totalParticipants}</p>
               <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Total Pendaftar</p>
             </div>
           </div>
@@ -298,24 +264,21 @@ async function LiveStatsBox() {
                <CheckCircle2 className="w-6 h-6 text-green-600" />
             </div>
             <div>
-              <p className="text-3xl font-black text-[#253656]">{totalHadir}</p>
+              <p className="text-3xl font-black text-[#253656]">{totalAttending}</p>
               <p className="text-sm font-medium text-[#6C7C98] uppercase tracking-wider mt-1">Pengunjung Hadir</p>
             </div>
           </div>
         </div>
-      )}
       
       <div className="mt-8 pt-5 border-t border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-3 w-3">
-            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${error ? 'bg-amber-400' : 'bg-green-400'}`}></span>
-            <span className={`relative inline-flex rounded-full h-3 w-3 ${error ? 'bg-amber-500' : 'bg-green-500'}`}></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-green-400"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
           </span>
-          <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">{error ? "Offline Mode" : "Real-time Data"}</span>
+          <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Real-time Data</span>
         </div>
-        {!error && (
            <span className="text-[10px] font-bold text-[#253656] bg-gray-100 px-2 py-1 rounded-md uppercase tracking-wider">Live</span>
-        )}
       </div>
     </div>
   );

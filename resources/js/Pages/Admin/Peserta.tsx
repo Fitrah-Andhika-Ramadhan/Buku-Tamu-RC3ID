@@ -1,21 +1,7 @@
-import { db } from "@/lib/db";
 import { ParticipantTable } from "./ParticipantTable";
 import { AlertTriangle } from "lucide-react";
 
-export const dynamic = 'force-dynamic';
-
-export default async function PesertaPage() {
-  let participants: Awaited<ReturnType<typeof db.participant.findMany>> = [];
-  let isDbError = false;
-
-  try {
-    participants = await db.participant.findMany({
-      orderBy: { createdAt: "desc" }
-    });
-  } catch (err) {
-    console.error("DB error on PesertaPage:", err);
-    isDbError = true;
-  }
+export default function PesertaPage({ participants = [], isDbError = false }: { participants: any[], isDbError: boolean }) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

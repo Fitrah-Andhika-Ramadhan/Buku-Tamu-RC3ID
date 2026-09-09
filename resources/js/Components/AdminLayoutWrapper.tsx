@@ -1,7 +1,6 @@
 "use client";
 
-import { Link } from "@inertiajs/react";
-import { usePathname } from "next/navigation";
+import { Link, usePage } from "@inertiajs/react";
 import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode } from "lucide-react";
 import { useState } from "react";
 
@@ -11,7 +10,7 @@ const navItems = [
 ];
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const { url: pathname } = usePage();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (pathname === "/admin/login") {

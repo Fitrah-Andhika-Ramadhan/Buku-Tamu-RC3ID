@@ -1,29 +1,19 @@
-import { db } from "@/lib/db";
 import { Users, CheckCircle2, Clock, ArrowRight, Activity, AlertTriangle, UserCheck } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@inertiajs/react";
 
-export const dynamic = 'force-dynamic';
-
-export default async function AdminDashboard() {
-  let totalRegistrants = 0;
-  let totalHadir = 0;
-  let totalPending = 0;
-  let recentParticipants: { id: string; nama_lengkap: string; instansi: string; createdAt: Date; status_hadir: boolean }[] = [];
-  let isDbError = false;
-
-  try {
-    totalRegistrants = await db.participant.count();
-    totalHadir = await db.participant.count({ where: { status_hadir: true } });
-    totalPending = totalRegistrants - totalHadir;
-    recentParticipants = await db.participant.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      select: { id: true, nama_lengkap: true, instansi: true, createdAt: true, status_hadir: true },
-    });
-  } catch (err) {
-    console.error("Database connection failed in Admin Dashboard:", err);
-    isDbError = true;
-  }
+export default function AdminDashboard({
+  totalRegistrants = 0,
+  totalHadir = 0,
+  totalPending = 0,
+  recentParticipants = [],
+  isDbError = false
+}: {
+  totalRegistrants: number;
+  totalHadir: number;
+  totalPending: number;
+  recentParticipants: any[];
+  isDbError: boolean;
+}) {
 
   const hadirRate = totalRegistrants > 0 ? Math.round((totalHadir / totalRegistrants) * 100) : 0;
 
