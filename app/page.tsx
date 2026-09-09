@@ -208,9 +208,9 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
+          </div>
         </div>
       </main>
-
       {/* Footer Area */}
       <footer className="bg-[#253656] text-white mt-12 py-10 w-full">
         <div className="w-full px-6 md:px-12 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
