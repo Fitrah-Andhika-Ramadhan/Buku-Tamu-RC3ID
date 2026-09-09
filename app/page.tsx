@@ -52,7 +52,7 @@ export default function LandingPage() {
         <section className="mb-24 mt-8 flex flex-col gap-12 lg:gap-16 w-full relative z-10">
           
           {/* Main Hero Content (Full Width) */}
-          <div className="w-full flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div className="w-full flex flex-col items-center text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#253656]/5 border border-[#253656]/10 text-[#253656] text-xs font-bold uppercase tracking-wider mb-8 shadow-sm backdrop-blur-sm animate-fade-in-up">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
@@ -61,7 +61,7 @@ export default function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-12 tracking-tight w-full drop-shadow-sm">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-12 tracking-tight w-full drop-shadow-sm max-w-5xl mx-auto">
               <span className="block mb-2">ADVANCING</span> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-red-500 to-[#BD272D] animate-gradient-x drop-shadow-md">
                 EARLY DETECTION
@@ -69,11 +69,11 @@ export default function LandingPage() {
               <span className="block mt-2 text-3xl sm:text-4xl md:text-5xl opacity-90">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
 
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
               <Link href="/register" className="w-full sm:w-auto relative group">
                 {/* Glowing animated shadow */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#BD272D] to-rose-400 rounded-full blur opacity-40 group-hover:opacity-70 transition duration-500 group-hover:duration-200 animate-pulse"></div>
-                <Button className="relative w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-widest uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden">
+                <Button className="relative w-full sm:w-auto h-14 md:h-16 px-10 md:px-14 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-widest uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden">
                   <span className="relative z-10 flex items-center">
                     Isi Buku Tamu
                     <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-2 transition-transform" />
@@ -86,7 +86,7 @@ export default function LandingPage() {
           </div>
           
           {/* Live Stats Row */}
-          <div className="w-full mt-4 flex justify-center lg:justify-start">
+          <div className="w-full mt-6 flex justify-center">
              <Suspense fallback={
                <div className="bg-white/80 backdrop-blur-xl border border-gray-200 rounded-3xl p-8 shadow-xl shadow-[#253656]/5 relative overflow-hidden min-h-[200px] w-full max-w-md flex items-center justify-center">
                  <div className="animate-pulse flex flex-col items-center gap-4">
