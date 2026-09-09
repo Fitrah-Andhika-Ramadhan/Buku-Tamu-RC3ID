@@ -65,9 +65,10 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
             </h2>
 
             {/* Description */}
-            <p className="text-lg md:text-xl text-[#6C7C98] leading-relaxed mb-10 max-w-2xl font-medium font-['Plus_Jakarta_Sans']">
-              <strong className="text-[#253656] font-bold">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-bold">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue. Daftarkan diri Anda dan langsung klaim merchandise riset kami!
-            </p>
+              <p className="text-gray-600 text-lg md:text-xl font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <strong className="text-[#253656] font-black">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-black">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue.<br/>
+                Daftarkan diri Anda dan langsung <strong className="text-[#BD272D]">klaim merchandise</strong> riset kami!
+              </p>
 
             {/* Feature Badges */}
             <div className="flex flex-wrap justify-center xl:justify-start gap-4 mb-12">

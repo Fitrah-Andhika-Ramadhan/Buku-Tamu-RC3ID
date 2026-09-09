@@ -57,9 +57,12 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
             </div>
 
             <div className="max-w-3xl mx-auto relative z-10">
-                <Link href="/" className="inline-flex items-center text-sm font-bold text-[#6C7C98] hover:text-[#BD272D] transition-colors uppercase tracking-[0.15em] mb-8">
-                    <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
-                </Link>
+                <header className="w-full flex items-center justify-between mb-8">
+                    <img src="/logo.svg" alt="RC3ID Logo" className="h-8 md:h-10 w-auto" />
+                    <Link href="/" className="inline-flex items-center text-sm font-bold text-[#6C7C98] hover:text-[#BD272D] transition-colors uppercase tracking-[0.15em]">
+                        <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
+                    </Link>
+                </header>
 
                 <div className="bg-white/70 backdrop-blur-3xl border border-white shadow-2xl shadow-[#253656]/10 rounded-[2.5rem] overflow-hidden">
                     {/* Header */}
@@ -70,11 +73,21 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
                             <h1 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight leading-tight">
                                 Form Buku Tamu <br/> <span className="text-[#BD272D] drop-shadow-md">Booth RC3ID</span>
                             </h1>
-                            <p className="text-blue-100 font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl font-medium">
-                                Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!
-                                <br/><br/>
-                                Silakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.
-                            </p>
+                            <div className="text-blue-100 font-['Plus_Jakarta_Sans'] text-sm md:text-base leading-relaxed max-w-3xl font-medium space-y-4">
+                                <p>Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!</p>
+                                <p>Kami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi, yang berfokus pada kelompok kerja Tuberkulosis (TB), HIV, dan DF-ONE (Dengue and other Febrile pathOgen iNfEctions).</p>
+                                <p>Silakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.</p>
+                                
+                                <hr className="border-white/20 my-4" />
+                                
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm text-blue-200">
+                                    <a href="https://rc3id.unpad.ac.id" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🌐 rc3id.unpad.ac.id</a>
+                                    <a href="https://instagram.com/rc3id.unpad" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">📸 @rc3id.unpad</a>
+                                    <a href="https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">💼 LinkedIn RC3ID</a>
+                                    <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🎥 YouTube RC3ID</a>
+                                    <a href="https://x.com/RC3IDUnpad" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white transition-colors">🐦 @RC3IDUnpad</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -142,6 +155,16 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
                                 <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">
                                     {field.label} {field.required && <span className="text-[#BD272D]">*</span>}
                                 </label>
+                                
+                                {field.name === 'sosmed' && (
+                                    <div className="text-sm text-[#6C7C98] font-['Plus_Jakarta_Sans'] mb-4 leading-relaxed bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
+                                        <p className="mb-2">Website: <a href="https://rc3id.unpad.ac.id" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">rc3id.unpad.ac.id</a></p>
+                                        <p className="mb-2">Instagram: <a href="https://instagram.com/rc3id.unpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">@rc3id.unpad</a></p>
+                                        <p className="mb-2">LinkedIn: <a href="https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/" className="text-[#BD272D] font-bold hover:underline break-all" target="_blank" rel="noreferrer">linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/</a></p>
+                                        <p className="mb-2">YouTube: <a href="https://youtube.com/@RC3IDUniversitasPadjadjaran" className="text-[#BD272D] font-bold hover:underline break-all" target="_blank" rel="noreferrer">youtube.com/@RC3IDUniversitasPadjadjaran</a></p>
+                                        <p>X (Twitter): <a href="https://x.com/RC3IDUnpad" className="text-[#BD272D] font-bold hover:underline" target="_blank" rel="noreferrer">x.com/RC3IDUnpad</a></p>
+                                    </div>
+                                )}
 
                                 {field.type === 'textarea' ? (
                                     <textarea
