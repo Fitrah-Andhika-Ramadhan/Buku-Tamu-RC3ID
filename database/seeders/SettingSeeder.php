@@ -23,7 +23,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'id' => '1700000000002',
-                'type' => 'radio',
+                'type' => 'checkbox',
                 'label' => 'Peluang Kolaborasi',
                 'name' => 'kolaborasi',
                 'required' => true,
