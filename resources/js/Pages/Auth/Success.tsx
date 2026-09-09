@@ -293,13 +293,13 @@ export default function SuccessPage() {
         {/* Old Merchandise Section Removed */}
 
         {/* Optional Stats Sections */}
+        {/* Live Stats ALWAYS SHOWN */}
+        <div className="w-full max-w-5xl mb-12">
+          <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
+        </div>
+
         {config.show_live_stats && (
           <>
-            {/* Live Stats */}
-            <div className="w-full max-w-5xl mb-12">
-              <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
-            </div>
-
             {/* RC3ID Info Section */}
             <div className="w-full max-w-5xl mb-16">
               <div className="relative">
