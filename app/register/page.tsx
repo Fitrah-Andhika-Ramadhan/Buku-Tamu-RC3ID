@@ -29,7 +29,7 @@ export default function RegisterPage() {
       </header>
 
       <main className="flex-1 w-full px-4 sm:px-8 pt-12 pb-20 flex flex-col items-center bg-[#f1f3f6]">
-        <div className="w-full max-w-2xl relative z-10">
+        <div className="w-full max-w-4xl relative z-10">
           <RegistrationForm />
         </div>
       </main>
