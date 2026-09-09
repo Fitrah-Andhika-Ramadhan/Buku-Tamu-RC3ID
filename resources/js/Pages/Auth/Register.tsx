@@ -19,7 +19,7 @@ export default function Register({ formFields = [] }: { formFields?: any[] }) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('register'), {
+        post(route('register.store'), {
             onSuccess: () => reset(),
         });
     };
