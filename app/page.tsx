@@ -61,30 +61,13 @@ export default function LandingPage() {
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-6 md:mb-8 tracking-tight w-full drop-shadow-sm">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-[#253656] leading-[1.1] md:leading-[1.05] mb-12 tracking-tight w-full drop-shadow-sm">
               <span className="block mb-2">ADVANCING</span> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-red-500 to-[#BD272D] animate-gradient-x drop-shadow-md">
                 EARLY DETECTION
               </span> 
               <span className="block mt-2 text-3xl sm:text-4xl md:text-5xl opacity-90">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
-            
-            {/* Glassmorphism Exec Summary Box (Ultra Wide) */}
-            <div className="w-full text-left border border-white/40 p-6 sm:p-8 md:p-10 rounded-2xl md:rounded-3xl bg-white/60 backdrop-blur-xl shadow-2xl shadow-[#253656]/5 mb-10 md:mb-12 relative overflow-hidden group hover:border-[#BD272D]/30 transition-all duration-500">
-              <div className="absolute top-0 left-0 w-1.5 md:w-2 h-full bg-gradient-to-b from-[#BD272D] to-[#253656]"></div>
-              
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-[#253656]/10 rounded-lg text-[#253656]">
-                  <FileText className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-[#253656] uppercase text-sm tracking-widest">EXECUTIVE SUMMARY</h3>
-              </div>
-              <p className="text-[#6C7C98] leading-relaxed text-sm md:text-lg max-w-7xl">
-                <strong>RC3ID UNPAD</strong> berpartisipasi penuh dalam <strong>B-IDEAs 2026 Exhibition</strong>. Event ini berfokus pada inovasi dan percepatan deteksi dini untuk pengendalian penyakit menular yang lebih baik.
-                <br/><br/>
-                Selamat datang di <strong className="text-[#BD272D]">Buku Tamu Digital</strong> booth RC3ID. Silakan isi data kunjungan Anda untuk mendapatkan QR Code eksklusif sebagai tiket akses interaktif dan klaim merchandise riset kami.
-              </p>
-            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link href="/register" className="w-full sm:w-auto relative group">
