@@ -51,8 +51,8 @@ export default function LandingPage() {
             RC3ID pada B-IDEAs 2026 Exhibition
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-5xl px-2">
-            ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span><br className="hidden md:block" /> FOR BETTER INFECTIOUS DISEASE CONTROL
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-[#253656] leading-[1.2] md:leading-[1.1] mb-6 md:mb-8 uppercase tracking-tight w-full max-w-6xl px-2 text-balance">
+            ADVANCING <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] to-[#e63940]">EARLY DETECTION</span> FOR BETTER INFECTIOUS DISEASE CONTROL
           </h2>
           
           {/* Glassmorphism Exec Summary Box */}
