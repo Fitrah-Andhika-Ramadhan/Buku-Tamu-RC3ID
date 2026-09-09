@@ -103,10 +103,10 @@ export default function SuccessPage() {
       <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center font-['Outfit'] relative z-10">
 
         {/* ===== TOP: Success + Ticket ===== */}
-        <div className={`w-full max-w-5xl grid grid-cols-1 ${config.show_digital_ticket !== false ? 'lg:grid-cols-2' : 'max-w-2xl mx-auto'} gap-8 md:gap-12 items-start mb-12`}>
+        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start mb-12">
           
           {/* Left: Success Message */}
-          <div className={`flex flex-col items-center ${config.show_digital_ticket !== false ? 'lg:items-start text-center lg:text-left' : 'text-center'}`}>
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left h-full justify-center">
             <div className="w-24 h-24 bg-green-50 rounded-full border-[6px] border-green-100 flex items-center justify-center mb-6 shadow-inner relative animate-fade-in-up">
                <div className="absolute inset-0 rounded-full border-4 border-green-400 border-dashed animate-[spin_10s_linear_infinite] opacity-30"></div>
                <CheckCircle2 className="w-12 h-12 text-green-500 relative z-10" />
@@ -122,22 +122,14 @@ export default function SuccessPage() {
               </p>
             )}
 
-            {/* TTS Indicator */}
+            {/* TTS Indicator (Hidden visually per user request, audio still plays) */}
             {config.tts_enabled && (
-              <div
-                className={`inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  ttsPlaying
-                    ? 'bg-amber-100 text-amber-700 border border-amber-300 animate-pulse'
-                    : 'bg-slate-100 text-slate-500 border border-slate-200 cursor-pointer hover:bg-amber-50 hover:text-amber-600'
-                }`}
-                onClick={!ttsPlaying ? replayTts : undefined}
-              >
-                <Volume2 className={`w-4 h-4 ${ttsPlaying ? 'animate-bounce' : ''}`} />
-                {ttsPlaying ? 'Memutar suara...' : '🔊 Putar Ulang Suara'}
+              <div className="hidden">
+                <Volume2 className="w-4 h-4" />
               </div>
             )}
 
-            <p className={`text-base text-[#6C7C98] mb-6 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed ${config.show_digital_ticket !== false ? 'max-w-md' : 'max-w-lg'}`}>
+            <p className="text-base text-[#6C7C98] mb-6 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed max-w-md">
               Data Anda telah tersimpan. {config.success_message}
             </p>
 
@@ -152,9 +144,9 @@ export default function SuccessPage() {
               </a>
             )}
 
-            {/* Merchandise Vertical Card */}
-            {config.show_merchandise && (
-              <div className={`mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 ${config.show_digital_ticket === false ? 'mx-auto' : ''}`}>
+            {/* Merchandise Vertical Card (Shown on left ONLY if ticket is also shown) */}
+            {config.show_merchandise && config.show_digital_ticket !== false && (
+              <div className="mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5">
                 <div className="h-48 bg-slate-200 relative overflow-hidden group">
                   <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
@@ -174,11 +166,12 @@ export default function SuccessPage() {
             )}
           </div>
 
-          {/* Right: Digital Ticket */}
-          {config.show_digital_ticket !== false && (
-            <div className="flex flex-col gap-4">
-            {/* Ticket Card */}
-            <div id="ticket-printable" ref={ticketRef} className="relative">
+          {/* Right: Digital Ticket or Merchandise (if ticket hidden) */}
+          <div className="flex flex-col gap-4 h-full justify-center w-full max-w-sm mx-auto lg:max-w-none">
+            {config.show_digital_ticket !== false ? (
+              <>
+                {/* Ticket Card */}
+                <div id="ticket-printable" ref={ticketRef} className="relative">
               {/* Glow */}
               <div className="absolute -inset-2 bg-gradient-to-br from-[#BD272D]/30 to-[#253656]/30 rounded-[2rem] blur-xl -z-10"></div>
               
