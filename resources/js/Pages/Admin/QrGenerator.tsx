@@ -268,6 +268,7 @@ export default function QrGenerator() {
                       fgColor={fgColor}
                       bgColor={bgColor}
                       level="H"
+                      includeMargin={true}
                       imageSettings={
                         showLogo ? {
                           src: customLogoUrl || defaultSquareLogo || "/logo.svg",
