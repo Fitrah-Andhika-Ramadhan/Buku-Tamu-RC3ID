@@ -188,31 +188,31 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                         placeholder={`Masukkan ${field.label}`}
                                     />
                                 ) : field.type === 'radio' ? (
-                                    <div className="space-y-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
                                         {field.options?.map((option: string, idx: number) => (
-                                            <label key={idx} className="flex items-start gap-4 cursor-pointer group">
-                                                <div className="relative flex items-center justify-center mt-1">
+                                            <label key={idx} className="flex items-start gap-3 cursor-pointer group">
+                                                <div className="relative flex items-center justify-center mt-0.5">
                                                     <input 
                                                         type="radio" 
                                                         name={field.name} 
                                                         value={option} 
                                                         checked={(data as any)[field.name] === option}
                                                         onChange={e => setData(field.name as any, e.target.value)}
-                                                        className="w-6 h-6 border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
+                                                        className="w-5 h-5 border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
                                                     />
                                                 </div>
-                                                <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
+                                                <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium text-sm leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
                                             </label>
                                         ))}
                                     </div>
                                 ) : field.type === 'checkbox' ? (
-                                    <div className="space-y-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/40 p-6 rounded-2xl border border-gray-100">
                                         {field.options?.map((option: string, idx: number) => {
                                             const currentValues = (data as any)[field.name] ? (data as any)[field.name].split(', ') : [];
                                             const isChecked = currentValues.includes(option);
                                             return (
-                                                <label key={idx} className="flex items-start gap-4 cursor-pointer group">
-                                                    <div className="relative flex items-center justify-center mt-1">
+                                                <label key={idx} className="flex items-start gap-3 cursor-pointer group">
+                                                    <div className="relative flex items-center justify-center mt-0.5">
                                                         <input 
                                                             type="checkbox" 
                                                             name={field.name} 
@@ -225,10 +225,10 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                                                     setData(field.name as any, currentValues.filter((v: string) => v !== option).join(', '));
                                                                 }
                                                             }}
-                                                            className="w-6 h-6 rounded border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
+                                                            className="w-5 h-5 rounded border-2 border-gray-300 text-[#BD272D] focus:ring-[#BD272D] transition-colors cursor-pointer" 
                                                         />
                                                     </div>
-                                                    <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
+                                                    <span className="text-[#6C7C98] font-['Plus_Jakarta_Sans'] font-medium text-sm leading-relaxed group-hover:text-[#253656] transition-colors">{option}</span>
                                                 </label>
                                             )
                                         })}
