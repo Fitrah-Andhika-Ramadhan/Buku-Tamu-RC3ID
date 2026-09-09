@@ -48,6 +48,10 @@ export default function QrGenerator() {
       canvas.height = max;
       const ctx = canvas.getContext("2d");
       if (ctx) {
+        // Fill with white background so it always has a white border in the QR code
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(0, 0, max, max);
+        
         const x = (max - img.width) / 2;
         const y = (max - img.height) / 2;
         ctx.drawImage(img, x, y);
