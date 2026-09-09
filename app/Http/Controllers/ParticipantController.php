@@ -57,8 +57,13 @@ class ParticipantController extends Controller
             'show_merchandise' => true,
         ];
 
+        $totalParticipants = Participant::count();
+        $totalAttending = Participant::where('is_attending', true)->count();
+
         return Inertia::render('Auth/Success', [
-            'success_config' => $config
+            'success_config' => $config,
+            'totalParticipants' => $totalParticipants,
+            'totalAttending' => $totalAttending,
         ]);
     }
 }

@@ -238,7 +238,7 @@ export default function LandingPage({ totalParticipants, totalAttending }: { tot
   );
 }
 
-function LiveStatsBox({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
+export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
   return (
     <div className="bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-10 shadow-2xl shadow-[#253656]/10 relative overflow-hidden font-['Outfit']">
       <div className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-[#BD272D]/20 to-transparent rounded-full blur-2xl"></div>

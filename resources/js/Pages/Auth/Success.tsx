@@ -1,6 +1,7 @@
 import { Link, Head, usePage } from "@inertiajs/react";
 import { CheckCircle2, Gift, FileText, Download, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LiveStatsBox } from "@/Pages/Welcome";
 
 export default function SuccessPage() {
   const { props } = usePage();
@@ -40,7 +41,7 @@ export default function SuccessPage() {
         </Link>
       </header>
 
-      <main className="flex-1 w-full px-4 md:px-8 py-8 flex items-center justify-center font-['Outfit'] relative z-10">
+      <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center justify-center font-['Outfit'] relative z-10">
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           
           {/* Left Column: Success Message & E-Materi */}
@@ -99,7 +100,11 @@ export default function SuccessPage() {
               </div>
             </div>
           )}
-
+        </div>
+        
+        {/* Render Live Stats Box below the success content */}
+        <div className="w-full max-w-4xl mt-12 mb-8">
+          <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
         </div>
       </main>
     </div>
