@@ -206,21 +206,21 @@ export default function SuccessPage() {
       <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center font-['Outfit'] relative z-10">
 
         {/* ===== TOP: Success + Ticket ===== */}
-        <div className={`w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12 ${config.show_digital_ticket !== false ? 'grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start' : 'flex flex-col items-center justify-center max-w-3xl mx-auto'}`}>
+        <div className={`w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12 ${config.show_digital_ticket !== false ? 'grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start' : 'flex flex-col items-center justify-center max-w-4xl 2xl:max-w-5xl mx-auto py-8 lg:py-16'}`}>
           
           {/* Left: Success Message */}
-          <div className={`flex flex-col items-center h-full justify-center ${config.show_digital_ticket !== false ? 'lg:items-start text-center lg:text-left' : 'text-center'}`}>
-            <div className="w-24 h-24 bg-green-50 rounded-full border-[6px] border-green-100 flex items-center justify-center mb-6 shadow-inner relative animate-fade-in-up">
-               <div className="absolute inset-0 rounded-full border-4 border-green-400 border-dashed animate-[spin_10s_linear_infinite] opacity-30"></div>
-               <CheckCircle2 className="w-12 h-12 text-green-500 relative z-10" />
+          <div className={`flex flex-col items-center h-full justify-center w-full ${config.show_digital_ticket !== false ? 'lg:items-start text-center lg:text-left' : 'text-center'}`}>
+            <div className="w-24 h-24 lg:w-32 lg:h-32 2xl:w-40 2xl:h-40 bg-green-50 rounded-full border-[6px] lg:border-[8px] border-green-100 flex items-center justify-center mb-6 lg:mb-8 shadow-inner relative animate-fade-in-up">
+               <div className="absolute inset-0 rounded-full border-4 lg:border-8 border-green-400 border-dashed animate-[spin_10s_linear_infinite] opacity-30"></div>
+               <CheckCircle2 className="w-12 h-12 lg:w-16 lg:h-16 2xl:w-20 2xl:h-20 text-green-500 relative z-10" />
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black text-[#253656] mb-3 tracking-tight drop-shadow-sm">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl font-black text-[#253656] mb-3 lg:mb-4 tracking-tight drop-shadow-sm transition-all duration-300">
               Berhasil! 🎉
             </h1>
 
             {participant && (
-              <p className="text-xl font-bold text-[#BD272D] mb-2">
+              <p className="text-xl md:text-2xl lg:text-3xl 2xl:text-4xl font-bold text-[#BD272D] mb-2 lg:mb-4 transition-all duration-300">
                 Halo, {participant.full_name}!
               </p>
             )}
@@ -232,7 +232,7 @@ export default function SuccessPage() {
               </div>
             )}
 
-            <p className="text-base text-[#6C7C98] mb-6 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed max-w-md">
+            <p className={`text-base md:text-lg lg:text-xl text-[#6C7C98] mb-6 lg:mb-10 font-medium font-['Plus_Jakarta_Sans'] leading-relaxed transition-all duration-300 ${config.show_digital_ticket !== false ? 'max-w-md' : 'max-w-2xl 2xl:max-w-3xl'}`}>
               Data Anda telah tersimpan. {config.success_message}
             </p>
 
@@ -249,19 +249,19 @@ export default function SuccessPage() {
                 }
               }}
             >
-              <Button className="w-full sm:w-auto h-12 px-8 bg-[#253656] hover:bg-[#1a263d] text-white font-bold rounded-xl shadow-xl shadow-[#253656]/20 transition-all duration-300 hover:-translate-y-1">
-                <FileText className="w-5 h-5 mr-3 text-blue-300" />
+              <Button className="w-full sm:w-auto h-12 lg:h-14 px-8 lg:px-10 bg-[#253656] hover:bg-[#1a263d] text-white font-bold text-base lg:text-lg rounded-xl shadow-xl shadow-[#253656]/20 transition-all duration-300 hover:-translate-y-1">
+                <FileText className="w-5 h-5 lg:w-6 lg:h-6 mr-3 text-blue-300" />
                 Unduh E-Materi RC3ID
-                <Download className="w-4 h-4 ml-3 opacity-60" />
+                <Download className="w-4 h-4 lg:w-5 lg:h-5 ml-3 opacity-60" />
               </Button>
             </a>
 
             {/* Games Banner */}
-            <div className="mt-6 w-full sm:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-4 shadow-sm animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-              <div className="text-3xl animate-bounce">🎮</div>
-              <div>
-                <p className="text-sm font-black text-amber-800 uppercase tracking-wider mb-0.5">Jangan Lewatkan!</p>
-                <p className="text-xs font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
+            <div className="mt-6 lg:mt-8 w-full sm:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 lg:p-6 flex items-center justify-center gap-4 shadow-sm animate-fade-in-up transition-all duration-300" style={{ animationDelay: '0.3s' }}>
+              <div className="text-3xl lg:text-4xl animate-bounce">🎮</div>
+              <div className="text-left">
+                <p className="text-sm lg:text-base font-black text-amber-800 uppercase tracking-wider mb-0.5 lg:mb-1">Jangan Lewatkan!</p>
+                <p className="text-xs lg:text-sm font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
               </div>
             </div>
           </div>
