@@ -203,22 +203,12 @@ export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParti
 
         <div className="space-y-8">
           <div className="flex items-center gap-6 group cursor-default">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-blue-50 to-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
-               <Users className="w-8 h-8 text-blue-600 drop-shadow-sm" />
+            <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center shrink-0 border border-rose-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
+               <Users className="w-10 h-10 text-rose-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalParticipants}</p>
-              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Total Pengunjung</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6 group cursor-default">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center shrink-0 border border-rose-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
-               <Gift className="w-8 h-8 text-rose-600 drop-shadow-sm" />
-            </div>
-            <div>
-              <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalAttending}</p>
-              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Hadiah Terklaim</p>
+              <p className="text-5xl md:text-6xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalAttending}</p>
+              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Pengunjung Hadir</p>
             </div>
           </div>
         </div>
