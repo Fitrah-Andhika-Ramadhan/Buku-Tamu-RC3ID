@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { router } from "@inertiajs/react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
-import { CheckCircle2, FileText, Gift, Save, Ticket } from "lucide-react";
+import { CheckCircle2, FileText, Gift, Save, Ticket, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SuccessConfig({ config }: { config: any }) {
@@ -19,7 +19,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     stat_publikasi: config.stat_publikasi || "100+",
     stat_nama_univ: config.stat_nama_univ || "UNPAD",
     e_materi_file: null as File | null,
-    merchandise_photo: null as File | null,
+    merchandise_items: config.merchandise_items || [],
   });
 
   const [saving, setSaving] = useState(false);
@@ -45,8 +45,16 @@ export default function SuccessConfig({ config }: { config: any }) {
     if (formData.e_materi_file) {
       data.append("e_materi_file", formData.e_materi_file);
     }
-    if (formData.merchandise_photo) {
-      data.append("merchandise_photo", formData.merchandise_photo);
+    if (formData.merchandise_items && formData.merchandise_items.length > 0) {
+      formData.merchandise_items.forEach((item: any, index: number) => {
+        data.append(`merchandise_items[${index}][id]`, item.id || String(Date.now() + index));
+        data.append(`merchandise_items[${index}][name]`, item.name || "");
+        data.append(`merchandise_items[${index}][desc]`, item.desc || "");
+        data.append(`merchandise_items[${index}][img]`, item.img || "");
+        if (item.file) {
+          data.append(`merchandise_items[${index}][file]`, item.file);
+        }
+      });
     }
 
     router.post('/admin/success-config', data, {
@@ -229,18 +237,115 @@ export default function SuccessConfig({ config }: { config: any }) {
               </div>
 
               {formData.show_merchandise && (
-                <div className="pl-4 border-l-2 border-[#BD272D]/20">
-                  <label className="text-sm font-bold text-[#253656] block mb-2">Ganti Foto Merchandise</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => setFormData({ ...formData, merchandise_photo: e.target.files ? e.target.files[0] : null })}
-                    className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer"
-                  />
-                  {config.merchandise_photo_url && !formData.merchandise_photo && (
-                    <div className="mt-3">
-                      <p className="text-xs text-slate-400 mb-2">Foto saat ini:</p>
-                      <img src={config.merchandise_photo_url} alt="Current Merch" className="h-20 w-20 object-cover rounded-xl border border-slate-200 shadow-sm" />
+                <div className="pl-4 border-l-2 border-[#BD272D]/20 mt-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-bold text-[#253656]">Daftar Merchandise</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          merchandise_items: [
+                            ...formData.merchandise_items,
+                            { id: String(Date.now()), name: '', desc: '', img: '', file: null }
+                          ]
+                        });
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#BD272D]/10 text-[#BD272D] hover:bg-[#BD272D]/20 transition-colors rounded-lg text-xs font-bold"
+                    >
+                      <Plus className="w-3.5 h-3.5" /> Tambah Item
+                    </button>
+                  </div>
+
+                  {formData.merchandise_items.length === 0 ? (
+                    <div className="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                      <p className="text-sm text-slate-500">Belum ada merchandise yang ditambahkan.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {formData.merchandise_items.map((item: any, index: number) => (
+                        <div key={item.id || index} className="flex gap-4 p-4 bg-white border border-slate-200 rounded-xl shadow-sm relative group">
+                          
+                          <div className="flex-1 space-y-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Nama Merchandise</label>
+                                <input
+                                  type="text"
+                                  value={item.name}
+                                  onChange={(e) => {
+                                    const newItems = [...formData.merchandise_items];
+                                    newItems[index].name = e.target.value;
+                                    setFormData({ ...formData, merchandise_items: newItems });
+                                  }}
+                                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] text-sm"
+                                  placeholder="Contoh: Tote Bag"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Deskripsi Singkat</label>
+                                <input
+                                  type="text"
+                                  value={item.desc}
+                                  onChange={(e) => {
+                                    const newItems = [...formData.merchandise_items];
+                                    newItems[index].desc = e.target.value;
+                                    setFormData({ ...formData, merchandise_items: newItems });
+                                  }}
+                                  className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] text-sm"
+                                  placeholder="Contoh: Tote bag eksklusif..."
+                                />
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Foto Merchandise</label>
+                              <div className="flex items-center gap-3">
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => {
+                                    const file = e.target.files ? e.target.files[0] : null;
+                                    const newItems = [...formData.merchandise_items];
+                                    newItems[index].file = file;
+                                    
+                                    if (file) {
+                                      // Create a temporary local URL for preview
+                                      newItems[index].preview = URL.createObjectURL(file);
+                                    } else {
+                                      newItems[index].preview = null;
+                                    }
+                                    
+                                    setFormData({ ...formData, merchandise_items: newItems });
+                                  }}
+                                  className="flex-1 text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer"
+                                />
+                                
+                                {(item.preview || item.img) && (
+                                  <div className="h-10 w-10 shrink-0 rounded-lg border border-slate-200 overflow-hidden bg-slate-50 flex items-center justify-center">
+                                    <img src={item.preview || item.img} alt="Preview" className="h-full w-full object-contain" />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="pt-6">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newItems = formData.merchandise_items.filter((_: any, i: number) => i !== index);
+                                setFormData({ ...formData, merchandise_items: newItems });
+                              }}
+                              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                              title="Hapus Item"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                          
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

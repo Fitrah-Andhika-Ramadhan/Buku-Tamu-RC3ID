@@ -125,6 +125,11 @@ class AdminController extends Controller
                 'e_materi_file_url' => '',
                 'show_merchandise' => true,
                 'merchandise_photo_url' => '/merchandise.png',
+                'merchandise_items' => [
+                    [ 'id' => '1', 'name' => 'Tote Bag', 'desc' => 'Tote bag eksklusif dengan desain minimalis dan logo RC3ID.', 'img' => '/merchandise.png' ],
+                    [ 'id' => '2', 'name' => 'Mug Keramik', 'desc' => 'Mug keramik berkualitas dengan logo RC3ID, cocok untuk menemanimu.', 'img' => '/merch2.png' ],
+                    [ 'id' => '3', 'name' => 'Lanyard', 'desc' => 'Lanyard eksklusif dengan desain modern dan logo RC3ID.', 'img' => '/merch3.png' ],
+                ],
                 'tts_enabled' => true,
                 'tts_text' => 'Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!',
             ]
@@ -162,11 +167,22 @@ class AdminController extends Controller
             $config['e_materi_file_url'] = '/materi/' . $filename;
         }
 
-        if ($request->hasFile('merchandise_photo')) {
-            $file = $request->file('merchandise_photo');
-            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
-            $file->move(public_path('merchandise'), $filename);
-            $config['merchandise_photo_url'] = '/merchandise/' . $filename;
+        $merchandiseItems = $request->input('merchandise_items');
+        if (is_array($merchandiseItems)) {
+            $processedItems = [];
+            foreach ($merchandiseItems as $index => $item) {
+                // If a new file is uploaded for this item
+                if ($request->hasFile("merchandise_items.{$index}.file")) {
+                    $file = $request->file("merchandise_items.{$index}.file");
+                    $filename = time() . '_' . $index . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+                    $file->move(public_path('merchandise'), $filename);
+                    $item['img'] = '/merchandise/' . $filename;
+                }
+                // Remove the file object from the item array before saving to JSON
+                unset($item['file']);
+                $processedItems[] = $item;
+            }
+            $config['merchandise_items'] = $processedItems;
         }
 
         Setting::updateOrCreate(

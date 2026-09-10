@@ -5,7 +5,16 @@ import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
-const MerchandiseCarousel = () => {
+const MerchandiseCarousel = ({ items = [] }: { items?: any[] }) => {
+  const displayItems = items && items.length > 0 ? items : [
+    { name: 'Tote Bag', img: '/merchandise.png', desc: 'Tote bag eksklusif dengan desain minimalis dan logo RC3ID.' },
+    { name: 'Mug Keramik', img: '/merch2.png', desc: 'Mug keramik berkualitas dengan logo RC3ID, cocok untuk menemanimu.' },
+    { name: 'Lanyard', img: '/merch3.png', desc: 'Lanyard eksklusif dengan desain modern dan logo RC3ID.' }
+  ];
+
+  // Hitung jumlah kolom maksimal berdasarkan jumlah item
+  const cols = Math.min(3, displayItems.length);
+  
   return (
     <div className="w-full bg-white/80 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-[#253656]/10 animate-fade-in-up mt-4 relative overflow-hidden">
       {/* Subtle Glow Background */}
@@ -27,12 +36,8 @@ const MerchandiseCarousel = () => {
       </div>
 
       {/* Grid Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 relative z-10">
-        {[
-          { name: 'Tote Bag', img: '/merchandise.png', desc: 'Tote bag eksklusif dengan desain minimalis dan logo RC3ID.' },
-          { name: 'Mug Keramik', img: '/merch2.png', desc: 'Mug keramik berkualitas dengan logo RC3ID, cocok untuk menemanimu.' },
-          { name: 'Lanyard', img: '/merch3.png', desc: 'Lanyard eksklusif dengan desain modern dan logo RC3ID.' }
-        ].map((item, i) => (
+      <div className={`grid grid-cols-1 md:grid-cols-${cols} gap-6 lg:gap-8 relative z-10 justify-center`}>
+        {displayItems.map((item, i) => (
           <div key={i} className="group relative bg-white rounded-3xl p-6 border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-[#BD272D]/10 transition-all duration-500 hover:-translate-y-2 flex flex-col items-center text-center overflow-hidden">
             {/* Confetti / Sparkles decoration */}
             <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-yellow-400 opacity-0 group-hover:opacity-100 group-hover:animate-ping delay-100"></div>
@@ -400,7 +405,7 @@ export default function SuccessPage() {
         {/* Merchandise Section (Full Width Showcase) */}
         {config.show_merchandise && (
           <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
-            <MerchandiseCarousel />
+            <MerchandiseCarousel items={config.merchandise_items} />
           </div>
         )}
 
