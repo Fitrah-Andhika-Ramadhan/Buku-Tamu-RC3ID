@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [ParticipantController::class, 'index'])->name('home');
-Route::post('/daftar-tamu', [ParticipantController::class, 'store'])->name('register.store');
+// Rate limit: max 10 submissions per minute per IP — prevents spam/flood
+Route::post('/daftar-tamu', [ParticipantController::class, 'store'])->middleware('throttle:10,1')->name('register.store');
 Route::get('/success', [ParticipantController::class, 'success'])->name('register.success');
 Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 

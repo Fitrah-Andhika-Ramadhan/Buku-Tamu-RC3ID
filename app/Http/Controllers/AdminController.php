@@ -213,6 +213,9 @@ class AdminController extends Controller
             ['value' => $config]
         );
 
+        // Flush cached config so frontend sees updated settings immediately
+        \Illuminate\Support\Facades\Cache::forget('success_page_config');
+
         return redirect()->back()->with('success', 'Success page settings saved successfully.');
     }
 
