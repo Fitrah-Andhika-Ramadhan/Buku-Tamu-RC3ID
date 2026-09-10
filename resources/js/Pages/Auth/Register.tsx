@@ -51,8 +51,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
             </div>
 
             <div className="max-w-3xl mx-auto relative z-10">
-                <header className="w-full flex items-center justify-between mb-8">
-                    <img src="/logo.svg" alt="RC3ID Logo" className="h-8 md:h-10 w-auto" />
+                <header className="w-full flex items-center justify-end mb-8">
                     <Link href="/" className="inline-flex items-center text-sm font-bold text-[#6C7C98] hover:text-[#BD272D] transition-colors uppercase tracking-[0.15em]">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
                     </Link>
