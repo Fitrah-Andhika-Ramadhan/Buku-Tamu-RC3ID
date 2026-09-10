@@ -194,7 +194,6 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
                 <ul className="space-y-6 relative z-10">
                   {[
                     "Telah mengisi buku tamu digital",
-                    "Status Hadir diverifikasi staf",
                     "Menyelesaikan Kuis / Survey Booth"
                   ].map((req, i) => (
                     <li key={i} className="flex items-center gap-5 group/item">
