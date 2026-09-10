@@ -45,7 +45,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-[#253656] rounded-full blur-[180px] opacity-15 -z-10 mix-blend-multiply"></div>
 
         {/* Hero Section */}
-        <section className="mb-24 mt-8 md:mt-16 flex flex-col xl:flex-row items-center justify-center gap-16 w-full relative z-10">
+        <section className="mb-24 mt-8 md:mt-16 flex flex-col xl:flex-row items-center justify-between gap-16 w-full max-w-[1600px] mx-auto relative z-10">
           
           {/* Main Hero Content (Left Side) */}
           <div className="flex-[3] flex flex-col items-center xl:items-start text-center xl:text-left w-full min-w-0">
@@ -57,16 +57,16 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
               RC3ID pada B-IDEAs 2026 Exhibition
             </div>
 
-            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black text-[#253656] leading-[1.05] mb-8 tracking-tighter w-full drop-shadow-sm">
-              <span className="block mb-2">ADVANCING</span> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-rose-500 to-[#BD272D] animate-gradient-x drop-shadow-lg">
+            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] 2xl:text-[6.5rem] font-black text-[#253656] leading-[1.05] mb-8 tracking-tighter w-full drop-shadow-sm">
+              <span className="block 2xl:inline-block 2xl:mr-6 mb-2 2xl:mb-0">ADVANCING</span> 
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-rose-500 to-[#BD272D] animate-gradient-x drop-shadow-lg inline-block">
                 EARLY DETECTION
               </span> 
-              <span className="block mt-4 text-2xl sm:text-3xl md:text-[2.5rem] opacity-90 text-[#6C7C98] font-black tracking-tight">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
+              <span className="block mt-4 text-2xl sm:text-3xl md:text-[2.5rem] 2xl:text-[3rem] opacity-90 text-[#6C7C98] font-black tracking-tight">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
             </h2>
 
             {/* Description */}
-              <p className="text-gray-600 text-lg md:text-xl font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <p className="text-gray-600 text-lg md:text-xl 2xl:text-2xl font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl 2xl:max-w-4xl mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                 <strong className="text-[#253656] font-black">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-black">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue.<br/>
                 Daftarkan diri Anda dan langsung <strong className="text-[#BD272D]">klaim merchandise</strong> riset kami!
               </p>
@@ -163,56 +163,6 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
           ))}
         </section>
       </div>
-          {/* Right Column: Syarat Merchandise */}
-          <div className="w-full xl:w-[450px] shrink-0 flex flex-col items-center xl:items-start mb-20 relative">
-          {/* Background glow for this section */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg h-[120%] bg-gradient-to-r from-[#BD272D]/10 to-purple-500/10 blur-[100px] -z-10 rounded-full animate-pulse"></div>
-          
-          <div className="mb-8 w-full text-center xl:text-left flex flex-col items-center xl:items-start">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#BD272D]/10 text-[#BD272D] text-xs font-black uppercase tracking-[0.2em] mb-4">
-              <Gift className="w-4 h-4" /> Bonus Eksklusif
-            </div>
-            <h2 className="text-3xl font-black text-[#253656] uppercase tracking-tight">
-              Syarat Merchandise
-            </h2>
-          </div>
-
-          {/* Premium Glassmorphism Box for Info */}
-          <div className="relative group w-full max-w-md">
-            {/* Glowing border effect */}
-            <div className="absolute -inset-1 bg-gradient-to-br from-[#BD272D] to-[#253656] rounded-[2.5rem] blur-lg opacity-30 group-hover:opacity-60 transition duration-700"></div>
-            
-            <div className="relative bg-white/60 backdrop-blur-2xl border border-white/80 p-1 rounded-[2.5rem] shadow-2xl shadow-[#253656]/15 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#253656] to-[#1a263d] p-6 rounded-t-[2.25rem] text-center relative overflow-hidden">
-                {/* Subtle pattern overlay */}
-                <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:12px_12px]"></div>
-                <h3 className="relative text-base font-black text-white uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-                  Info Ketentuan Klaim
-                </h3>
-              </div>
-              <div className="p-8 md:p-10">
-                <ul className="space-y-6 relative z-10">
-                  {[
-                    "Telah mengisi buku tamu digital",
-                    "Menyelesaikan Kuis / Survey Booth"
-                  ].map((req, i) => (
-                    <li key={i} className="flex items-center gap-5 group/item">
-                      <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-red-50 border border-red-100 shrink-0 group-hover/item:scale-110 group-hover/item:bg-red-100 transition-all duration-300 shadow-sm">
-                        <CheckCircle2 className="w-5 h-5 text-[#BD272D]" />
-                      </div>
-                      <span className="text-base text-[#253656] font-bold font-['Plus_Jakarta_Sans']">{req}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-10 pt-8 border-t border-gray-200/60 text-center relative z-10">
-                  <p className="text-sm text-[#6C7C98] font-medium leading-relaxed font-['Plus_Jakarta_Sans']">
-                    "Merchandise eksklusif diberikan bagi pengunjung booth yang memenuhi kriteria di atas, <strong className="text-[#BD272D] font-bold">selama persediaan masih ada</strong>."
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
         </div>
       </main>
       {/* Footer Area */}
