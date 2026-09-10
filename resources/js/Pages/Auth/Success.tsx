@@ -275,13 +275,15 @@ export default function SuccessPage() {
             </a>
 
             {/* Games Banner */}
-            <div className="mt-6 lg:mt-8 w-full sm:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 lg:p-6 flex items-center justify-center gap-4 shadow-sm animate-fade-in-up transition-all duration-300" style={{ animationDelay: '0.3s' }}>
-              <div className="text-3xl lg:text-4xl animate-bounce">🎮</div>
-              <div className="text-left">
-                <p className="text-sm lg:text-base font-black text-amber-800 uppercase tracking-wider mb-0.5 lg:mb-1">Jangan Lewatkan!</p>
-                <p className="text-xs lg:text-sm font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
+            {config.show_games_banner !== false && (
+              <div className="mt-6 lg:mt-8 w-full sm:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 lg:p-6 flex items-center justify-center gap-4 shadow-sm animate-fade-in-up transition-all duration-300" style={{ animationDelay: '0.3s' }}>
+                <div className="text-3xl lg:text-4xl animate-bounce">🎮</div>
+                <div className="text-left">
+                  <p className="text-sm lg:text-base font-black text-amber-800 uppercase tracking-wider mb-0.5 lg:mb-1">Jangan Lewatkan!</p>
+                  <p className="text-xs lg:text-sm font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right: Digital Ticket */}

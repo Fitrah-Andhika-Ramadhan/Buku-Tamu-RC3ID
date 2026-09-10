@@ -14,6 +14,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     tts_enabled: config.tts_enabled ?? true,
     tts_text: config.tts_text || "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
     show_live_stats: config.show_live_stats ?? false,
+    show_games_banner: config.show_games_banner ?? true,
     stat_tahun_berdiri: config.stat_tahun_berdiri || "2017",
     stat_kelompok_riset: config.stat_kelompok_riset || "3",
     stat_publikasi: config.stat_publikasi || "100+",
@@ -43,6 +44,7 @@ export default function SuccessConfig({ config }: { config: any }) {
     data.append("tts_enabled", formData.tts_enabled ? "1" : "0");
     data.append("tts_text", formData.tts_text || "");
     data.append("show_live_stats", formData.show_live_stats ? "1" : "0");
+    data.append("show_games_banner", formData.show_games_banner ? "1" : "0");
     data.append("stat_tahun_berdiri", formData.stat_tahun_berdiri);
     data.append("stat_kelompok_riset", formData.stat_kelompok_riset);
     data.append("stat_publikasi", formData.stat_publikasi);
@@ -228,7 +230,28 @@ export default function SuccessConfig({ config }: { config: any }) {
 
             <hr className="border-slate-100" />
 
-            {/* Merchandise Toggle & Photo */}
+            {/* Games Banner Toggle */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between bg-amber-50 p-4 rounded-xl border border-amber-200">
+                <div>
+                  <label className="text-sm font-bold text-[#253656] flex items-center gap-2 mb-1">
+                    🎮 Tampilkan Banner Games
+                  </label>
+                  <p className="text-xs text-slate-500">Tampilkan banner "Jangan Lewatkan!" di halaman sukses untuk mengajak pengunjung ikut games.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={formData.show_games_banner}
+                    onChange={(e) => setFormData({ ...formData, show_games_banner: e.target.checked })}
+                  />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                </label>
+              </div>
+            </div>
+
+            <hr className="border-slate-100" />
             <div className="space-y-4">
               <div className="flex items-center justify-between bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <div>
