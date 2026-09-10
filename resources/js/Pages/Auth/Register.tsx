@@ -71,7 +71,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                                 {header.title_line1} {header.title_line1 && header.title_line2 && <br/>} <span className="text-[#BD272D]">{header.title_line2}</span>
                             </h1>
                         )}
-                        <div className="text-gray-600 font-['Plus_Jakarta_Sans'] text-sm md:text-base leading-relaxed max-w-3xl font-medium space-y-4">
+                        <div className="text-slate-700 font-['Outfit'] text-base md:text-lg lg:text-xl leading-relaxed max-w-4xl font-medium space-y-5">
                             {header.description.split('\n\n').map((para: string, i: number) => (
                                 <p key={i}>{para}</p>
                             ))}
