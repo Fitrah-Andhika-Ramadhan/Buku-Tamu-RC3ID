@@ -390,7 +390,7 @@ export default function SuccessPage() {
         {/* Optional Stats Sections */}
         {/* Live Stats ALWAYS SHOWN */}
         <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
-          <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
+          <LiveStatsBox totalAttending={props.totalAttending as number} totalInstitutions={props.totalInstitutions as number || 0} />
         </div>
 
         {config.show_live_stats && (

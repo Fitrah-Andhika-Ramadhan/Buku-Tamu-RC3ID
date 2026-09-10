@@ -68,11 +68,13 @@ class ParticipantController extends Controller
 
         $totalParticipants = Participant::count();
         $totalAttending = Participant::where('is_attending', true)->count();
+        $totalInstitutions = Participant::whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution');
 
         return Inertia::render('Auth/Success', [
             'success_config'    => $config,
             'totalParticipants' => $totalParticipants,
             'totalAttending'    => $totalAttending,
+            'totalInstitutions' => $totalInstitutions,
             'participant'       => $participant ? [
                 'id'          => $participant->id,
                 'full_name'   => $participant->full_name,
