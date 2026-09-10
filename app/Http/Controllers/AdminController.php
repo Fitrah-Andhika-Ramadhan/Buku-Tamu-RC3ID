@@ -88,6 +88,18 @@ class AdminController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        try {
+            $participant = Participant::findOrFail($id);
+            $participant->delete();
+            return back()->with('success', 'Peserta berhasil dihapus.');
+        } catch (\Exception $e) {
+            Log::error('Error deleting participant: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus peserta');
+        }
+    }
+
     public function formBuilder()
     {
         $setting = Setting::firstOrCreate(

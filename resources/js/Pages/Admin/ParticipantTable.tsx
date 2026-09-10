@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3 } from "lucide-react";
+import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2 } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Link, router } from "@inertiajs/react";
 
@@ -23,6 +23,7 @@ export function ParticipantTable({ participants }: { participants: Participant[]
   const [filter, setFilter] = useState<"all" | "hadir" | "pending">("all");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [viewMode, setViewMode] = useState<"list" | "spreadsheet" | "chart">("list");
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const toggleRow = (id: string) => {
     setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
@@ -320,6 +321,38 @@ export function ParticipantTable({ participants }: { participants: Participant[]
                           >
                             <ExternalLink className="w-4 h-4" />
                           </Link>
+
+                          <div className="relative">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setOpenMenuId(openMenuId === p.id ? null : p.id);
+                              }}
+                              className="p-1.5 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors"
+                              title="Lainnya"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </button>
+                            {openMenuId === p.id && (
+                              <>
+                                <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); }} />
+                                <div className="absolute right-0 top-full mt-1 w-36 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-50">
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setOpenMenuId(null);
+                                      if (confirm('Apakah Anda yakin ingin menghapus peserta ini? Aksi ini tidak dapat dibatalkan.')) {
+                                        router.delete(`/admin/peserta/${p.id}`, { preserveScroll: true });
+                                      }
+                                    }}
+                                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium flex items-center gap-2 transition-colors"
+                                  >
+                                    <Trash2 className="w-4 h-4" /> Hapus
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </td>
                     </tr>
