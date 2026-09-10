@@ -65,31 +65,27 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                         </div>
                     )}
                     {/* Header Text Section */}
-                    <div className="bg-white p-8 md:p-12 relative overflow-hidden border-b border-gray-100">
-                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,#6C7C98_1px,transparent_1px)] bg-[size:16px_16px]"></div>
-                        <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#BD272D]/10 rounded-full blur-2xl"></div>
-                        <div className="relative z-10">
-                            {(header.title_line1 || header.title_line2) && (
-                                <h1 className="text-3xl md:text-4xl font-black text-[#253656] mb-4 tracking-tight leading-tight">
-                                    {header.title_line1} {header.title_line1 && header.title_line2 && <br/>} <span className="text-[#BD272D]">{header.title_line2}</span>
-                                </h1>
+                    <div className="p-8 md:px-12 md:pt-12 md:pb-4 relative z-10">
+                        {(header.title_line1 || header.title_line2) && (
+                            <h1 className="text-3xl md:text-4xl font-black text-[#253656] mb-4 tracking-tight leading-tight">
+                                {header.title_line1} {header.title_line1 && header.title_line2 && <br/>} <span className="text-[#BD272D]">{header.title_line2}</span>
+                            </h1>
+                        )}
+                        <div className="text-gray-600 font-['Plus_Jakarta_Sans'] text-sm md:text-base leading-relaxed max-w-3xl font-medium space-y-4">
+                            {header.description.split('\n\n').map((para: string, i: number) => (
+                                <p key={i}>{para}</p>
+                            ))}
+                            
+                            {header.social_links.length > 0 && (
+                                <>
+                                    <hr className="border-gray-200/60 my-6" />
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm text-[#6C7C98]">
+                                        {header.social_links.map((link: SocialLink, i: number) => (
+                                            <a key={i} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-[#BD272D] transition-colors">{link.emoji} {link.label}</a>
+                                        ))}
+                                    </div>
+                                </>
                             )}
-                            <div className="text-gray-600 font-['Plus_Jakarta_Sans'] text-sm md:text-base leading-relaxed max-w-3xl font-medium space-y-4">
-                                {header.description.split('\n\n').map((para: string, i: number) => (
-                                    <p key={i}>{para}</p>
-                                ))}
-                                
-                                {header.social_links.length > 0 && (
-                                    <>
-                                        <hr className="border-gray-200 my-4" />
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs md:text-sm text-[#6C7C98]">
-                                            {header.social_links.map((link: SocialLink, i: number) => (
-                                                <a key={i} href={link.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-[#BD272D] transition-colors">{link.emoji} {link.label}</a>
-                                            ))}
-                                        </div>
-                                    </>
-                                )}
-                            </div>
                         </div>
                     </div>
 
