@@ -15,18 +15,32 @@ Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 use App\Http\Controllers\AdminController;
 
 Route::get('/install', function () {
+    $output = [];
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return 'Tabel database MYSQL berhasil dibuat! Output: ' . \Illuminate\Support\Facades\Artisan::output();
+        $output[] = '✅ Migrate: ' . trim(\Illuminate\Support\Facades\Artisan::output());
     } catch (\Exception $e) {
-        return 'Gagal: ' . $e->getMessage();
+        $output[] = '❌ Migrate gagal: ' . $e->getMessage();
     }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize');
+        $output[] = '✅ Optimize: Route & config cache berhasil dikompilasi.';
+    } catch (\Exception $e) {
+        $output[] = '⚠️ Optimize: ' . $e->getMessage();
+    }
+    return '<pre style="font-family:monospace;padding:2rem;background:#f0f9ff;border-radius:8px">'
+        . '<b>🚀 Setup RC3ID Selesai!</b>' . "\n\n"
+        . implode("\n", $output)
+        . "\n\n<i>Halaman ini bisa ditutup.</i></pre>";
 });
 
 Route::get('/bersih-cache', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        return redirect('/success')->with('message', 'Cache berhasil dibersihkan!');
+        $output = trim(\Illuminate\Support\Facades\Artisan::output());
+        return '<pre style="font-family:monospace;padding:2rem;background:#fff7ed;border-radius:8px">'
+            . '🧹 Cache berhasil dibersihkan!' . "\n\n" . $output
+            . '</pre>';
     } catch (\Exception $e) {
         return 'Gagal: ' . $e->getMessage();
     }
