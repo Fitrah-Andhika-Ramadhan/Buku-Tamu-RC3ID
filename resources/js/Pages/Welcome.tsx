@@ -6,7 +6,7 @@ import { QRCodeCanvas } from "qrcode.react";
 
 export default function LandingPage({ totalParticipants, totalAttending, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, showWelcomeQr?: boolean }) {
   return (
-    <div className="min-h-screen bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
+    <div className="min-h-screen w-full bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
       <div className="fixed inset-0 -z-20 h-full w-full bg-[#f8fafc]">
         <div className="absolute inset-0 opacity-30 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]"></div>
