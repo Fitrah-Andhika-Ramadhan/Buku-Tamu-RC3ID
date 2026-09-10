@@ -22,6 +22,15 @@ Route::get('/install', function () {
     }
 });
 
+Route::get('/bersih-cache', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+        return redirect('/success')->with('message', 'Cache berhasil dibersihkan!');
+    } catch (\Exception $e) {
+        return 'Gagal: ' . $e->getMessage();
+    }
+});
+
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
