@@ -6,7 +6,7 @@ import { QRCodeCanvas } from "qrcode.react";
 
 export default function LandingPage({ totalParticipants, totalAttending, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, showWelcomeQr?: boolean }) {
   return (
-    <div className="min-h-screen w-full bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
+    <div className="min-h-screen flex flex-col w-full bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
       <div className="fixed inset-0 -z-20 h-full w-full bg-[#f8fafc]">
         <div className="absolute inset-0 opacity-30 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]"></div>
@@ -39,7 +39,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
         </div>
       </header>
 
-      <main className="relative w-full px-4 md:px-8 lg:px-12 py-12 overflow-hidden font-['Outfit']">
+      <main className="flex-grow relative w-full px-4 md:px-8 lg:px-12 py-12 overflow-hidden font-['Outfit']">
         {/* Decorative Background Blobs for Eye Catching Effect */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#BD272D] rounded-full blur-[180px] opacity-25 -z-10 animate-pulse mix-blend-multiply"></div>
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-[#253656] rounded-full blur-[180px] opacity-15 -z-10 mix-blend-multiply"></div>
@@ -166,7 +166,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
         </div>
       </main>
       {/* Footer Area */}
-      <footer className="bg-gradient-to-b from-[#253656] to-[#1a263d] text-white mt-12 py-12 w-full font-['Outfit'] border-t border-white/10">
+      <footer className="mt-auto bg-gradient-to-b from-[#253656] to-[#1a263d] text-white py-12 w-full font-['Outfit'] border-t border-white/10">
         <div className="w-full px-6 md:px-12 lg:px-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <p className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-2">
