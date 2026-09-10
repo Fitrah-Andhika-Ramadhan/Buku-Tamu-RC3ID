@@ -244,6 +244,15 @@ export default function SuccessPage() {
               </Button>
             </a>
 
+            {/* Games Banner */}
+            <div className="mt-6 w-full sm:w-auto bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-4 flex items-center gap-4 shadow-sm animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+              <div className="text-3xl animate-bounce">🎮</div>
+              <div>
+                <p className="text-sm font-black text-amber-800 uppercase tracking-wider mb-0.5">Jangan Lewatkan!</p>
+                <p className="text-xs font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
+              </div>
+            </div>
+
             {/* Merchandise Vertical Card (Shown on left ONLY if ticket is also shown) */}
             {config.show_merchandise && config.show_digital_ticket !== false && (
               <div className="mt-8">

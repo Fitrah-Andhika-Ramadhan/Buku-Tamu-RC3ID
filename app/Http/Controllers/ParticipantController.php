@@ -12,6 +12,7 @@ class ParticipantController extends Controller
     {
         $totalParticipants = Participant::count();
         $totalAttending = Participant::where('is_attending', true)->count();
+        $totalInstitutions = Participant::whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution');
 
         $setting = \App\Models\Setting::where('key', 'form_header_config')->first();
         $config = $setting ? $setting->value : [];
@@ -20,6 +21,7 @@ class ParticipantController extends Controller
         return Inertia::render('Welcome', [
             'totalParticipants' => $totalParticipants,
             'totalAttending' => $totalAttending,
+            'totalInstitutions' => $totalInstitutions,
             'showWelcomeQr' => $showWelcomeQr,
         ]);
     }

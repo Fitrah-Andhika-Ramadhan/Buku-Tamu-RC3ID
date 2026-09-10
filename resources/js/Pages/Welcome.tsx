@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Suspense, useState, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
-export default function LandingPage({ totalParticipants, totalAttending, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, showWelcomeQr?: boolean }) {
+export default function LandingPage({ totalParticipants, totalAttending, totalInstitutions, showWelcomeQr = true }: { totalParticipants: number, totalAttending: number, totalInstitutions: number, showWelcomeQr?: boolean }) {
   return (
     <div className="min-h-screen flex flex-col w-full bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
@@ -113,7 +113,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
                {showWelcomeQr ? (
                  <WelcomeQrBox />
                ) : (
-                 <LiveStatsBox totalParticipants={totalParticipants} totalAttending={totalAttending} />
+                 <LiveStatsBox totalAttending={totalAttending} totalInstitutions={totalInstitutions} />
                )}
              </div>
           </div>
@@ -191,7 +191,7 @@ export default function LandingPage({ totalParticipants, totalAttending, showWel
   );
 }
 
-export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParticipants: number, totalAttending: number }) {
+export function LiveStatsBox({ totalAttending, totalInstitutions }: { totalAttending: number, totalInstitutions: number }) {
   return (
     <div className="bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-10 shadow-2xl shadow-[#253656]/10 relative overflow-hidden font-['Outfit']">
       <div className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-[#BD272D]/20 to-transparent rounded-full blur-2xl"></div>
@@ -203,12 +203,22 @@ export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParti
 
         <div className="space-y-8">
           <div className="flex items-center gap-6 group cursor-default">
-            <div className="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center shrink-0 border border-rose-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
-               <Users className="w-10 h-10 text-rose-600 drop-shadow-sm" />
+            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center shrink-0 border border-rose-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
+               <Users className="w-8 h-8 text-rose-600 drop-shadow-sm" />
             </div>
             <div>
-              <p className="text-5xl md:text-6xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalAttending}</p>
+              <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalAttending}</p>
               <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Pengunjung Hadir</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6 group cursor-default">
+            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-blue-50 to-blue-100/50 flex items-center justify-center shrink-0 border border-blue-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
+               <FileText className="w-8 h-8 text-blue-600 drop-shadow-sm" />
+            </div>
+            <div>
+              <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalInstitutions}</p>
+              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Instansi Terlibat</p>
             </div>
           </div>
         </div>
