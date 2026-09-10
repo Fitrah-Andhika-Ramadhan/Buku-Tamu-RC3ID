@@ -218,7 +218,7 @@ export function LiveStatsBox({ totalAttending, totalInstitutions }: { totalAtten
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalInstitutions}</p>
-              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Instansi Terlibat</p>
+              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Instansi Terdaftar</p>
             </div>
           </div>
         </div>

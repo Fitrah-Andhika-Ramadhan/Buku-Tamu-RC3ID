@@ -179,6 +179,14 @@ class AdminController extends Controller
             $config['e_materi_file_url'] = '/materi/' . $filename;
         }
 
+        $config['merchandise_display_mode'] = $request->input('merchandise_display_mode', 'carousel');
+        if ($request->hasFile('merchandise_photo')) {
+            $file = $request->file('merchandise_photo');
+            $filename = time() . '_single_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path('merchandise'), $filename);
+            $config['merchandise_photo_url'] = '/merchandise/' . $filename;
+        }
+
         $merchandiseItems = $request->input('merchandise_items');
         if (is_array($merchandiseItems)) {
             $processedItems = [];

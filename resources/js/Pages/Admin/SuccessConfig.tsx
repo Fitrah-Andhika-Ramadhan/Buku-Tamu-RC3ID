@@ -19,6 +19,9 @@ export default function SuccessConfig({ config }: { config: any }) {
     stat_publikasi: config.stat_publikasi || "100+",
     stat_nama_univ: config.stat_nama_univ || "UNPAD",
     e_materi_file: null as File | null,
+    merchandise_display_mode: config.merchandise_display_mode || "carousel",
+    merchandise_photo_url: config.merchandise_photo_url || "",
+    merchandise_photo: null as File | null,
     merchandise_items: config.merchandise_items || [],
   });
 
@@ -44,6 +47,11 @@ export default function SuccessConfig({ config }: { config: any }) {
     data.append("stat_nama_univ", formData.stat_nama_univ);
     if (formData.e_materi_file) {
       data.append("e_materi_file", formData.e_materi_file);
+    }
+    
+    data.append("merchandise_display_mode", formData.merchandise_display_mode);
+    if (formData.merchandise_photo) {
+      data.append("merchandise_photo", formData.merchandise_photo);
     }
     if (formData.merchandise_items && formData.merchandise_items.length > 0) {
       formData.merchandise_items.forEach((item: any, index: number) => {
@@ -238,31 +246,89 @@ export default function SuccessConfig({ config }: { config: any }) {
 
               {formData.show_merchandise && (
                 <div className="pl-4 border-l-2 border-[#BD272D]/20 mt-4 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-[#253656]">Daftar Merchandise</label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          merchandise_items: [
-                            ...formData.merchandise_items,
-                            { id: String(Date.now()), name: '', desc: '', img: '', file: null }
-                          ]
-                        });
-                      }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#BD272D]/10 text-[#BD272D] hover:bg-[#BD272D]/20 transition-colors rounded-lg text-xs font-bold"
-                    >
-                      <Plus className="w-3.5 h-3.5" /> Tambah Item
-                    </button>
+                  <div className="space-y-2 mb-6">
+                    <label className="text-sm font-bold text-[#253656]">Pilih Mode Tampilan</label>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <label className={`flex-1 border rounded-xl p-4 cursor-pointer transition-all ${formData.merchandise_display_mode === 'carousel' ? 'border-[#BD272D] bg-[#BD272D]/5 shadow-sm' : 'border-slate-200 hover:border-slate-300'}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <input 
+                            type="radio" 
+                            name="merch_mode" 
+                            checked={formData.merchandise_display_mode === 'carousel'}
+                            onChange={() => setFormData({...formData, merchandise_display_mode: 'carousel'})}
+                            className="text-[#BD272D] focus:ring-[#BD272D]"
+                          />
+                          <span className="font-bold text-sm text-[#253656]">List Dinamis (Carousel)</span>
+                        </div>
+                        <p className="text-xs text-slate-500 ml-6">Upload beberapa foto terpisah. Halaman akan menyesuaikan grid otomatis.</p>
+                      </label>
+                      <label className={`flex-1 border rounded-xl p-4 cursor-pointer transition-all ${formData.merchandise_display_mode === 'single' ? 'border-[#BD272D] bg-[#BD272D]/5 shadow-sm' : 'border-slate-200 hover:border-slate-300'}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <input 
+                            type="radio" 
+                            name="merch_mode" 
+                            checked={formData.merchandise_display_mode === 'single'}
+                            onChange={() => setFormData({...formData, merchandise_display_mode: 'single'})}
+                            className="text-[#BD272D] focus:ring-[#BD272D]"
+                          />
+                          <span className="font-bold text-sm text-[#253656]">Satu Gambar Klasik</span>
+                        </div>
+                        <p className="text-xs text-slate-500 ml-6">Satu gambar besar menyamping dengan desain klasik bawaan.</p>
+                      </label>
+                    </div>
                   </div>
 
-                  {formData.merchandise_items.length === 0 ? (
-                    <div className="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                      <p className="text-sm text-slate-500">Belum ada merchandise yang ditambahkan.</p>
+                  {formData.merchandise_display_mode === 'single' ? (
+                    <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                      <label className="text-sm font-bold text-[#253656]">Upload Foto Merchandise (Satu Gambar)</label>
+                      <div className="flex items-center gap-4">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files ? e.target.files[0] : null;
+                            setFormData({ ...formData, merchandise_photo: file });
+                          }}
+                          className="flex-1 text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#253656]/5 file:text-[#253656] hover:file:bg-[#253656]/10 cursor-pointer"
+                        />
+                        {(formData.merchandise_photo || formData.merchandise_photo_url) && (
+                          <div className="h-16 w-16 shrink-0 rounded-xl border border-slate-200 overflow-hidden bg-white flex items-center justify-center">
+                            <img 
+                              src={formData.merchandise_photo ? URL.createObjectURL(formData.merchandise_photo) : formData.merchandise_photo_url} 
+                              alt="Preview" 
+                              className="h-full w-full object-contain" 
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <>
+                      <div className="flex items-center justify-between mt-2">
+                        <label className="text-sm font-bold text-[#253656]">Daftar Merchandise</label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              merchandise_items: [
+                                ...formData.merchandise_items,
+                                { id: String(Date.now()), name: '', desc: '', img: '', file: null }
+                              ]
+                            });
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 bg-[#BD272D]/10 text-[#BD272D] hover:bg-[#BD272D]/20 transition-colors rounded-lg text-xs font-bold"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> Tambah Item
+                        </button>
+                      </div>
+
+                      {formData.merchandise_items.length === 0 ? (
+                        <div className="text-center py-6 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                          <p className="text-sm text-slate-500">Belum ada merchandise yang ditambahkan.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
                       {formData.merchandise_items.map((item: any, index: number) => (
                         <div key={item.id || index} className="flex gap-4 p-4 bg-white border border-slate-200 rounded-xl shadow-sm relative group">
                           
@@ -348,7 +414,9 @@ export default function SuccessConfig({ config }: { config: any }) {
                       ))}
                     </div>
                   )}
-                </div>
+                </>
+              )}
+            </div>
               )}
             </div>
 

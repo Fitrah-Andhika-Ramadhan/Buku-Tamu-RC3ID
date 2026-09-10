@@ -403,7 +403,33 @@ export default function SuccessPage() {
         </div>
 
         {/* Merchandise Section (Full Width Showcase) */}
-        {config.show_merchandise && (
+        {config.show_merchandise && config.merchandise_display_mode === 'single' && (
+          <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
+            <div className="bg-white/80 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-[#253656]/10 flex flex-col md:flex-row gap-8 items-center font-['Outfit']">
+              <div className="md:w-1/2">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#BD272D]/10 text-[#BD272D] text-xs font-black uppercase tracking-[0.2em] mb-4">
+                  <Gift className="w-4 h-4" /> Hadiah Eksklusif Untuk Anda
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-[#253656] tracking-tight mb-4">
+                  Koleksi Merchandise
+                </h3>
+                <p className="text-[#6C7C98] font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+                  Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. 
+                  Silakan tunjukkan halaman ini ke staf kami.
+                </p>
+              </div>
+              <div className="md:w-1/2 relative">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#BD272D]/20 to-transparent blur-2xl rounded-full"></div>
+                <img 
+                  src={config.merchandise_photo_url || "/merchandise.png"} 
+                  alt="Merchandise" 
+                  className="w-full max-w-md mx-auto relative z-10 drop-shadow-2xl hover:scale-105 transition-transform duration-500 rounded-3xl" 
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {config.show_merchandise && config.merchandise_display_mode !== 'single' && (
           <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
             <MerchandiseCarousel items={config.merchandise_items} />
           </div>
