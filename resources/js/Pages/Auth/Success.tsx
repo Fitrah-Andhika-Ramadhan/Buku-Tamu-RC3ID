@@ -3,7 +3,7 @@ import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Pri
 import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LabelList, Cell } from "recharts";
 
 const MerchandiseCarousel = ({ items = [] }: { items?: any[] }) => {
   const displayItems = items && items.length > 0 ? items : [
@@ -423,33 +423,48 @@ export default function SuccessPage() {
                 <span className="w-2 h-8 rounded-full bg-[#BD272D] inline-block"></span>
                 Instansi (Top 10)
               </h3>
-              <div className="h-[350px] w-full">
+              <div className="h-[450px] w-full mt-4">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={topInstitutionsData} margin={{ top: 20, right: 10, left: -20, bottom: 60 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <BarChart data={topInstitutionsData} layout="vertical" margin={{ top: 10, right: 50, left: 10, bottom: 10 }}>
+                    <defs>
+                      <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="#BD272D" stopOpacity={0.8}/>
+                        <stop offset="100%" stopColor="#f43f5e" stopOpacity={1}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" opacity={0.6} />
                     <XAxis 
-                      dataKey="name" 
-                      tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }} 
-                      axisLine={false} 
-                      tickLine={false} 
-                      interval={0} 
-                      angle={-45} 
-                      textAnchor="end" 
-                      height={80} 
+                      type="number"
+                      hide
                     />
                     <YAxis 
-                      tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 600 }} 
+                      dataKey="name" 
+                      type="category"
+                      tick={{ fontSize: 13, fill: '#475569', fontWeight: 600 }} 
                       axisLine={false} 
                       tickLine={false} 
-                      allowDecimals={false}
+                      width={180}
+                      tickFormatter={(value) => value.length > 25 ? value.substring(0, 25) + '...' : value}
                     />
                     <Tooltip 
-                      cursor={{ fill: '#f8fafc' }} 
+                      cursor={{ fill: '#f8fafc', opacity: 0.6 }} 
                       contentStyle={{ borderRadius: '16px', border: '1px solid #f1f5f9', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
                       labelStyle={{ fontWeight: 800, color: '#253656', marginBottom: '4px' }}
                       itemStyle={{ fontWeight: 600, color: '#BD272D' }}
+                      formatter={(value: any) => [`${value} Kehadiran`, 'Jumlah']}
                     />
-                    <Bar dataKey="count" name="Jumlah Kehadiran" fill="#BD272D" radius={[8, 8, 0, 0]} barSize={48} />
+                    <Bar dataKey="count" radius={[0, 8, 8, 0]} barSize={28}>
+                      {topInstitutionsData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill="url(#barGradient)" />
+                      ))}
+                      <LabelList 
+                        dataKey="count" 
+                        position="right" 
+                        fill="#253656" 
+                        fontWeight="bold" 
+                        fontSize={14} 
+                      />
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
