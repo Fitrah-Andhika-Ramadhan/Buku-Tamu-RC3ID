@@ -411,11 +411,10 @@ export default function SuccessPage() {
                   <Gift className="w-4 h-4" /> Hadiah Eksklusif Untuk Anda
                 </div>
                 <h3 className="text-2xl md:text-3xl font-black text-[#253656] tracking-tight mb-4">
-                  Koleksi Merchandise
+                  {config.merchandise_photo_title || "Koleksi Merchandise"}
                 </h3>
                 <p className="text-[#6C7C98] font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
-                  Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. 
-                  Silakan tunjukkan halaman ini ke staf kami.
+                  {config.merchandise_photo_desc || "Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. Silakan tunjukkan halaman ini ke staf kami."}
                 </p>
               </div>
               <div className="md:w-1/2 relative">

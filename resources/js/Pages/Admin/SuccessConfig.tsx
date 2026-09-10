@@ -20,6 +20,8 @@ export default function SuccessConfig({ config }: { config: any }) {
     stat_nama_univ: config.stat_nama_univ || "UNPAD",
     e_materi_file: null as File | null,
     merchandise_display_mode: config.merchandise_display_mode || "carousel",
+    merchandise_photo_title: config.merchandise_photo_title || "Koleksi Merchandise",
+    merchandise_photo_desc: config.merchandise_photo_desc || "Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. Silakan tunjukkan halaman ini ke staf kami.",
     merchandise_photo_url: config.merchandise_photo_url || "",
     merchandise_photo: null as File | null,
     merchandise_items: config.merchandise_items || [],
@@ -50,6 +52,8 @@ export default function SuccessConfig({ config }: { config: any }) {
     }
     
     data.append("merchandise_display_mode", formData.merchandise_display_mode);
+    data.append("merchandise_photo_title", formData.merchandise_photo_title);
+    data.append("merchandise_photo_desc", formData.merchandise_photo_desc);
     if (formData.merchandise_photo) {
       data.append("merchandise_photo", formData.merchandise_photo);
     }
@@ -300,6 +304,29 @@ export default function SuccessConfig({ config }: { config: any }) {
                             />
                           </div>
                         )}
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Judul Merchandise</label>
+                          <input
+                            type="text"
+                            value={formData.merchandise_photo_title}
+                            onChange={(e) => setFormData({ ...formData, merchandise_photo_title: e.target.value })}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] text-sm"
+                            placeholder="Contoh: Koleksi Merchandise"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 block">Deskripsi Singkat</label>
+                          <textarea
+                            value={formData.merchandise_photo_desc}
+                            onChange={(e) => setFormData({ ...formData, merchandise_photo_desc: e.target.value })}
+                            rows={2}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BD272D]/20 focus:border-[#BD272D] text-sm"
+                            placeholder="Contoh: Dapatkan hadiah eksklusif..."
+                          />
+                        </div>
                       </div>
                     </div>
                   ) : (

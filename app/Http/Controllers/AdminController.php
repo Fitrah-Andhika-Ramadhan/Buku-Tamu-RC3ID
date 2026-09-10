@@ -180,6 +180,9 @@ class AdminController extends Controller
         }
 
         $config['merchandise_display_mode'] = $request->input('merchandise_display_mode', 'carousel');
+        $config['merchandise_photo_title'] = $request->input('merchandise_photo_title', 'Koleksi Merchandise');
+        $config['merchandise_photo_desc'] = $request->input('merchandise_photo_desc', 'Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. Silakan tunjukkan halaman ini ke staf kami.');
+
         if ($request->hasFile('merchandise_photo')) {
             $file = $request->file('merchandise_photo');
             $filename = time() . '_single_' . str_replace(' ', '_', $file->getClientOriginalName());
