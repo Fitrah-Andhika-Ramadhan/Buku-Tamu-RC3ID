@@ -65,7 +65,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                         </div>
                     )}
                     {/* Header Text Section */}
-                    <div className="bg-gradient-to-br from-rose-50/50 via-slate-50/80 to-white border-b border-slate-200/60 p-8 md:p-12 relative z-10">
+                    <div className="bg-gradient-to-br from-rose-50/50 via-slate-50/80 to-white border-b border-slate-200/60 p-8 md:p-12 relative z-10 flex flex-col items-center text-center">
                         {(header.title_line1 || header.title_line2) && (
                             <h1 className="text-3xl md:text-4xl font-black text-[#253656] mb-4 tracking-tight leading-tight">
                                 {header.title_line1} {header.title_line1 && header.title_line2 && <br/>} <span className="text-[#BD272D]">{header.title_line2}</span>
