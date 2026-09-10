@@ -50,7 +50,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                 <div className="absolute bottom-1/2 left-[20%] z-0 h-[300px] w-[300px] rounded-full bg-cyan-500 opacity-[0.03] blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: "4s" }}></div>
             </div>
 
-            <div className="max-w-3xl mx-auto relative z-10">
+            <div className="max-w-3xl xl:max-w-4xl 2xl:max-w-5xl mx-auto relative z-10 transition-all duration-300">
                 <header className="w-full flex items-center justify-end mb-8">
                     <Link href="/" className="inline-flex items-center text-sm font-bold text-[#6C7C98] hover:text-[#BD272D] transition-colors uppercase tracking-[0.15em]">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
