@@ -4,6 +4,65 @@ import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
 
+// Komponen Carousel untuk Merchandise
+const MerchandiseCarousel = ({ photoUrl }: { photoUrl?: string }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Daftar foto hadiah (Bisa diganti atau ditambah nanti di folder public)
+  const photos = [
+    photoUrl || '/merchandise.png',
+    '/merch2.png', // Tambahkan file merch2.png di folder public
+    '/merch3.png'  // Tambahkan file merch3.png di folder public
+  ];
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % photos.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [photos.length]);
+
+  return (
+    <div className="w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 mx-auto lg:mx-0 mt-8 lg:mt-0">
+      <div className="h-48 bg-slate-200 relative overflow-hidden group">
+        {photos.map((src, i) => (
+          <img 
+            key={i}
+            src={src} 
+            onError={(e) => {
+              // Fallback jika gambar belum diupload
+              (e.target as HTMLImageElement).src = `https://placehold.co/600x400/e2e8f0/64748b?text=Foto+Hadiah+${i+1}`;
+            }}
+            alt={`Merchandise ${i+1}`} 
+            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${
+              i === currentIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
+            }`} 
+          />
+        ))}
+        {/* Indikator Titik (Dots) */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {photos.map((_, i) => (
+            <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#BD272D] w-4' : 'bg-white/60 w-1.5'}`} />
+          ))}
+        </div>
+        
+        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm z-10">
+          <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
+          <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
+        </div>
+      </div>
+      <div className="p-6 text-left">
+        <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
+          <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
+        </h3>
+        <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+          Dapatkan hadiah menarik seperti Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export default function SuccessPage() {
   const { props } = usePage();
   const config = (props.success_config as any) || {
@@ -20,6 +79,37 @@ export default function SuccessPage() {
   const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Fungsi untuk membunyikan suara (Ting-Ting!)
+    const playBeep = () => {
+      try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+        const audioCtx = new AudioContext();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        oscillator.type = 'sine';
+        // Nada sukses (C6 lalu E6)
+        oscillator.frequency.setValueAtTime(1046.50, audioCtx.currentTime); // C6
+        oscillator.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.1); // E6
+        
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.5);
+      } catch(e) {
+        console.log('Audio error:', e);
+      }
+    };
+
+    // Bunyikan otomatis saat halaman dimuat
+    playBeep();
+
     if (config.tts_enabled && config.tts_text && 'speechSynthesis' in window) {
       const timer = setTimeout(() => {
         window.speechSynthesis.cancel();
@@ -156,22 +246,8 @@ export default function SuccessPage() {
 
             {/* Merchandise Vertical Card (Shown on left ONLY if ticket is also shown) */}
             {config.show_merchandise && config.show_digital_ticket !== false && (
-              <div className="mt-8 w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5">
-                <div className="h-48 bg-slate-200 relative overflow-hidden group">
-                  <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
-                    <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
-                    <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
-                  </div>
-                </div>
-                <div className="p-6 text-left">
-                  <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
-                    <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
-                  </h3>
-                  <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
-                    Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
-                  </p>
-                </div>
+              <div className="mt-8">
+                <MerchandiseCarousel photoUrl={config.merchandise_photo_url} />
               </div>
             )}
           </div>
@@ -294,23 +370,7 @@ export default function SuccessPage() {
           </>
           ) : (
             config.show_merchandise && (
-              <div className="w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 mx-auto">
-                <div className="h-48 bg-slate-200 relative overflow-hidden group">
-                  <img src={config.merchandise_photo_url || '/merchandise.png'} alt="Merchandise" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm">
-                    <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
-                    <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
-                  </div>
-                </div>
-                <div className="p-6 text-left">
-                  <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
-                    <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
-                  </h3>
-                  <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
-                    Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
-                  </p>
-                </div>
-              </div>
+              <MerchandiseCarousel photoUrl={config.merchandise_photo_url} />
             )
           )}
           </div>
