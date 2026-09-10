@@ -104,7 +104,7 @@ export default function SuccessPage() {
       <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center font-['Outfit'] relative z-10">
 
         {/* ===== TOP: Success + Ticket ===== */}
-        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start mb-12">
+        <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start mb-12">
           
           {/* Left: Success Message */}
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left h-full justify-center">
@@ -320,14 +320,14 @@ export default function SuccessPage() {
 
         {/* Optional Stats Sections */}
         {/* Live Stats ALWAYS SHOWN */}
-        <div className="w-full max-w-5xl mb-12">
+        <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
           <LiveStatsBox totalParticipants={props.totalParticipants as number} totalAttending={props.totalAttending as number} />
         </div>
 
         {config.show_live_stats && (
           <>
             {/* RC3ID Info Section */}
-            <div className="w-full max-w-5xl mb-16">
+            <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-16">
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-[#253656]/5 to-[#BD272D]/5 rounded-[2.5rem] blur-xl"></div>
                 <div className="relative bg-white/60 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-[#253656]/10 overflow-hidden font-['Outfit']">
