@@ -206,10 +206,10 @@ export default function SuccessPage() {
       <main className="flex-1 w-full px-4 md:px-8 py-8 flex flex-col items-center font-['Outfit'] relative z-10">
 
         {/* ===== TOP: Success + Ticket ===== */}
-        <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start mb-12">
+        <div className={`w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12 ${config.show_digital_ticket !== false ? 'grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start' : 'flex flex-col items-center justify-center max-w-3xl mx-auto'}`}>
           
           {/* Left: Success Message */}
-          <div className="flex flex-col items-center lg:items-start text-center lg:text-left h-full justify-center">
+          <div className={`flex flex-col items-center h-full justify-center ${config.show_digital_ticket !== false ? 'lg:items-start text-center lg:text-left' : 'text-center'}`}>
             <div className="w-24 h-24 bg-green-50 rounded-full border-[6px] border-green-100 flex items-center justify-center mb-6 shadow-inner relative animate-fade-in-up">
                <div className="absolute inset-0 rounded-full border-4 border-green-400 border-dashed animate-[spin_10s_linear_infinite] opacity-30"></div>
                <CheckCircle2 className="w-12 h-12 text-green-500 relative z-10" />
@@ -266,129 +266,122 @@ export default function SuccessPage() {
             </div>
           </div>
 
-          {/* Right: Digital Ticket or Merchandise (if ticket hidden) */}
-          <div className="flex flex-col gap-4 h-full justify-center w-full max-w-sm mx-auto lg:max-w-none">
-            {config.show_digital_ticket !== false ? (
-              <>
-                {/* Ticket Card */}
-                <div id="ticket-printable" ref={ticketRef} className="relative">
-              {/* Glow */}
-              <div className="absolute -inset-2 bg-gradient-to-br from-[#BD272D]/30 to-[#253656]/30 rounded-[2rem] blur-xl -z-10"></div>
-              
-              <div className="bg-white rounded-[1.5rem] overflow-hidden shadow-2xl border border-gray-100">
-                {/* Ticket Header */}
-                <div className="bg-gradient-to-r from-[#253656] to-[#1a3566] px-6 py-5 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:14px_14px]"></div>
-                  <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#BD272D]/30 rounded-full blur-2xl"></div>
-                  <div className="relative z-10 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] text-blue-300 uppercase tracking-[0.25em] font-bold mb-1">TIKET DIGITAL</p>
-                      <h3 className="text-white font-black text-lg leading-tight">Booth RC3ID</h3>
-                      <p className="text-blue-200 text-xs font-medium">B-IDEAs 2026 Exhibition</p>
-                    </div>
-                    <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
-                      <span className="text-white text-xs font-black tracking-widest">RC3ID</span>
+          {/* Right: Digital Ticket */}
+          {config.show_digital_ticket !== false && (
+            <div className="flex flex-col gap-4 h-full justify-center w-full max-w-sm mx-auto lg:max-w-none">
+              {/* Ticket Card */}
+              <div id="ticket-printable" ref={ticketRef} className="relative">
+                {/* Glow */}
+                <div className="absolute -inset-2 bg-gradient-to-br from-[#BD272D]/30 to-[#253656]/30 rounded-[2rem] blur-xl -z-10"></div>
+                
+                <div className="bg-white rounded-[1.5rem] overflow-hidden shadow-2xl border border-gray-100">
+                  {/* Ticket Header */}
+                  <div className="bg-gradient-to-r from-[#253656] to-[#1a3566] px-6 py-5 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,white_1px,transparent_1px)] bg-[size:14px_14px]"></div>
+                    <div className="absolute -right-6 -top-6 w-24 h-24 bg-[#BD272D]/30 rounded-full blur-2xl"></div>
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] text-blue-300 uppercase tracking-[0.25em] font-bold mb-1">TIKET DIGITAL</p>
+                        <h3 className="text-white font-black text-lg leading-tight">Booth RC3ID</h3>
+                        <p className="text-blue-200 text-xs font-medium">B-IDEAs 2026 Exhibition</p>
+                      </div>
+                      <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                        <span className="text-white text-xs font-black tracking-widest">RC3ID</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Perforated divider */}
-                <div className="relative flex items-center px-4 py-1 bg-slate-50">
-                  <div className="w-5 h-5 bg-slate-100 rounded-full absolute -left-3 border border-slate-200"></div>
-                  <div className="flex-1 border-t-2 border-dashed border-slate-200 mx-4"></div>
-                  <div className="w-5 h-5 bg-slate-100 rounded-full absolute -right-3 border border-slate-200"></div>
-                </div>
+                  {/* Perforated divider */}
+                  <div className="relative flex items-center px-4 py-1 bg-slate-50">
+                    <div className="w-5 h-5 bg-slate-100 rounded-full absolute -left-3 border border-slate-200"></div>
+                    <div className="flex-1 border-t-2 border-dashed border-slate-200 mx-4"></div>
+                    <div className="w-5 h-5 bg-slate-100 rounded-full absolute -right-3 border border-slate-200"></div>
+                  </div>
 
-                {/* Ticket Body */}
-                <div className="px-6 py-5 space-y-4">
-                  {participant ? (
-                    <>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Nama Lengkap</p>
-                          <p className="font-black text-[#253656] text-lg leading-tight">{participant.full_name}</p>
+                  {/* Ticket Body */}
+                  <div className="px-6 py-5 space-y-4">
+                    {participant ? (
+                      <>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Nama Lengkap</p>
+                            <p className="font-black text-[#253656] text-lg leading-tight">{participant.full_name}</p>
+                          </div>
+                          {participant.institution && (
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Institusi</p>
+                              <p className="font-semibold text-[#253656] text-sm">{participant.institution}</p>
+                            </div>
+                          )}
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Tanggal</p>
+                              <p className="font-bold text-[#253656] text-xs">{dateStr}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Pukul</p>
+                              <p className="font-bold text-[#253656] text-xs">{timeStr} WIB</p>
+                            </div>
+                          </div>
                         </div>
-                        {participant.institution && (
-                          <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Institusi</p>
-                            <p className="font-semibold text-[#253656] text-sm">{participant.institution}</p>
-                          </div>
-                        )}
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Tanggal</p>
-                            <p className="font-bold text-[#253656] text-xs">{dateStr}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold mb-0.5">Pukul</p>
-                            <p className="font-bold text-[#253656] text-xs">{timeStr} WIB</p>
-                          </div>
+
+                        {/* Status Badge */}
+                        <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm ${
+                          participant.is_attending
+                            ? 'bg-green-50 border-green-200 text-green-700'
+                            : 'bg-amber-50 border-amber-200 text-amber-700'
+                        }`}>
+                          <span className="relative flex h-2.5 w-2.5">
+                            <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${participant.is_attending ? 'bg-green-500' : 'bg-amber-500'}`}></span>
+                            <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${participant.is_attending ? 'bg-green-500' : 'bg-amber-500'}`}></span>
+                          </span>
+                          {participant.is_attending ? '✓ Kehadiran Terverifikasi' : '⏳ Menunggu Verifikasi Staf'}
                         </div>
-                      </div>
 
-                      {/* Status Badge */}
-                      <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-bold text-sm ${
-                        participant.is_attending
-                          ? 'bg-green-50 border-green-200 text-green-700'
-                          : 'bg-amber-50 border-amber-200 text-amber-700'
-                      }`}>
-                        <span className="relative flex h-2.5 w-2.5">
-                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${participant.is_attending ? 'bg-green-500' : 'bg-amber-500'}`}></span>
-                          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${participant.is_attending ? 'bg-green-500' : 'bg-amber-500'}`}></span>
-                        </span>
-                        {participant.is_attending ? '✓ Kehadiran Terverifikasi' : '⏳ Menunggu Verifikasi Staf'}
+                        {/* Ticket ID */}
+                        <div className="border-t border-dashed border-slate-200 pt-3 flex items-center justify-between">
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">ID Tiket</p>
+                          <p className="font-black text-[#253656] text-sm tracking-widest">#{String(participant.id).padStart(5, '0')}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-4 text-slate-400 text-sm">
+                        <Ticket className="w-8 h-8 mx-auto mb-2 opacity-30" />
+                        <p>Data tiket tidak tersedia</p>
                       </div>
+                    )}
+                  </div>
 
-                      {/* Ticket ID */}
-                      <div className="border-t border-dashed border-slate-200 pt-3 flex items-center justify-between">
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">ID Tiket</p>
-                        <p className="font-black text-[#253656] text-sm tracking-widest">#{String(participant.id).padStart(5, '0')}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-center py-4 text-slate-400 text-sm">
-                      <Ticket className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                      <p>Data tiket tidak tersedia</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Ticket Footer */}
-                <div className="bg-gradient-to-r from-[#BD272D] to-[#991f24] px-6 py-3">
-                  <p className="text-white/80 text-[10px] text-center font-bold tracking-widest uppercase">
-                    Tunjukkan tiket ini kepada staf booth untuk klaim merchandise
-                  </p>
+                  {/* Ticket Footer */}
+                  <div className="bg-gradient-to-r from-[#BD272D] to-[#991f24] px-6 py-3">
+                    <p className="text-white/80 text-[10px] text-center font-bold tracking-widest uppercase">
+                      Tunjukkan tiket ini kepada staf booth untuk klaim merchandise
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Download/Print buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={handlePrintTicket}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#253656] text-[#253656] font-bold text-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-sm"
-              >
-                <Printer className="w-4 h-4" />
-                Print Tiket
-              </button>
-              {participant?.id && (
+              {/* Download/Print buttons */}
+              <div className="flex gap-3">
                 <button
-                  onClick={handleDownloadTicket}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#253656] hover:bg-[#1a263d] text-white font-bold text-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-[#253656]/20"
+                  onClick={handlePrintTicket}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#253656] text-[#253656] font-bold text-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-sm"
                 >
-                  <Download className="w-4 h-4" />
-                  Lihat Tiket Digital
+                  <Printer className="w-4 h-4" />
+                  Print Tiket
                 </button>
-              )}
-            </div>
-          </>
-          ) : (
-            <div className="text-center py-10 bg-slate-50 rounded-3xl border border-slate-100">
-              <Ticket className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500 font-medium">Tiket digital dinonaktifkan</p>
+                {participant?.id && (
+                  <button
+                    onClick={handleDownloadTicket}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-[#253656] hover:bg-[#1a263d] text-white font-bold text-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-[#253656]/20"
+                  >
+                    <Download className="w-4 h-4" />
+                    Lihat Tiket Digital
+                  </button>
+                )}
+              </div>
             </div>
           )}
-          </div>
         </div>
 
         {/* Merchandise Section (Full Width Showcase) */}
