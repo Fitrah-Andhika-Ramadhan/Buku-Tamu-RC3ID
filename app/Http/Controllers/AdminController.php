@@ -163,6 +163,7 @@ class AdminController extends Controller
         $currentConfig = $setting ? $setting->value : [];
 
         $config = array_merge($currentConfig, $validated);
+        $config['show_merchandise'] = filter_var($request->input('show_merchandise', true), FILTER_VALIDATE_BOOLEAN);
         $config['tts_enabled'] = filter_var($request->input('tts_enabled', false), FILTER_VALIDATE_BOOLEAN);
         $config['tts_text'] = $request->input('tts_text', '');
         $config['show_live_stats'] = filter_var($request->input('show_live_stats', false), FILTER_VALIDATE_BOOLEAN);
