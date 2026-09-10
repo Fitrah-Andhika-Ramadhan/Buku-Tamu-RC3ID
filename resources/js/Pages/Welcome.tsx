@@ -208,17 +208,17 @@ export function LiveStatsBox({ totalParticipants, totalAttending }: { totalParti
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalParticipants}</p>
-              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Total Pendaftar</p>
+              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Total Pengunjung</p>
             </div>
           </div>
           
           <div className="flex items-center gap-6 group cursor-default">
-            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-green-50 to-green-100/50 flex items-center justify-center shrink-0 border border-green-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
-               <CheckCircle2 className="w-8 h-8 text-green-600 drop-shadow-sm" />
+            <div className="w-16 h-16 rounded-[1.5rem] bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center shrink-0 border border-rose-200 shadow-inner group-hover:scale-105 transition-transform duration-300">
+               <Gift className="w-8 h-8 text-rose-600 drop-shadow-sm" />
             </div>
             <div>
               <p className="text-4xl md:text-5xl font-black text-[#253656] tracking-tighter drop-shadow-sm">{totalAttending}</p>
-              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Pengunjung Hadir</p>
+              <p className="text-sm font-bold text-[#6C7C98] uppercase tracking-[0.15em] mt-2">Hadiah Terklaim</p>
             </div>
           </div>
         </div>
