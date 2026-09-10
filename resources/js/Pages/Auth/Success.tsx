@@ -3,6 +3,7 @@ import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Pri
 import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 const MerchandiseCarousel = () => {
   return (
@@ -84,13 +85,25 @@ export default function SuccessPage() {
     tts_enabled: true,
     tts_text: "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
   };
+
   const participant = (props.participant as any) || null;
+  const topInstitutionsData = (props.topInstitutionsData as { name: string, count: number }[]) || [];
 
   const [ttsPlaying, setTtsPlaying] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
   const ticketRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Cek apakah suara sudah pernah diputar untuk peserta ini di sesi ini
+    // Ini mencegah suara diputar ulang saat halaman di-refresh
+    const ttsKey = `ttsPlayed_${participant?.id || 'new'}`;
+    if (sessionStorage.getItem(ttsKey)) {
+      return; // Sudah pernah diputar
+    }
+    
+    // Tandai bahwa suara sudah diputar
+    sessionStorage.setItem(ttsKey, 'true');
+
     // Fungsi untuk membunyikan suara (Ting-Ting!)
     const playBeep = () => {
       try {
@@ -137,7 +150,7 @@ export default function SuccessPage() {
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [participant?.id, config.tts_enabled, config.tts_text]);
 
   const replayTts = () => {
     if ('speechSynthesis' in window && config.tts_text) {
@@ -396,6 +409,48 @@ export default function SuccessPage() {
         <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
           <LiveStatsBox totalAttending={props.totalAttending as number} totalInstitutions={props.totalInstitutions as number || 0} />
         </div>
+
+        {/* Top 10 Institutions Chart */}
+        {topInstitutionsData && topInstitutionsData.length > 0 && (
+          <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
+            <div className="bg-white/60 backdrop-blur-2xl border border-white/80 p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-[#253656]/10 font-['Outfit']">
+              <h3 className="font-black text-[#253656] text-xl md:text-2xl mb-6 flex items-center gap-3">
+                <span className="w-2 h-8 rounded-full bg-[#BD272D] inline-block"></span>
+                Instansi (Top 10)
+              </h3>
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topInstitutionsData} margin={{ top: 20, right: 10, left: -20, bottom: 60 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                    <XAxis 
+                      dataKey="name" 
+                      tick={{ fontSize: 11, fill: '#64748b', fontWeight: 500 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      interval={0} 
+                      angle={-45} 
+                      textAnchor="end" 
+                      height={80} 
+                    />
+                    <YAxis 
+                      tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 600 }} 
+                      axisLine={false} 
+                      tickLine={false} 
+                      allowDecimals={false}
+                    />
+                    <Tooltip 
+                      cursor={{ fill: '#f8fafc' }} 
+                      contentStyle={{ borderRadius: '16px', border: '1px solid #f1f5f9', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }}
+                      labelStyle={{ fontWeight: 800, color: '#253656', marginBottom: '4px' }}
+                      itemStyle={{ fontWeight: 600, color: '#BD272D' }}
+                    />
+                    <Bar dataKey="count" name="Jumlah Kehadiran" fill="#BD272D" radius={[8, 8, 0, 0]} barSize={48} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}
 
         {config.show_live_stats && (
           <>

@@ -81,16 +81,16 @@ export default function QrGenerator() {
     const canvas = qrRef.current?.querySelector("canvas");
     if (!canvas) return;
 
-    // Create a new canvas with padding to act as a white frame
-    const padding = 32; // Thick padding for a nice frame
+    // Create a new canvas with padding to act as a frame
+    const padding = 20; // Proportional padding
     const finalCanvas = document.createElement("canvas");
     finalCanvas.width = canvas.width + (padding * 2);
     finalCanvas.height = canvas.height + (padding * 2);
     
     const ctx = finalCanvas.getContext("2d");
     if (ctx) {
-      // Fill the entire frame with white
-      ctx.fillStyle = "#FFFFFF";
+      // Fill the entire frame with the selected background color
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
       
       // Draw the original QR code in the center
@@ -276,20 +276,20 @@ export default function QrGenerator() {
 
                 <div className="p-6 flex flex-col items-center">
                   {/* QR Code with optional logo overlay */}
-                  <div className="relative p-4 rounded-2xl border-2 border-dashed border-slate-200 mb-4" style={{ backgroundColor: bgColor }}>
+                  <div className="relative p-2 rounded-2xl border-2 border-dashed border-slate-200 mb-4" style={{ backgroundColor: bgColor }}>
                     <QRCodeCanvas
                       value={qrValue || "https://rc3id.unpad.ac.id"}
-                      size={200}
+                      size={240} // Increased size slightly for better resolution
                       fgColor={fgColor}
                       bgColor={bgColor}
                       level="H"
-                      includeMargin={true}
+                      includeMargin={false} // Disable internal margin to prevent double-thickness
                       imageSettings={
                         showLogo ? {
                           src: customLogoUrl || defaultSquareLogo || "/logo.svg",
-                          height: 64,
-                          width: 64,
-                          excavate: true,
+                          height: 48, // Balanced logo size
+                          width: 48,
+                          excavate: true, // Cut out background behind logo
                         } : undefined
                       }
                     />

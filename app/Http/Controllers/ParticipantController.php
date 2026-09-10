@@ -70,11 +70,20 @@ class ParticipantController extends Controller
         $totalAttending = Participant::where('is_attending', true)->count();
         $totalInstitutions = Participant::whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution');
 
+        $topInstitutionsData = Participant::select('institution as name', \DB::raw('count(*) as count'))
+            ->whereNotNull('institution')
+            ->where('institution', '!=', '')
+            ->groupBy('institution')
+            ->orderByDesc('count')
+            ->limit(10)
+            ->get();
+
         return Inertia::render('Auth/Success', [
-            'success_config'    => $config,
-            'totalParticipants' => $totalParticipants,
-            'totalAttending'    => $totalAttending,
-            'totalInstitutions' => $totalInstitutions,
+            'success_config'      => $config,
+            'totalParticipants'   => $totalParticipants,
+            'totalAttending'      => $totalAttending,
+            'totalInstitutions'   => $totalInstitutions,
+            'topInstitutionsData' => $topInstitutionsData,
             'participant'       => $participant ? [
                 'id'          => $participant->id,
                 'full_name'   => $participant->full_name,
