@@ -156,13 +156,17 @@ class AdminController extends Controller
         $config['stat_nama_univ'] = $request->input('stat_nama_univ', 'UNPAD');
 
         if ($request->hasFile('e_materi_file')) {
-            $path = $request->file('e_materi_file')->store('public/materi');
-            $config['e_materi_file_url'] = \Illuminate\Support\Facades\Storage::url($path);
+            $file = $request->file('e_materi_file');
+            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path('materi'), $filename);
+            $config['e_materi_file_url'] = '/materi/' . $filename;
         }
 
         if ($request->hasFile('merchandise_photo')) {
-            $path = $request->file('merchandise_photo')->store('public/merchandise');
-            $config['merchandise_photo_url'] = \Illuminate\Support\Facades\Storage::url($path);
+            $file = $request->file('merchandise_photo');
+            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path('merchandise'), $filename);
+            $config['merchandise_photo_url'] = '/merchandise/' . $filename;
         }
 
         Setting::updateOrCreate(
@@ -202,8 +206,10 @@ class AdminController extends Controller
 
         $bannerPath = $currentConfig['banner_image_path'] ?? null;
         if ($request->hasFile('banner_image')) {
-            $path = $request->file('banner_image')->store('banners', 'public');
-            $bannerPath = '/storage/' . $path;
+            $file = $request->file('banner_image');
+            $filename = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $file->move(public_path('banners'), $filename);
+            $bannerPath = '/banners/' . $filename;
         }
 
         $config = [
