@@ -39,6 +39,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/qr-generator', function() {
         return \Inertia\Inertia::render('Admin/QrGenerator');
     })->name('admin.qr.generator');
+
+    // DB SQL Viewer
+    Route::get('/db-viewer', [\App\Http\Controllers\DbViewerController::class, 'index'])->name('admin.db.viewer');
+    Route::post('/db-viewer', [\App\Http\Controllers\DbViewerController::class, 'index']);
 });
 
 require __DIR__.'/auth.php';

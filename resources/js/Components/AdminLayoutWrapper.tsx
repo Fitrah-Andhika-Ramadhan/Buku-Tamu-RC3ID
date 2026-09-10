@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, usePage } from "@inertiajs/react";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { name: "Header Form", href: "/admin/form-header", icon: Layout, desc: "Judul & Sosmed Form" },
   { name: "Halaman Sukses", href: "/admin/success-config", icon: CheckCircle2, desc: "Atur Tampilan Sukses" },
   { name: "QR Generator", href: "/admin/qr-generator", icon: QrCode, desc: "Buat & Ekspor QR Code" },
+  { name: "DB Viewer", href: "/admin/db-viewer", icon: Database, desc: "Lihat Data SQL" },
 ];
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
