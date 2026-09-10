@@ -4,61 +4,73 @@ import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
 
-// Komponen Carousel untuk Merchandise
-const MerchandiseCarousel = ({ photoUrl }: { photoUrl?: string }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  
-  // Daftar foto hadiah (Bisa diganti atau ditambah nanti di folder public)
-  const photos = [
-    photoUrl || '/merchandise.png',
-    '/merch2.png', // Tambahkan file merch2.png di folder public
-    '/merch3.png'  // Tambahkan file merch3.png di folder public
-  ];
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % photos.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [photos.length]);
-
+const MerchandiseCarousel = () => {
   return (
-    <div className="w-full max-w-sm bg-white rounded-[1.5rem] border border-slate-100 overflow-hidden shadow-xl shadow-[#253656]/5 mx-auto lg:mx-0 mt-8 lg:mt-0">
-      <div className="h-48 bg-slate-200 relative overflow-hidden group">
-        {photos.map((src, i) => (
-          <img 
-            key={i}
-            src={src} 
-            onError={(e) => {
-              // Fallback jika gambar belum diupload
-              (e.target as HTMLImageElement).src = `https://placehold.co/600x400/e2e8f0/64748b?text=Foto+Hadiah+${i+1}`;
-            }}
-            alt={`Merchandise ${i+1}`} 
-            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${
-              i === currentIndex ? 'opacity-100 scale-105' : 'opacity-0 scale-100'
-            }`} 
-          />
-        ))}
-        {/* Indikator Titik (Dots) */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-          {photos.map((_, i) => (
-            <div key={i} className={`h-1.5 rounded-full transition-all duration-300 ${i === currentIndex ? 'bg-[#BD272D] w-4' : 'bg-white/60 w-1.5'}`} />
-          ))}
+    <div className="w-full bg-white/80 backdrop-blur-2xl border border-white/80 rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-[#253656]/10 animate-fade-in-up mt-4 relative overflow-hidden">
+      {/* Subtle Glow Background */}
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-gradient-to-br from-[#BD272D]/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      
+      {/* Header Section */}
+      <div className="flex flex-col items-center md:items-start text-center md:text-left mb-10 relative z-10">
+        <div className="flex items-center justify-center md:justify-start gap-4 mb-3">
+          <div className="w-14 h-14 bg-gradient-to-br from-rose-50 to-rose-100 rounded-[1.2rem] border border-rose-200 flex items-center justify-center shadow-inner animate-bounce">
+            <Gift className="w-7 h-7 text-[#BD272D]" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-[#253656] tracking-tight uppercase">
+            HADIAH EKSKLUSIF <span className="text-[#BD272D]">UNTUK ANDA</span>
+          </h2>
         </div>
-        
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white flex items-center gap-2 shadow-sm z-10">
-          <div className="w-2 h-2 bg-[#BD272D] rounded-full animate-pulse"></div>
-          <span className="text-[#253656] text-[10px] font-black tracking-widest uppercase">Eksklusif</span>
-        </div>
-      </div>
-      <div className="p-6 text-left">
-        <h3 className="font-black text-[#253656] text-base mb-2 flex items-center gap-2">
-          <Gift className="w-5 h-5 text-[#BD272D]" /> Koleksi Merchandise
-        </h3>
-        <p className="text-[#6C7C98] text-sm font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
-          Dapatkan hadiah menarik seperti Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth.
+        <p className="text-[#6C7C98] font-medium font-['Plus_Jakarta_Sans'] text-sm md:text-base max-w-2xl">
+          Dapatkan salah satu merchandise edisi terbatas khusus pengunjung booth.
         </p>
       </div>
+
+      {/* Grid Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 relative z-10">
+        {[
+          { name: 'Tote Bag', img: '/merchandise.png', desc: 'Tote bag eksklusif dengan desain minimalis dan logo RC3ID.' },
+          { name: 'Mug Keramik', img: '/merch2.png', desc: 'Mug keramik berkualitas dengan logo RC3ID, cocok untuk menemanimu.' },
+          { name: 'Lanyard', img: '/merch3.png', desc: 'Lanyard eksklusif dengan desain modern dan logo RC3ID.' }
+        ].map((item, i) => (
+          <div key={i} className="group relative bg-white rounded-3xl p-6 border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-[#BD272D]/10 transition-all duration-500 hover:-translate-y-2 flex flex-col items-center text-center overflow-hidden">
+            {/* Confetti / Sparkles decoration */}
+            <div className="absolute top-4 left-4 w-2 h-2 rounded-full bg-yellow-400 opacity-0 group-hover:opacity-100 group-hover:animate-ping delay-100"></div>
+            <div className="absolute top-10 right-6 w-1.5 h-1.5 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 group-hover:animate-ping delay-300"></div>
+            
+            {/* Image Container with floating animation */}
+            <div className="w-40 h-40 md:w-48 md:h-48 mb-6 relative flex items-center justify-center animate-[float_6s_ease-in-out_infinite]" style={{ animationDelay: `${i * 0.5}s` }}>
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-50 rounded-full blur-xl scale-75 group-hover:scale-100 transition-transform duration-500"></div>
+              <img 
+                src={item.img} 
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `https://placehold.co/400x400/f8fafc/64748b?text=${item.name.replace(' ', '+')}`;
+                }}
+                alt={item.name}
+                className="w-full h-full object-contain relative z-10 drop-shadow-2xl group-hover:scale-110 transition-transform duration-700 ease-out"
+              />
+              {/* Shine effect on hover */}
+              <div className="absolute inset-0 z-20 bg-gradient-to-tr from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_ease-in-out] pointer-events-none rounded-full"></div>
+            </div>
+
+            {/* Badge & Title */}
+            <div className="bg-[#253656] text-white px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase mb-4 shadow-md group-hover:bg-[#BD272D] transition-colors duration-300">
+              {item.name}
+            </div>
+            
+            <p className="text-slate-500 text-xs font-medium font-['Plus_Jakarta_Sans'] leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+      
+      {/* Floating animation keyframes */}
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+      `}</style>
     </div>
   );
 };
@@ -252,13 +264,6 @@ export default function SuccessPage() {
                 <p className="text-xs font-bold text-amber-700/80">Ikuti keseruan games lainnya di booth RC3ID.</p>
               </div>
             </div>
-
-            {/* Merchandise Vertical Card (Shown on left ONLY if ticket is also shown) */}
-            {config.show_merchandise && config.show_digital_ticket !== false && (
-              <div className="mt-8">
-                <MerchandiseCarousel photoUrl={config.merchandise_photo_url} />
-              </div>
-            )}
           </div>
 
           {/* Right: Digital Ticket or Merchandise (if ticket hidden) */}
@@ -378,14 +383,20 @@ export default function SuccessPage() {
             </div>
           </>
           ) : (
-            config.show_merchandise && (
-              <MerchandiseCarousel photoUrl={config.merchandise_photo_url} />
-            )
+            <div className="text-center py-10 bg-slate-50 rounded-3xl border border-slate-100">
+              <Ticket className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500 font-medium">Tiket digital dinonaktifkan</p>
+            </div>
           )}
           </div>
         </div>
 
-        {/* Old Merchandise Section Removed */}
+        {/* Merchandise Section (Full Width Showcase) */}
+        {config.show_merchandise && (
+          <div className="w-full max-w-5xl xl:max-w-6xl 2xl:max-w-[1400px] transition-all duration-500 mb-12">
+            <MerchandiseCarousel />
+          </div>
+        )}
 
         {/* Optional Stats Sections */}
         {/* Live Stats ALWAYS SHOWN */}
