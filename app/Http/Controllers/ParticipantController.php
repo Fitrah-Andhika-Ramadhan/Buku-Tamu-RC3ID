@@ -42,7 +42,7 @@ class ParticipantController extends Controller
             'full_name'        => $request->input('full_name', ''),
             'wa_number'        => $request->input('wa_number', ''),
             'email'            => $request->input('email', ''),
-            'institution'      => $request->input('institution', ''),
+            'institution'      => $request->input('institution') ?? '',  // null-safe: DB column is NOT NULL
             'custom_responses' => $customResponses,
             'is_attending'     => true,
         ]);
