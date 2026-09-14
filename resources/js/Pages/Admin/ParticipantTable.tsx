@@ -155,8 +155,13 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
   };
 
   const handleExportPDF = () => {
-    // This will trigger the browser's print dialog, which we'll style with @media print CSS
-    window.print();
+    // Switch to chart mode so charts are rendered before printing
+    setViewMode("chart");
+    
+    // Allow React to re-render the charts into the DOM before triggering the print dialog
+    setTimeout(() => {
+      window.print();
+    }, 500);
   };
 
   const handleExportDOC = () => {
@@ -226,9 +231,9 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
+    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col print:border-none print:shadow-none">
       {/* Header */}
-      <div className="p-5 border-b border-slate-100">
+      <div className="p-5 border-b border-slate-100 no-print">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
             <h2 className="font-black text-[#253656] text-lg">Daftar Pendaftar</h2>
@@ -550,8 +555,12 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
         </div>
       ) : (
         // --- CHART VIEW ---
-        <div className="p-6 bg-slate-50/50">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-6 bg-slate-50/50 print:bg-white print:p-0 print:block">
+          <div className="hidden print:block mb-8 text-center border-b pb-4">
+            <h1 className="text-3xl font-black text-[#253656]">Laporan Statistik Peserta RC3ID</h1>
+            <p className="text-slate-500 mt-2">Diekspor pada: {new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-4">
             
             {/* Kehadiran Pie Chart */}
             <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center">
@@ -634,7 +643,7 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
 
       {/* Footer */}
       {filtered.length > 0 && (
-        <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50/50 no-print">
           <p className="text-xs text-slate-400">Menampilkan <strong className="text-slate-600">{filtered.length}</strong> dari <strong className="text-slate-600">{participants.length}</strong> peserta</p>
           <p className="text-xs font-bold text-[#BD272D]">{totalHadir} sudah hadir</p>
         </div>
