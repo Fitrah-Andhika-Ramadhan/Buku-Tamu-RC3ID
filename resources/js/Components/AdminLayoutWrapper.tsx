@@ -16,7 +16,7 @@ const navItems = [
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { url: pathname } = usePage();
-  const { events, currentEvent } = usePage().props as any;
+  const { events, currentEvent, frontEventId } = usePage().props as any;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newEventName, setNewEventName] = useState('');
@@ -166,6 +166,22 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   <option key={ev.id} value={ev.id}>{ev.name}</option>
                 ))}
               </select>
+              
+              {currentEvent && (
+                <button 
+                  onClick={() => router.post('/admin/events/set-front', { event_id: currentEvent.id })}
+                  className={`shrink-0 py-2 px-3 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-1.5 border ${
+                    frontEventId === currentEvent.id 
+                    ? 'bg-green-50 text-green-700 border-green-200' 
+                    : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                  }`}
+                  title={frontEventId === currentEvent.id ? 'Saat ini tampil di halaman depan (Landing Page)' : 'Jadikan form ini tampil di halaman depan'}
+                >
+                  <div className={`w-2 h-2 rounded-full ${frontEventId === currentEvent.id ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
+                  {frontEventId === currentEvent.id ? 'Aktif di Beranda' : 'Tampilkan di Beranda'}
+                </button>
+              )}
+
               <button 
                 onClick={() => setIsCreateModalOpen(true)}
                 className="shrink-0 bg-[#253656] text-white py-2 px-4 rounded-xl hover:bg-[#BD272D] transition-colors text-sm font-bold shadow-sm flex items-center gap-2"

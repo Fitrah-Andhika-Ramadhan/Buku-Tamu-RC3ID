@@ -65,6 +65,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     // Form & Event Management Routes
     Route::post('/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
     Route::post('/events/switch', [AdminController::class, 'switchEvent'])->name('admin.events.switch');
+    Route::post('/events/set-front', [AdminController::class, 'setFrontEvent'])->name('admin.events.set-front');
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
     Route::get('/success-config', [AdminController::class, 'successConfig'])->name('admin.success.config');

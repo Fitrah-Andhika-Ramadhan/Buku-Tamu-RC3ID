@@ -48,13 +48,18 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
             ],
             'events' => $events,
             'currentEvent' => $currentEvent,
-        ];
+            'frontEventId' => \Illuminate\Support\Facades\Schema::hasTable('settings') 
+                ? \App\Models\Setting::where('key', 'front_event_id')->value('value') 
+                : null,
+            'flash' => [
+                'success' => fn () => $request->session()->get('success')
+            ],
+        ]);
     }
 }

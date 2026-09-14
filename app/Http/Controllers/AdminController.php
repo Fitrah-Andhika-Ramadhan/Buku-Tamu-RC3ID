@@ -401,4 +401,16 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Berhasil beralih form.');
     }
+
+    public function setFrontEvent(Request $request)
+    {
+        $request->validate(['event_id' => 'required']);
+
+        Setting::updateOrCreate(
+            ['key' => 'front_event_id'],
+            ['value' => $request->event_id]
+        );
+
+        return redirect()->back()->with('success', 'Front event berhasil diatur.');
+    }
 }

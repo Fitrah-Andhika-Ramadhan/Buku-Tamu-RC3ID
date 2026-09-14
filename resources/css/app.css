@@ -70,6 +70,10 @@ button, a { -webkit-tap-highlight-color: transparent; }
 ::selection { background: oklch(0.88 0.16 112); color: oklch(0.24 0.04 175); }
 
 @media print {
+  @page {
+    margin: 1.5cm;
+  }
+
   /* Hide sidebar and header elements */
   aside, header, nav, .no-print, button {
     display: none !important;

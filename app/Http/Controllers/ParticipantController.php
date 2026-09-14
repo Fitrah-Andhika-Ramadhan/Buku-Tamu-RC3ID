@@ -12,7 +12,13 @@ class ParticipantController extends Controller
 {
     public function index()
     {
-        $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->value('value');
+        if ($frontEventId) {
+            $event = Event::find($frontEventId);
+        } else {
+            $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        }
+        
         if (!$event) {
             return Inertia::render('Welcome', ['event' => null, 'totalParticipants' => 0, 'totalAttending' => 0, 'totalInstitutions' => 0, 'showWelcomeQr' => false]);
         }
@@ -22,15 +28,19 @@ class ParticipantController extends Controller
     public function eventForm($slug)
     {
         $event = Event::where('slug', $slug)->firstOrFail();
-        if (!$event->is_active) {
-            abort(404, 'Event is no longer active.');
-        }
+        if (!$event->is_active) abort(404, 'Event is no longer active.');
         return $this->renderEvent($event);
     }
 
     public function registerLegacy()
     {
-        $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->value('value');
+        if ($frontEventId) {
+            $event = Event::find($frontEventId);
+        } else {
+            $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        }
+        
         if (!$event) abort(404);
         return $this->renderRegister($event, 'register.store');
     }
