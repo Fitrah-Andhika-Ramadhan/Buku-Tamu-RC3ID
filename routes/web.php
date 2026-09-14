@@ -60,6 +60,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::post('/peserta/manual', [AdminController::class, 'storeManual'])->name('admin.peserta.manual');
     Route::post('/peserta/scan', [AdminController::class, 'scanDocument'])->name('admin.peserta.scan');
+    Route::post('/settings/gemini-key', [AdminController::class, 'saveGeminiKey'])->name('admin.settings.gemini');
     Route::put('/peserta/{id}/toggle', [AdminController::class, 'toggle'])->name('admin.peserta.toggle');
     Route::delete('/peserta/{id}', [AdminController::class, 'destroy'])->name('admin.peserta.destroy');
     

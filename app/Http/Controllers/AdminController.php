@@ -429,10 +429,28 @@ class AdminController extends Controller
                 'data' => $result
             ]);
         } catch (\Exception $e) {
+            $errorCode = $e->getMessage() === 'API_KEY_MISSING' ? 'API_KEY_MISSING' : 'GENERAL_ERROR';
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
-            ], 500);
+                'error_code' => $errorCode,
+                'message' => $e->getMessage() === 'API_KEY_MISSING' 
+                    ? 'API Key Gemini belum diatur.' 
+                    : $e->getMessage()
+            ], $errorCode === 'API_KEY_MISSING' ? 400 : 500);
         }
+    }
+
+    public function saveGeminiKey(Request $request)
+    {
+        $request->validate([
+            'key' => 'required|string'
+        ]);
+
+        Setting::updateOrCreate(
+            ['key' => 'gemini_api_key'],
+            ['value' => $request->key]
+        );
+
+        return response()->json(['success' => true]);
     }
 }

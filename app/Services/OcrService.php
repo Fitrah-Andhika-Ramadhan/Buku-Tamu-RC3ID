@@ -15,11 +15,11 @@ class OcrService
      */
     public function scanDocument($file)
     {
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = \App\Models\Setting::where('key', 'gemini_api_key')->value('value') ?: env('GEMINI_API_KEY');
         
         if (empty($apiKey)) {
-            Log::error('OCR failed: GEMINI_API_KEY is not set in .env');
-            throw new \Exception('API Key Gemini tidak ditemukan. Harap tambahkan GEMINI_API_KEY di pengaturan .env Anda.');
+            Log::error('OCR failed: GEMINI_API_KEY is not set');
+            throw new \Exception('API_KEY_MISSING');
         }
 
         $base64Image = base64_encode(file_get_contents($file->getRealPath()));

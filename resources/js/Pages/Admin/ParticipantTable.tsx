@@ -4,6 +4,7 @@ import React, { useState, useRef } from "react";
 import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2, Plus, FileText, X, Save, Upload, ScanLine, Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Link, router } from "@inertiajs/react";
+import axios from "axios";
 
 type Participant = {
   id: string;
@@ -55,20 +56,18 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
     const file = e.target.files?.[0];
     if (!file) return;
 
+    await performScan(file);
+  };
+
+  const performScan = async (file: File) => {
     setIsScanning(true);
     const formData = new FormData();
     formData.append('document', file);
 
     try {
-      const response = await fetch('/admin/peserta/scan', {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-        },
-        body: formData
-      });
+      const response = await axios.post('/admin/peserta/scan', formData);
+      const result = response.data;
       
-      const result = await response.json();
       if (result.success && result.data) {
         setManualFormData(prev => ({
           ...prev,
@@ -86,11 +85,32 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
         }));
         alert('Pemindaian berhasil! Silakan periksa kembali data yang terisi secara otomatis.');
       } else {
-        alert(result.message || 'Gagal memindai dokumen.');
+        if (result.error_code === 'API_KEY_MISSING') {
+           const key = prompt('Fitur ini membutuhkan API Key Gemini. Masukkan Gemini API Key Anda secara gratis dari Google AI Studio:');
+           if (key) {
+               await axios.post('/admin/settings/gemini-key', { key });
+               alert('API Key berhasil disimpan! Memulai ulang pemindaian...');
+               await performScan(file);
+               return;
+           }
+        } else {
+           alert(result.message || 'Gagal memindai dokumen.');
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      alert('Terjadi kesalahan jaringan saat memindai dokumen.');
+      const data = error.response?.data;
+      if (data && data.error_code === 'API_KEY_MISSING') {
+           const key = prompt('Fitur ini membutuhkan API Key Gemini. Masukkan Gemini API Key Anda secara gratis dari Google AI Studio:');
+           if (key) {
+               await axios.post('/admin/settings/gemini-key', { key });
+               alert('API Key berhasil disimpan! Memulai ulang pemindaian...');
+               await performScan(file);
+               return;
+           }
+      } else {
+        alert(data?.message || 'Terjadi kesalahan jaringan saat memindai dokumen.');
+      }
     } finally {
       setIsScanning(false);
       if (fileInputRef.current) {
