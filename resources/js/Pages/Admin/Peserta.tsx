@@ -6,8 +6,8 @@ export default function PesertaPage({ participants = [], formFields = [], isDbEr
 
   return (
     <AdminLayoutWrapper>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div>
+      <div className="max-w-6xl mx-auto space-y-6 print:max-w-none print:w-full print:m-0 print:space-y-0">
+        <div className="no-print">
           <h1 className="text-2xl font-bold text-[#253656]">Data Peserta</h1>
           <p className="text-slate-500 mt-1">Kelola data pendaftar dan validasi klaim merchandise.</p>
         </div>

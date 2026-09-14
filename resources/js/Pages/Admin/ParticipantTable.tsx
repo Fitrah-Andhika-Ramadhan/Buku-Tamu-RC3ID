@@ -560,10 +560,31 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
             <h1 className="text-3xl font-black text-[#253656]">Laporan Statistik Peserta RC3ID</h1>
             <p className="text-slate-500 mt-2">Diekspor pada: {new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-4">
+
+          {/* SUMMARY GRID FOR PRINT (AND WEB) */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm break-inside-avoid">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Pendaftar</p>
+              <p className="text-2xl font-black text-[#253656] mt-1">{participants.length}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm break-inside-avoid">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sudah Hadir</p>
+              <p className="text-2xl font-black text-[#10b981] mt-1">{totalHadir}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm break-inside-avoid">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Belum Hadir</p>
+              <p className="text-2xl font-black text-[#f59e0b] mt-1">{participants.length - totalHadir}</p>
+            </div>
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm break-inside-avoid">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Instansi</p>
+              <p className="text-2xl font-black text-[#BD272D] mt-1">{instansiData.length}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:gap-6">
             
             {/* Kehadiran Pie Chart */}
-            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center">
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center break-inside-avoid">
               <h3 className="font-bold text-[#253656] mb-4 w-full">Status Kehadiran</h3>
               <div className="h-[250px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -585,7 +606,7 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
 
             {/* Profesi Bar Chart */}
             {professionData.length > 0 && (
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm break-inside-avoid">
                 <h3 className="font-bold text-[#253656] mb-4">Profesi Peserta</h3>
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -603,13 +624,13 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
 
             {/* Instansi Bar Chart */}
             {instansiData.length > 0 && (
-              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm break-inside-avoid">
                 <h3 className="font-bold text-[#253656] mb-4">Instansi (Top 10)</h3>
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={instansiData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={60} />
+                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={80} />
                       <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                       <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                       <Bar dataKey="count" fill="#BD272D" radius={[4, 4, 0, 0]} barSize={30} />
@@ -621,13 +642,13 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
 
             {/* Custom Questions Charts */}
             {customChartsData.map((chart, idx) => (
-              <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+              <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm break-inside-avoid">
                 <h3 className="font-bold text-[#253656] mb-4 truncate" title={chart.question}>{chart.question}</h3>
                 <div className="h-[250px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={chart.data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={60} />
+                      <XAxis dataKey="name" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval={0} angle={-45} textAnchor="end" height={80} />
                       <YAxis tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
                       <Tooltip cursor={{ fill: '#f8fafc' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                       <Bar dataKey="count" fill={['#253656', '#BD272D', '#10b981', '#f59e0b', '#8b5cf6'][idx % 5]} radius={[4, 4, 0, 0]} barSize={40} />
