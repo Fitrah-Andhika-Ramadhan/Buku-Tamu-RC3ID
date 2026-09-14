@@ -12,7 +12,7 @@ interface FormHeader {
   banner_image_path?: string | null;
 }
 
-export default function Register({ formFields = [], formHeader }: { formFields?: any[], formHeader?: FormHeader }) {
+export default function Register({ formFields = [], formHeader, submitUrl }: { formFields?: any[], formHeader?: FormHeader, submitUrl?: string }) {
   const header: FormHeader = formHeader || {
     title_line1: 'Form Buku Tamu',
     title_line2: 'Booth RC3ID',
@@ -35,7 +35,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('register.store'), {
+        post(submitUrl || route('register.store'), {
             onSuccess: () => reset(),
         });
     };

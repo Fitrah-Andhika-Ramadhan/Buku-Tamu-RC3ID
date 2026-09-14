@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -11,18 +12,72 @@ class ParticipantController extends Controller
 {
     public function index()
     {
-        // Cache stats for 60 seconds — prevents N DB queries for N concurrent users
-        $totalParticipants  = Cache::remember('stat_total_participants', 60, fn() => Participant::count());
-        $totalAttending     = Cache::remember('stat_total_attending', 60, fn() => Participant::where('is_attending', true)->count());
-        $totalInstitutions  = Cache::remember('stat_total_institutions', 60, fn() =>
-            Participant::whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution')
+        $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        if (!$event) {
+            return Inertia::render('Welcome', ['event' => null, 'totalParticipants' => 0, 'totalAttending' => 0, 'totalInstitutions' => 0, 'showWelcomeQr' => false]);
+        }
+        return $this->renderEvent($event);
+    }
+
+    public function eventForm($slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+        if (!$event->is_active) {
+            abort(404, 'Event is no longer active.');
+        }
+        return $this->renderEvent($event);
+    }
+
+    public function registerLegacy()
+    {
+        $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        if (!$event) abort(404);
+        return $this->renderRegister($event, 'register.store');
+    }
+
+    public function registerForm($slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+        if (!$event->is_active) abort(404, 'Event is no longer active.');
+        return $this->renderRegister($event, 'event.store', ['slug' => $slug]);
+    }
+
+    protected function renderRegister(Event $event, $submitRoute, $routeParams = [])
+    {
+        $defaultHeader = [
+            'title_line1' => 'Form Buku Tamu',
+            'title_line2' => 'Booth RC3ID',
+            'description' => "Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!\n\nKami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi.\n\nSilakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.",
+            'social_links' => [
+                ['emoji' => '🌐', 'label' => 'rc3id.unpad.ac.id', 'url' => 'https://rc3id.unpad.ac.id'],
+                ['emoji' => '📸', 'label' => '@rc3id.unpad', 'url' => 'https://instagram.com/rc3id.unpad'],
+                ['emoji' => '💼', 'label' => 'LinkedIn RC3ID', 'url' => 'https://linkedin.com/company/research-center-for-care-and-control-of-infectious-diseases/'],
+                ['emoji' => '🎥', 'label' => 'YouTube RC3ID', 'url' => 'https://youtube.com/@RC3IDUniversitasPadjadjaran'],
+                ['emoji' => '🐦', 'label' => '@RC3IDUnpad', 'url' => 'https://x.com/RC3IDUnpad'],
+            ]
+        ];
+
+        return Inertia::render('Auth/Register', [
+            'formFields' => $event->form_fields ?? [],
+            'formHeader' => !empty($event->form_header) ? $event->form_header : $defaultHeader,
+            'submitUrl'  => route($submitRoute, $routeParams),
+        ]);
+    }
+
+    protected function renderEvent(Event $event)
+    {
+        $eventId = $event->id;
+        $totalParticipants  = Cache::remember("stat_total_participants_{$eventId}", 60, fn() => Participant::where('event_id', $eventId)->count());
+        $totalAttending     = Cache::remember("stat_total_attending_{$eventId}", 60, fn() => Participant::where('event_id', $eventId)->where('is_attending', true)->count());
+        $totalInstitutions  = Cache::remember("stat_total_institutions_{$eventId}", 60, fn() =>
+            Participant::where('event_id', $eventId)->whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution')
         );
 
-        $setting = Cache::remember('form_header_config', 300, fn() => \App\Models\Setting::where('key', 'form_header_config')->first());
-        $config = $setting ? $setting->value : [];
+        $config = $event->form_header ?? [];
         $showWelcomeQr = $config['show_welcome_qr'] ?? true;
 
         return Inertia::render('Welcome', [
+            'event'             => $event,
             'totalParticipants' => $totalParticipants,
             'totalAttending'    => $totalAttending,
             'totalInstitutions' => $totalInstitutions,
@@ -30,7 +85,20 @@ class ParticipantController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function storeLegacy(Request $request)
+    {
+        $event = Event::where('is_active', true)->orderBy('created_at', 'asc')->first();
+        if (!$event) abort(404);
+        return $this->processStore($request, $event, 'register.success');
+    }
+
+    public function store(Request $request, $slug)
+    {
+        $event = Event::where('slug', $slug)->firstOrFail();
+        return $this->processStore($request, $event, 'event.success', ['slug' => $slug]);
+    }
+
+    protected function processStore(Request $request, Event $event, $successRoute, $routeParams = [])
     {
         $request->validate([
             'full_name' => 'required|string|max:255',
@@ -39,37 +107,49 @@ class ParticipantController extends Controller
         $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', '_token']);
 
         $participant = Participant::create([
+            'event_id'         => $event->id,
             'full_name'        => $request->input('full_name', ''),
             'wa_number'        => $request->input('wa_number', ''),
             'email'            => $request->input('email', ''),
-            'institution'      => $request->input('institution') ?? '',  // null-safe: DB column is NOT NULL
+            'institution'      => $request->input('institution') ?? '',
             'custom_responses' => $customResponses,
             'is_attending'     => true,
         ]);
 
-        // Bust stats cache so next load shows updated numbers
-        Cache::forget('stat_total_participants');
-        Cache::forget('stat_total_attending');
-        Cache::forget('stat_total_institutions');
-        Cache::forget('stat_top_institutions');
+        Cache::forget("stat_total_participants_{$event->id}");
+        Cache::forget("stat_total_attending_{$event->id}");
+        Cache::forget("stat_total_institutions_{$event->id}");
+        Cache::forget("stat_top_institutions_{$event->id}");
 
-        // Store participant ID in session so success page works even after refresh
         session(['last_participant_id' => $participant->id]);
-        return redirect()->route('register.success');
+        return redirect()->route($successRoute, $routeParams);
     }
 
-    public function success()
+    public function successLegacy()
+    {
+        return $this->processSuccess();
+    }
+
+    public function success($slug)
+    {
+        return $this->processSuccess($slug);
+    }
+
+    protected function processSuccess($slug = null)
     {
         $participantId = session('last_participant_id');
         if (!$participantId) {
-            return redirect('/');
+            return redirect($slug ? route('event.form', ['slug' => $slug]) : '/');
         }
 
-        $participant = Participant::find($participantId);
+        $participant = Participant::with('event')->find($participantId);
+        if (!$participant || !$participant->event) {
+            return redirect('/');
+        }
+        $event = $participant->event;
+        $eventId = $event->id;
 
-        // Cache the config settings (rarely changes)
-        $setting = Cache::remember('success_page_config', 300, fn() => \App\Models\Setting::where('key', 'success_page_config')->first());
-        $config = $setting ? $setting->value : [
+        $config = $event->success_config ?? [
             'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
             'e_materi_url'    => '#',
             'show_merchandise'=> true,

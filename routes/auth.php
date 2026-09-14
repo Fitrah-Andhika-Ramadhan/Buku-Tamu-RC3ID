@@ -12,10 +12,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
-    Route::get('buku-tamu', [RegisteredUserController::class, 'create'])
-        ->name('register');
-
-    Route::post('buku-tamu', [RegisteredUserController::class, 'store']);
 
     Route::get('akses-internal-cnl', [AuthenticatedSessionController::class, 'create'])
         ->name('login');

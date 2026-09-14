@@ -76,7 +76,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
   
   /* Reset body and wrapper for print */
-  body, main, div.min-h-screen, div.fixed {
+  body, main, div.min-h-screen, div.fixed, div.flex-1 {
+    display: block !important;
+    width: 100% !important;
     background: white !important;
     color: black !important;
     position: static !important;

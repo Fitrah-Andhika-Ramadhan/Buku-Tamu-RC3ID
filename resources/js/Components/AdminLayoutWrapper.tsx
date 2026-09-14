@@ -1,7 +1,7 @@
 "use client";
 
-import { Link, usePage } from "@inertiajs/react";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database } from "lucide-react";
+import { Link, usePage, router } from "@inertiajs/react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database, LayoutList } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -16,6 +16,7 @@ const navItems = [
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { url: pathname } = usePage();
+  const { events, currentEvent } = usePage().props as any;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   if (pathname === "/login") {
@@ -140,6 +141,43 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
         </header>
 
         <div className="flex-1 overflow-auto p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 animate-fade-in slide-in-from-bottom-4 duration-700 ease-out">
+          
+          {/* Event Switcher */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm no-print">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
+                <LayoutList className="w-5 h-5 text-indigo-600" />
+              </div>
+              <div>
+                <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-0.5">Mengelola Data Untuk:</p>
+                <p className="text-sm font-bold text-slate-700">{currentEvent?.name || 'Memuat...'}</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <select 
+                value={currentEvent?.id || ''} 
+                onChange={(e) => router.post('/admin/events/switch', { event_id: e.target.value })}
+                className="w-full sm:w-64 border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm py-2"
+              >
+                {(events || []).map((ev: any) => (
+                  <option key={ev.id} value={ev.id}>{ev.name}</option>
+                ))}
+              </select>
+              <button 
+                onClick={() => {
+                  const name = prompt('Masukkan nama acara/form baru (contoh: "Seminar Nasional 2026"):');
+                  if (name) {
+                    router.post('/admin/events', { name });
+                  }
+                }}
+                className="shrink-0 bg-[#253656] text-white py-2 px-4 rounded-xl hover:bg-[#BD272D] transition-colors text-sm font-bold shadow-sm"
+              >
+                + Buat Baru
+              </button>
+            </div>
+          </div>
+
           {children}
         </div>
       </main>

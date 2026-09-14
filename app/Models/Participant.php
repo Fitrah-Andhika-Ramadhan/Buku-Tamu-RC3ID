@@ -11,6 +11,7 @@ class Participant extends Model
     use HasUuids;
 
     protected $fillable = [
+        'event_id',
         'full_name',
         'wa_number',
         'email',
@@ -26,4 +27,9 @@ class Participant extends Model
         'is_attending' => 'boolean',
         'custom_responses' => 'array',
     ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

@@ -29,11 +29,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $events = [];
+        $currentEvent = null;
+        
+        if ($request->user()) {
+            $events = \App\Models\Event::orderBy('created_at', 'asc')->get();
+            $eventId = \Illuminate\Support\Facades\Session::get('current_event_id');
+            if ($eventId) {
+                $currentEvent = $events->firstWhere('id', $eventId);
+            }
+            if (!$currentEvent && $events->isNotEmpty()) {
+                $currentEvent = $events->first();
+                \Illuminate\Support\Facades\Session::put('current_event_id', $currentEvent->id);
+            }
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
             ],
+            'events' => $events,
+            'currentEvent' => $currentEvent,
         ];
     }
 }

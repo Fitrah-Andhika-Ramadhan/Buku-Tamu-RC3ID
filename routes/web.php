@@ -7,9 +7,17 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', [ParticipantController::class, 'index'])->name('home');
-// Rate limit: max 10 submissions per minute per IP — prevents spam/flood
-Route::post('/daftar-tamu', [ParticipantController::class, 'store'])->middleware('throttle:10,1')->name('register.store');
-Route::get('/success', [ParticipantController::class, 'success'])->name('register.success');
+// Legacy routes for compatibility with old QR codes
+Route::get('/buku-tamu', [ParticipantController::class, 'registerLegacy'])->name('register');
+Route::post('/daftar-tamu', [ParticipantController::class, 'storeLegacy'])->middleware('throttle:10,1')->name('register.store');
+Route::get('/success', [ParticipantController::class, 'successLegacy'])->name('register.success');
+
+// New Event-specific routes
+Route::get('/e/{slug}/buku-tamu', [ParticipantController::class, 'registerForm'])->name('event.register');
+Route::get('/e/{slug}', [ParticipantController::class, 'eventForm'])->name('event.form');
+Route::post('/e/{slug}/daftar', [ParticipantController::class, 'store'])->middleware('throttle:10,1')->name('event.store');
+Route::get('/e/{slug}/success', [ParticipantController::class, 'success'])->name('event.success');
+
 Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 
 use App\Http\Controllers\AdminController;
@@ -54,7 +62,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::delete('/peserta/{id}', [AdminController::class, 'destroy'])->name('admin.peserta.destroy');
     Route::post('/peserta/manual', [AdminController::class, 'storeManual'])->name('admin.peserta.manual');
     
-    // Form Builder Routes
+    // Form & Event Management Routes
+    Route::post('/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
+    Route::post('/events/switch', [AdminController::class, 'switchEvent'])->name('admin.events.switch');
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
     Route::get('/success-config', [AdminController::class, 'successConfig'])->name('admin.success.config');

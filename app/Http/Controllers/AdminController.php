@@ -11,14 +11,35 @@ use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
+    protected function getCurrentEvent()
+    {
+        $eventId = \Illuminate\Support\Facades\Session::get('current_event_id');
+        if ($eventId) {
+            $event = \App\Models\Event::find($eventId);
+            if ($event) return $event;
+        }
+        $event = \App\Models\Event::orderBy('created_at', 'asc')->first();
+        if ($event) {
+            \Illuminate\Support\Facades\Session::put('current_event_id', $event->id);
+            return $event;
+        }
+        return null;
+    }
+
     public function dashboard()
     {
         try {
-            $totalRegistrants = Participant::count();
-            $totalHadir = Participant::where('is_attending', true)->count();
+            $event = $this->getCurrentEvent();
+            if (!$event) {
+                return Inertia::render('Admin/Dashboard', ['isDbError' => false, 'totalRegistrants' => 0, 'totalHadir' => 0, 'totalPending' => 0, 'recentParticipants' => []]);
+            }
+
+            $totalRegistrants = Participant::where('event_id', $event->id)->count();
+            $totalHadir = Participant::where('event_id', $event->id)->where('is_attending', true)->count();
             $totalPending = $totalRegistrants - $totalHadir;
             
-            $recentParticipants = Participant::orderBy('created_at', 'desc')
+            $recentParticipants = Participant::where('event_id', $event->id)
+                ->orderBy('created_at', 'desc')
                 ->take(5)
                 ->get(['id', 'full_name as nama_lengkap', 'institution as instansi', 'created_at as createdAt', 'is_attending as status_hadir']);
 
@@ -44,7 +65,12 @@ class AdminController extends Controller
     public function peserta()
     {
         try {
-            $participants = Participant::orderBy('created_at', 'desc')->get()->map(function($p) {
+            $event = $this->getCurrentEvent();
+            if (!$event) {
+                return Inertia::render('Admin/Peserta', ['participants' => [], 'formFields' => [], 'isDbError' => false]);
+            }
+
+            $participants = Participant::where('event_id', $event->id)->orderBy('created_at', 'desc')->get()->map(function($p) {
                 return [
                     'id' => $p->id,
                     'nama_lengkap' => $p->full_name,
@@ -60,8 +86,7 @@ class AdminController extends Controller
                 ];
             });
             
-            $setting = Setting::where('key', 'form_fields')->first();
-            $formFields = $setting ? json_decode($setting->value, true) : [];
+            $formFields = $event->form_fields ?? [];
 
             return Inertia::render('Admin/Peserta', [
                 'participants' => $participants,
@@ -72,6 +97,7 @@ class AdminController extends Controller
             Log::error('Admin Peserta DB Error: ' . $e->getMessage());
             return Inertia::render('Admin/Peserta', [
                 'participants' => [],
+                'formFields' => [],
                 'isDbError' => true,
             ]);
         }
@@ -121,6 +147,7 @@ class AdminController extends Controller
 
             $participant = new Participant();
             $participant->id = (string) Str::uuid();
+            $participant->event_id = $this->getCurrentEvent()->id ?? null;
             $participant->full_name = $validated['full_name'];
             $participant->wa_number = $validated['wa_number'] ?? '-';
             $participant->email = $validated['email'] ?? '-';
@@ -144,35 +171,43 @@ class AdminController extends Controller
 
     public function formBuilder()
     {
-        $setting = Setting::firstOrCreate(
-            ['key' => 'guestbook_form_fields'],
-            ['value' => []]
-        );
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return Inertia::render('Admin/FormBuilder', ['formFields' => []]);
+        }
 
         return Inertia::render('Admin/FormBuilder', [
-            'formFields' => $setting->value ?? []
+            'formFields' => $event->form_fields ?? []
         ]);
     }
 
     public function saveFormBuilder(Request $request)
     {
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return redirect()->back()->with('error', 'No active event found.');
+        }
+
         $validated = $request->validate([
             'fields' => 'required|array'
         ]);
 
-        Setting::updateOrCreate(
-            ['key' => 'guestbook_form_fields'],
-            ['value' => $validated['fields']]
-        );
+        $event->form_fields = $validated['fields'];
+        $event->save();
 
         return redirect()->back()->with('success', 'Form fields saved successfully.');
     }
 
     public function successConfig()
     {
-        $setting = Setting::where('key', 'success_page_config')->first();
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return Inertia::render('Admin/SuccessConfig', ['config' => []]);
+        }
+        
+        $currentConfig = $event->success_config ?? [];
         return Inertia::render('Admin/SuccessConfig', [
-            'config' => $setting ? $setting->value : [
+            'config' => !empty($currentConfig) ? $currentConfig : [
                 'success_message' => 'Silakan tunjukkan layar ini atau berikan nama Anda kepada staf kami untuk verifikasi kehadiran dan klaim merchandise eksklusif.',
                 'e_materi_type' => 'url',
                 'e_materi_url' => '',
@@ -192,6 +227,11 @@ class AdminController extends Controller
 
     public function saveSuccessConfig(Request $request)
     {
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return redirect()->back()->with('error', 'No active event found.');
+        }
+
         $validated = $request->validate([
             'success_message' => 'required|string',
             'e_materi_type' => 'required|string|in:url,file',
@@ -201,8 +241,7 @@ class AdminController extends Controller
             'tts_text' => 'nullable|string|max:1000',
         ]);
 
-        $setting = Setting::where('key', 'success_page_config')->first();
-        $currentConfig = $setting ? $setting->value : [];
+        $currentConfig = $event->success_config ?? [];
 
         $config = array_merge($currentConfig, $validated);
         $config['show_merchandise'] = filter_var($request->input('show_merchandise', true), FILTER_VALIDATE_BOOLEAN);
@@ -252,22 +291,25 @@ class AdminController extends Controller
             $config['merchandise_items'] = $processedItems;
         }
 
-        Setting::updateOrCreate(
-            ['key' => 'success_page_config'],
-            ['value' => $config]
-        );
+        $event->success_config = $config;
+        $event->save();
 
         // Flush cached config so frontend sees updated settings immediately
-        \Illuminate\Support\Facades\Cache::forget('success_page_config');
+        \Illuminate\Support\Facades\Cache::forget('success_page_config_' . $event->id);
 
         return redirect()->back()->with('success', 'Success page settings saved successfully.');
     }
 
     public function formHeaderConfig()
     {
-        $setting = Setting::where('key', 'form_header_config')->first();
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return Inertia::render('Admin/FormHeaderConfig', ['config' => []]);
+        }
+        
+        $currentConfig = $event->form_header ?? [];
         return Inertia::render('Admin/FormHeaderConfig', [
-            'config' => $setting ? $setting->value : [
+            'config' => !empty($currentConfig) ? $currentConfig : [
                 'title_line1' => 'Form Buku Tamu',
                 'title_line2' => 'Booth RC3ID',
                 'description' => "Selamat datang di booth Research Center for Care and Control of Infectious Diseases (RC3ID) Universitas Padjadjaran di 11th BIDEAS 2026!\n\nKami mengundang Anda untuk terhubung dengan inovasi riset klinis dan inisiatif edukasi publik kami dalam pengendalian penyakit infeksi.\n\nSilakan lengkapi informasi di bawah ini untuk klaim merchandise eksklusif dari booth kami. Data yang Anda berikan akan dijaga kerahasiaannya.",
@@ -287,8 +329,12 @@ class AdminController extends Controller
 
     public function saveFormHeaderConfig(Request $request)
     {
-        $setting = Setting::where('key', 'form_header_config')->first();
-        $currentConfig = $setting ? $setting->value : [];
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return redirect()->back()->with('error', 'No active event found.');
+        }
+
+        $currentConfig = $event->form_header ?? [];
 
         $bannerPath = $currentConfig['banner_image_path'] ?? null;
         if ($request->hasFile('banner_image')) {
@@ -308,11 +354,51 @@ class AdminController extends Controller
             'banner_image_path' => $bannerPath,
         ];
 
-        Setting::updateOrCreate(
-            ['key' => 'form_header_config'],
-            ['value' => $config]
-        );
+        $event->form_header = $config;
+        $event->save();
 
         return redirect()->back()->with('success', 'Form header settings saved successfully.');
+    }
+
+    public function storeEvent(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $event = new \App\Models\Event();
+        $event->id = (string) Str::uuid();
+        $event->name = $validated['name'];
+        $event->slug = Str::slug($validated['name']) . '-' . rand(100, 999);
+        $event->is_active = true;
+        
+        // Copy defaults from current event if any
+        $current = $this->getCurrentEvent();
+        if ($current) {
+            $event->form_fields = $current->form_fields;
+            $event->form_header = $current->form_header;
+            $event->success_config = $current->success_config;
+        } else {
+            $event->form_fields = [];
+            $event->form_header = [];
+            $event->success_config = [];
+        }
+        
+        $event->save();
+
+        \Illuminate\Support\Facades\Session::put('current_event_id', $event->id);
+
+        return redirect()->back()->with('success', 'Form baru berhasil dibuat.');
+    }
+
+    public function switchEvent(Request $request)
+    {
+        $validated = $request->validate([
+            'event_id' => 'required|uuid|exists:events,id',
+        ]);
+
+        \Illuminate\Support\Facades\Session::put('current_event_id', $validated['event_id']);
+
+        return redirect()->back()->with('success', 'Berhasil beralih form.');
     }
 }
