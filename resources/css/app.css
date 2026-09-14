@@ -68,3 +68,45 @@ html { background: var(--background); scroll-behavior: smooth; }
 body { @apply bg-background text-foreground; }
 button, a { -webkit-tap-highlight-color: transparent; }
 ::selection { background: oklch(0.88 0.16 112); color: oklch(0.24 0.04 175); }
+
+@media print {
+  /* Hide sidebar and header elements */
+  aside, header, nav, .no-print, button {
+    display: none !important;
+  }
+  
+  /* Reset body and wrapper for print */
+  body, main, div.min-h-screen, div.fixed {
+    background: white !important;
+    color: black !important;
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+  
+  /* Make table look clean */
+  table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+  
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+  }
+
+  /* Make sure charts are printed */
+  .recharts-wrapper {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Remove scrollbars */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}

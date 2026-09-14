@@ -10,6 +10,7 @@ interface FormField {
     name: string;
     required: boolean;
     options?: string[];
+    show_on_front?: boolean;
 }
 
 export default function FormBuilder({ formFields }: { formFields: FormField[] }) {
@@ -26,6 +27,7 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
             label: 'New Field',
             name: 'new_field_' + Date.now(),
             required: false,
+            show_on_front: true,
         };
         const updated = [...fields, newField];
         setFields(updated);
@@ -199,6 +201,25 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
                                                 />
                                                 <span className="text-sm font-bold text-[#253656]">Wajib Diisi</span>
                                             </label>
+                                        </div>
+
+                                        {/* Show on Front Checkbox */}
+                                        <div className="lg:col-span-12 md:col-span-12 border-t border-gray-100 mt-2 pt-3">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <span className="text-sm font-bold text-[#253656] block">Tampilkan di Form Publik?</span>
+                                                    <span className="text-xs text-gray-500 font-medium">Jika dimatikan, pertanyaan ini hanya muncul di form "Tambah Manual" milik Admin. Berguna untuk form internal acara masa lalu / catatan admin.</span>
+                                                </div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={field.show_on_front !== false}
+                                                        onChange={(e) => updateField(field.id, { show_on_front: e.target.checked })}
+                                                        className="sr-only peer"
+                                                    />
+                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#BD272D]"></div>
+                                                </label>
+                                            </div>
                                         </div>
 
                                         {/* Options for Radio/Checkbox */}

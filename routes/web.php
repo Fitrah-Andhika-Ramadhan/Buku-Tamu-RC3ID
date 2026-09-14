@@ -52,6 +52,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::get('/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::put('/peserta/{id}/toggle', [AdminController::class, 'toggle'])->name('admin.peserta.toggle');
     Route::delete('/peserta/{id}', [AdminController::class, 'destroy'])->name('admin.peserta.destroy');
+    Route::post('/peserta/manual', [AdminController::class, 'storeManual'])->name('admin.peserta.manual');
     
     // Form Builder Routes
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');

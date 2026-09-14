@@ -144,7 +144,7 @@ export default function Register({ formFields = [], formHeader }: { formFields?:
                         </div>
 
                         {/* Dynamic Fields */}
-                        {formFields.map((field, index) => (
+                        {formFields.filter(f => f.show_on_front !== false).map((field, index) => (
                             <div key={index} className="space-y-3">
                                 <label className="block text-sm font-black text-[#253656] uppercase tracking-[0.1em]">
                                     {field.label} {field.required && <span className="text-[#BD272D]">*</span>}

@@ -7,6 +7,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -59,8 +60,12 @@ class AdminController extends Controller
                 ];
             });
             
+            $setting = Setting::where('key', 'form_fields')->first();
+            $formFields = $setting ? json_decode($setting->value, true) : [];
+
             return Inertia::render('Admin/Peserta', [
                 'participants' => $participants,
+                'formFields' => $formFields,
                 'isDbError' => false,
             ]);
         } catch (\Exception $e) {
@@ -97,6 +102,36 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             Log::error('Error deleting participant: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Gagal menghapus peserta');
+        }
+    }
+
+    public function storeManual(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'full_name' => 'required|string|max:255',
+                'wa_number' => 'nullable|string|max:20',
+                'email' => 'nullable|email|max:255',
+                'institution' => 'nullable|string|max:255',
+            ]);
+
+            // Ambil semua data request kecuali field default
+            $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', '_token']);
+
+            $participant = Participant::create([
+                'id' => (string) Str::uuid(),
+                'full_name' => $validated['full_name'],
+                'wa_number' => $validated['wa_number'] ?? '-',
+                'email' => $validated['email'] ?? '-',
+                'institution' => $validated['institution'] ?? '-',
+                'custom_responses' => $customResponses,
+                'is_attending' => true,
+            ]);
+
+            return back()->with('success', 'Peserta manual berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            Log::error('Error store manual participant: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menambahkan peserta: ' . $e->getMessage());
         }
     }
 

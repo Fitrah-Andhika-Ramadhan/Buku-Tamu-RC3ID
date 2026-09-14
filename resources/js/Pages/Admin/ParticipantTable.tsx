@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2 } from "lucide-react";
+import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2, Plus, FileText, X, Save } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Link, router } from "@inertiajs/react";
 
@@ -18,12 +18,15 @@ type Participant = {
   custom_responses?: Record<string, any>;
 };
 
-export function ParticipantTable({ participants }: { participants: Participant[] }) {
+export function ParticipantTable({ participants, formFields = [] }: { participants: Participant[], formFields?: any[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"all" | "hadir" | "pending">("all");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [viewMode, setViewMode] = useState<"list" | "spreadsheet" | "chart">("list");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [showManualModal, setShowManualModal] = useState(false);
+  const [manualFormData, setManualFormData] = useState<Record<string, any>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const toggleRow = (id: string) => {
     setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
@@ -151,6 +154,77 @@ export function ParticipantTable({ participants }: { participants: Participant[]
     document.body.removeChild(link);
   };
 
+  const handleExportPDF = () => {
+    // This will trigger the browser's print dialog, which we'll style with @media print CSS
+    window.print();
+  };
+
+  const handleExportDOC = () => {
+    if (filtered.length === 0) {
+      alert("Tidak ada data untuk diekspor");
+      return;
+    }
+    
+    const baseHeaders = ['ID', 'Nama Lengkap', 'Instansi', 'Profesi', 'Email', 'No Whatsapp', 'Status Kehadiran', 'Waktu Daftar'];
+    const headers = [...baseHeaders, ...customHeaders];
+    
+    let tableHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+    <head><meta charset='utf-8'><title>Data Peserta RC3ID</title></head><body>
+    <h2 style="font-family: Arial, sans-serif;">Data Peserta RC3ID - ${new Date().toLocaleDateString('id-ID')}</h2>
+    <table border="1" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif; font-size: 12px;">
+      <thead style="background-color: #f2f2f2;">
+        <tr>${headers.map(h => `<th style="padding: 5px; text-align: left;">${h}</th>`).join('')}</tr>
+      </thead>
+      <tbody>`;
+      
+    filtered.forEach(p => {
+      const baseRow = [
+        p.id,
+        p.nama_lengkap,
+        p.instansi || '-',
+        p.profesi || '-',
+        p.email || '-',
+        p.wa_number,
+        p.status_hadir ? 'Hadir' : 'Pending',
+        new Date(p.createdAt).toLocaleString('id-ID')
+      ];
+      
+      const customRow = customHeaders.map(header => {
+        const val = p.custom_responses ? p.custom_responses[header] : "";
+        if (Array.isArray(val)) return val.join(', ');
+        return val || "";
+      });
+
+      const rowData = [...baseRow, ...customRow];
+      tableHtml += `<tr>${rowData.map(c => `<td style="padding: 5px;">${c}</td>`).join('')}</tr>`;
+    });
+    
+    tableHtml += `</tbody></table></body></html>`;
+    
+    const blob = new Blob(['\ufeff', tableHtml], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Data_Peserta_RC3ID_${new Date().toISOString().split('T')[0]}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleManualSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    router.post('/admin/peserta/manual', manualFormData, {
+      preserveScroll: true,
+      onSuccess: () => {
+        setShowManualModal(false);
+        setManualFormData({});
+      },
+      onFinish: () => setIsSubmitting(false)
+    });
+  };
+
   return (
     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
       {/* Header */}
@@ -187,11 +261,32 @@ export function ParticipantTable({ participants }: { participants: Participant[]
             </div>
             
             <button 
+              onClick={() => setShowManualModal(true)}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-white bg-[#BD272D] border border-transparent rounded-xl hover:bg-[#991f24] transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Tambah Manual
+            </button>
+            <button 
+              onClick={handleExportPDF}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              PDF
+            </button>
+            <button 
+              onClick={handleExportDOC}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              DOC
+            </button>
+            <button 
               onClick={handleExportCSV}
               className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />
-              Ekspor CSV
+              CSV
             </button>
           </div>
         </div>
@@ -542,6 +637,81 @@ export function ParticipantTable({ participants }: { participants: Participant[]
         <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
           <p className="text-xs text-slate-400">Menampilkan <strong className="text-slate-600">{filtered.length}</strong> dari <strong className="text-slate-600">{participants.length}</strong> peserta</p>
           <p className="text-xs font-bold text-[#BD272D]">{totalHadir} sudah hadir</p>
+        </div>
+      )}
+
+      {/* Modal Tambah Manual */}
+      {showManualModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <h3 className="font-bold text-lg text-[#253656] flex items-center gap-2">
+                <Plus className="w-5 h-5 text-[#BD272D]" /> Tambah Peserta Manual
+              </h3>
+              <button onClick={() => setShowManualModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1 rounded-md border border-slate-200">
+                 <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto">
+              <form id="manual-form" onSubmit={handleManualSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700">Nama Lengkap <span className="text-red-500">*</span></label>
+                    <input type="text" required value={manualFormData.full_name || ''} onChange={e => setManualFormData({...manualFormData, full_name: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700">No. WhatsApp</label>
+                    <input type="text" value={manualFormData.wa_number || ''} onChange={e => setManualFormData({...manualFormData, wa_number: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700">Email</label>
+                    <input type="email" value={manualFormData.email || ''} onChange={e => setManualFormData({...manualFormData, email: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700">Institusi</label>
+                    <input type="text" value={manualFormData.institution || ''} onChange={e => setManualFormData({...manualFormData, institution: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                  </div>
+                </div>
+
+                {formFields && formFields.length > 0 && <hr className="border-slate-100" />}
+
+                {/* Custom Fields */}
+                {formFields && formFields.map((field: any, idx: number) => (
+                  <div key={idx} className="space-y-1.5">
+                    <label className="text-sm font-bold text-slate-700">
+                      {field.label} {field.required && <span className="text-red-500">*</span>}
+                      {field.show_on_front === false && (
+                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
+                          Form Internal
+                        </span>
+                      )}
+                    </label>
+                    {field.type === 'textarea' ? (
+                      <textarea required={field.required} value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" rows={3} />
+                    ) : field.type === 'radio' ? (
+                      <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                         {field.options?.map((opt: string) => (
+                           <label key={opt} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
+                              <input type="radio" name={field.name} required={field.required} checked={manualFormData[field.name] === opt} onChange={() => setManualFormData({...manualFormData, [field.name]: opt})} className="text-[#BD272D] focus:ring-[#BD272D]" /> {opt}
+                           </label>
+                         ))}
+                      </div>
+                    ) : (
+                      <input type="text" required={field.required} value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                    )}
+                  </div>
+                ))}
+              </form>
+            </div>
+            
+            <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-2 bg-slate-50">
+              <button type="button" onClick={() => setShowManualModal(false)} className="px-4 py-2.5 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">Batal</button>
+              <button type="submit" form="manual-form" disabled={isSubmitting} className="flex items-center gap-2 px-4 py-2.5 text-sm font-bold text-white bg-[#BD272D] rounded-xl hover:bg-[#991f24] transition-colors disabled:opacity-70">
+                {isSubmitting ? "Menyimpan..." : <><Save className="w-4 h-4" /> Simpan Peserta</>}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

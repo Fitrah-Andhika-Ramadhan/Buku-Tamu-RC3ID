@@ -2,7 +2,7 @@ import { ParticipantTable } from "./ParticipantTable";
 import { AlertTriangle } from "lucide-react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 
-export default function PesertaPage({ participants = [], isDbError = false }: { participants: any[], isDbError: boolean }) {
+export default function PesertaPage({ participants = [], formFields = [], isDbError = false }: { participants: any[], formFields?: any[], isDbError: boolean }) {
 
   return (
     <AdminLayoutWrapper>
@@ -25,7 +25,7 @@ export default function PesertaPage({ participants = [], isDbError = false }: { 
             </div>
           </div>
         ) : (
-          <ParticipantTable participants={participants} />
+          <ParticipantTable participants={participants} formFields={formFields} />
         )}
       </div>
     </AdminLayoutWrapper>
