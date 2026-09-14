@@ -715,7 +715,7 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
                 {formFields && formFields.map((field: any, idx: number) => (
                   <div key={idx} className="space-y-1.5">
                     <label className="text-sm font-bold text-slate-700">
-                      {field.label} {field.required && <span className="text-red-500">*</span>}
+                      {field.label} <span className="text-slate-400 font-normal text-xs ml-1">(Opsional)</span>
                       {field.show_on_front === false && (
                         <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800 border border-amber-200">
                           Form Internal
@@ -723,17 +723,17 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
                       )}
                     </label>
                     {field.type === 'textarea' ? (
-                      <textarea required={field.required} value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" rows={3} />
+                      <textarea value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" rows={3} />
                     ) : field.type === 'radio' ? (
                       <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-100 rounded-lg">
                          {field.options?.map((opt: string) => (
                            <label key={opt} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
-                              <input type="radio" name={field.name} required={field.required} checked={manualFormData[field.name] === opt} onChange={() => setManualFormData({...manualFormData, [field.name]: opt})} className="text-[#BD272D] focus:ring-[#BD272D]" /> {opt}
+                              <input type="radio" name={field.name} checked={manualFormData[field.name] === opt} onChange={() => setManualFormData({...manualFormData, [field.name]: opt})} className="text-[#BD272D] focus:ring-[#BD272D]" /> {opt}
                            </label>
                          ))}
                       </div>
                     ) : (
-                      <input type="text" required={field.required} value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                      <input type="text" value={manualFormData[field.name] || ''} onChange={e => setManualFormData({...manualFormData, [field.name]: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
                     )}
                   </div>
                 ))}
