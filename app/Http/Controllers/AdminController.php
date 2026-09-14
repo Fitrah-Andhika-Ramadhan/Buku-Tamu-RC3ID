@@ -113,20 +113,27 @@ class AdminController extends Controller
                 'wa_number' => 'nullable|string|max:20',
                 'email' => 'nullable|email|max:255',
                 'institution' => 'nullable|string|max:255',
+                'registration_date' => 'nullable|date',
             ]);
 
             // Ambil semua data request kecuali field default
-            $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', '_token']);
+            $customResponses = $request->except(['full_name', 'wa_number', 'email', 'institution', 'registration_date', '_token']);
 
-            $participant = Participant::create([
-                'id' => (string) Str::uuid(),
-                'full_name' => $validated['full_name'],
-                'wa_number' => $validated['wa_number'] ?? '-',
-                'email' => $validated['email'] ?? '-',
-                'institution' => $validated['institution'] ?? '-',
-                'custom_responses' => $customResponses,
-                'is_attending' => true,
-            ]);
+            $participant = new Participant();
+            $participant->id = (string) Str::uuid();
+            $participant->full_name = $validated['full_name'];
+            $participant->wa_number = $validated['wa_number'] ?? '-';
+            $participant->email = $validated['email'] ?? '-';
+            $participant->institution = $validated['institution'] ?? '-';
+            $participant->custom_responses = $customResponses;
+            $participant->is_attending = true;
+            
+            if (!empty($validated['registration_date'])) {
+                $participant->created_at = $validated['registration_date'];
+                $participant->updated_at = $validated['registration_date'];
+            }
+            
+            $participant->save();
 
             return back()->with('success', 'Peserta manual berhasil ditambahkan.');
         } catch (\Exception $e) {

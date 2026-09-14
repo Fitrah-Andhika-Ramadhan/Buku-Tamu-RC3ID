@@ -672,6 +672,11 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
                     <label className="text-sm font-bold text-slate-700">Institusi</label>
                     <input type="text" value={manualFormData.institution || ''} onChange={e => setManualFormData({...manualFormData, institution: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
                   </div>
+                  <div className="space-y-1.5 md:col-span-2">
+                    <label className="text-sm font-bold text-slate-700">Tanggal Daftar (Opsional)</label>
+                    <input type="datetime-local" value={manualFormData.registration_date || ''} onChange={e => setManualFormData({...manualFormData, registration_date: e.target.value})} className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:border-[#BD272D] focus:ring-1 focus:ring-[#BD272D]" />
+                    <p className="text-xs text-slate-500">Kosongkan jika mendaftar hari ini / sekarang.</p>
+                  </div>
                 </div>
 
                 {formFields && formFields.length > 0 && <hr className="border-slate-100" />}
