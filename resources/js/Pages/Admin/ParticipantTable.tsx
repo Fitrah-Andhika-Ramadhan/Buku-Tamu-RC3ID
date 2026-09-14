@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2, Plus, FileText, X, Save } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { CheckCircle2, Clock, Search, ExternalLink, Filter, Download, ChevronDown, ChevronUp, Table, LayoutList, BarChart3, MoreVertical, Trash2, Plus, FileText, X, Save, Upload, ScanLine, Loader2 } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Link, router } from "@inertiajs/react";
 
@@ -27,6 +27,8 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
   const [showManualModal, setShowManualModal] = useState(false);
   const [manualFormData, setManualFormData] = useState<Record<string, any>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleRow = (id: string) => {
     setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }));
@@ -47,6 +49,54 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
     }, {
       preserveScroll: true
     });
+  };
+
+  const handleScanImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    const formData = new FormData();
+    formData.append('document', file);
+
+    try {
+      const response = await fetch('/admin/peserta/scan', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: formData
+      });
+      
+      const result = await response.json();
+      if (result.success && result.data) {
+        setManualFormData(prev => ({
+          ...prev,
+          full_name: result.data.full_name || result.data.nama_lengkap || prev.full_name,
+          wa_number: result.data.wa_number || prev.wa_number,
+          email: result.data.email || prev.email,
+          institution: result.data.institution || result.data.instansi || prev.institution,
+          // Handle profession which is mapped to custom fields
+          ...((formFields || []).reduce((acc: any, f: any) => {
+            if (f.name.toLowerCase().includes('profesi') || f.label.toLowerCase().includes('profesi')) {
+               acc[f.name] = result.data.profession || result.data.profesi || prev[f.name];
+            }
+            return acc;
+          }, {}))
+        }));
+        alert('Pemindaian berhasil! Silakan periksa kembali data yang terisi secara otomatis.');
+      } else {
+        alert(result.message || 'Gagal memindai dokumen.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Terjadi kesalahan jaringan saat memindai dokumen.');
+    } finally {
+      setIsScanning(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   const totalHadir = participants.filter((p) => p.status_hadir).length;
@@ -678,12 +728,34 @@ export function ParticipantTable({ participants, formFields = [] }: { participan
               <h3 className="font-bold text-lg text-[#253656] flex items-center gap-2">
                 <Plus className="w-5 h-5 text-[#BD272D]" /> Tambah Peserta Manual
               </h3>
-              <button onClick={() => setShowManualModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1 rounded-md border border-slate-200">
-                 <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleScanImage} />
+                <button 
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isScanning}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white text-xs font-bold rounded-lg shadow-sm transition-all disabled:opacity-70"
+                  title="Scan Dokumen Formulir dengan AI"
+                >
+                  {isScanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />}
+                  <span className="hidden sm:inline">{isScanning ? "Memindai..." : "Scan Dokumen AI"}</span>
+                </button>
+                <button onClick={() => setShowManualModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 transition-colors">
+                   <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
             
-            <div className="p-6 overflow-y-auto">
+            <div className="p-6 overflow-y-auto relative">
+              {isScanning && (
+                <div className="absolute inset-0 z-10 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl">
+                   <div className="relative">
+                      <ScanLine className="w-16 h-16 text-indigo-500 animate-pulse" />
+                      <div className="absolute top-0 left-0 w-full h-1 bg-indigo-500 shadow-[0_0_8px_2px_rgba(99,102,241,0.6)] rounded-full animate-[scan_2s_ease-in-out_infinite]"></div>
+                   </div>
+                   <p className="mt-4 font-bold text-indigo-900">AI sedang membaca tulisan...</p>
+                   <p className="text-xs text-indigo-500 mt-1">Harap tunggu sebentar, proses ini memakan waktu beberapa detik.</p>
+                </div>
+              )}
               <form id="manual-form" onSubmit={handleManualSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">

@@ -413,4 +413,26 @@ class AdminController extends Controller
 
         return redirect()->back()->with('success', 'Front event berhasil diatur.');
     }
+
+    public function scanDocument(Request $request)
+    {
+        $request->validate([
+            'document' => 'required|image|max:10240' // max 10MB
+        ]);
+
+        try {
+            $ocrService = new \App\Services\OcrService();
+            $result = $ocrService->scanDocument($request->file('document'));
+            
+            return response()->json([
+                'success' => true,
+                'data' => $result
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
