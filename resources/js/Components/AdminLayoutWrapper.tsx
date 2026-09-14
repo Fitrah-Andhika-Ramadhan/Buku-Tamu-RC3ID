@@ -18,6 +18,8 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
   const { url: pathname } = usePage();
   const { events, currentEvent } = usePage().props as any;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newEventName, setNewEventName] = useState('');
 
   if (pathname === "/login") {
     return <>{children}</>;
@@ -165,13 +167,8 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                 ))}
               </select>
               <button 
-                onClick={() => {
-                  const name = prompt('Masukkan nama acara/form baru (contoh: "Seminar Nasional 2026"):');
-                  if (name) {
-                    router.post('/admin/events', { name });
-                  }
-                }}
-                className="shrink-0 bg-[#253656] text-white py-2 px-4 rounded-xl hover:bg-[#BD272D] transition-colors text-sm font-bold shadow-sm"
+                onClick={() => setIsCreateModalOpen(true)}
+                className="shrink-0 bg-[#253656] text-white py-2 px-4 rounded-xl hover:bg-[#BD272D] transition-colors text-sm font-bold shadow-sm flex items-center gap-2"
               >
                 + Buat Baru
               </button>
@@ -181,6 +178,60 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
           {children}
         </div>
       </main>
+
+      {/* Custom Create Event Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-fade-in-up">
+            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-black text-slate-800 text-lg">Buat Acara / Form Baru</h3>
+              <p className="text-sm text-slate-500 mt-1">Masukkan nama acara baru. Pengaturan form & sukses akan disalin dari form saat ini.</p>
+            </div>
+            <div className="p-5">
+              <label className="block text-sm font-bold text-slate-700 mb-2">Nama Acara</label>
+              <input 
+                type="text" 
+                value={newEventName}
+                onChange={(e) => setNewEventName(e.target.value)}
+                placeholder='contoh: "Seminar Nasional 2026"'
+                className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && newEventName.trim()) {
+                    router.post('/admin/events', { name: newEventName.trim() });
+                    setIsCreateModalOpen(false);
+                    setNewEventName('');
+                  }
+                }}
+              />
+            </div>
+            <div className="p-4 bg-slate-50 flex justify-end gap-3">
+              <button 
+                onClick={() => {
+                  setIsCreateModalOpen(false);
+                  setNewEventName('');
+                }}
+                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 rounded-xl transition-colors"
+              >
+                Batal
+              </button>
+              <button 
+                onClick={() => {
+                  if (newEventName.trim()) {
+                    router.post('/admin/events', { name: newEventName.trim() });
+                    setIsCreateModalOpen(false);
+                    setNewEventName('');
+                  }
+                }}
+                disabled={!newEventName.trim()}
+                className="px-4 py-2 text-sm font-bold text-white bg-[#BD272D] hover:bg-[#991f24] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-[#BD272D]/20"
+              >
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
