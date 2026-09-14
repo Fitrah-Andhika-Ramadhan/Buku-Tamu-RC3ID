@@ -33,14 +33,18 @@ class HandleInertiaRequests extends Middleware
         $currentEvent = null;
         
         if ($request->user()) {
-            $events = \App\Models\Event::orderBy('created_at', 'asc')->get();
-            $eventId = \Illuminate\Support\Facades\Session::get('current_event_id');
-            if ($eventId) {
-                $currentEvent = $events->firstWhere('id', $eventId);
-            }
-            if (!$currentEvent && $events->isNotEmpty()) {
-                $currentEvent = $events->first();
-                \Illuminate\Support\Facades\Session::put('current_event_id', $currentEvent->id);
+            try {
+                $events = \App\Models\Event::orderBy('created_at', 'asc')->get();
+                $eventId = \Illuminate\Support\Facades\Session::get('current_event_id');
+                if ($eventId) {
+                    $currentEvent = $events->firstWhere('id', $eventId);
+                }
+                if (!$currentEvent && $events->isNotEmpty()) {
+                    $currentEvent = $events->first();
+                    \Illuminate\Support\Facades\Session::put('current_event_id', $currentEvent->id);
+                }
+            } catch (\Exception $e) {
+                // Table doesn't exist yet, ignore
             }
         }
 
