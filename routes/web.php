@@ -66,6 +66,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     
     // Form & Event Management Routes
     Route::post('/events', [AdminController::class, 'storeEvent'])->name('admin.events.store');
+    Route::put('/events/{id}', [AdminController::class, 'updateEvent'])->name('admin.events.update');
     Route::post('/events/switch', [AdminController::class, 'switchEvent'])->name('admin.events.switch');
     Route::post('/events/set-front', [AdminController::class, 'setFrontEvent'])->name('admin.events.set-front');
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');

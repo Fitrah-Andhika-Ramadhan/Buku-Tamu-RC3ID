@@ -404,12 +404,15 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:events,slug',
+        ], [
+            'slug.unique' => 'Link ini sudah digunakan oleh form lain. Silakan pilih link yang berbeda.'
         ]);
 
         $event = new \App\Models\Event();
         $event->id = (string) Str::uuid();
         $event->name = $validated['name'];
-        $event->slug = Str::slug($validated['name']) . '-' . rand(100, 999);
+        $event->slug = !empty($validated['slug']) ? Str::slug($validated['slug']) : Str::slug($validated['name']) . '-' . rand(100, 999);
         $event->is_active = true;
         
         // Copy defaults from current event if any
@@ -429,6 +432,23 @@ class AdminController extends Controller
         \Illuminate\Support\Facades\Session::put('current_event_id', $event->id);
 
         return redirect()->back()->with('success', 'Form baru berhasil dibuat.');
+    }
+
+    public function updateEvent(Request $request, $id)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:events,slug,' . $id,
+        ], [
+            'slug.unique' => 'Link ini sudah digunakan oleh form lain. Silakan pilih link yang berbeda.'
+        ]);
+
+        $event->name = $validated['name'];
+        $event->slug = Str::slug($validated['slug']);
+        $event->save();
+
+        return redirect()->back()->with('success', 'Informasi form berhasil diperbarui.');
     }
 
     public function switchEvent(Request $request)

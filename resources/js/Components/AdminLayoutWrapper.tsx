@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, usePage, router } from "@inertiajs/react";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database, LayoutList, Monitor } from "lucide-react";
+import { LogOut, LayoutDashboard, FileText, Settings, Users, Monitor, ShieldCheck, CheckCircle2, Ticket, QrCode, Menu, LayoutList, Plus, Star, Database, Edit3, Activity, X, Layout } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -20,7 +20,11 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
   const { events, currentEvent, frontEventId } = usePage().props as any;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newEventName, setNewEventName] = useState('');
+  const [newEventSlug, setNewEventSlug] = useState('');
+  const [editEventName, setEditEventName] = useState('');
+  const [editEventSlug, setEditEventSlug] = useState('');
 
   if (pathname === "/login") {
     return <>{children}</>;
@@ -163,10 +167,24 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                 onChange={(e) => router.post('/admin/events/switch', { event_id: e.target.value })}
                 className="w-full sm:w-64 border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm py-2"
               >
-                {(events || []).map((ev: any) => (
-                  <option key={ev.id} value={ev.id}>{ev.name}</option>
+                {(events || []).map((e: any) => (
+                  <option key={e.id} value={e.id}>{e.name}</option>
                 ))}
               </select>
+              
+              {currentEvent && (
+                <button
+                  onClick={() => {
+                    setEditEventName(currentEvent.name);
+                    setEditEventSlug(currentEvent.slug || '');
+                    setIsEditModalOpen(true);
+                  }}
+                  className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors border border-transparent hover:border-blue-100"
+                  title="Edit Nama/Link Acara"
+                >
+                  <Edit3 className="w-5 h-5" />
+                </button>
+              )}
               
               {currentEvent && (
                 <button 
@@ -184,10 +202,15 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               )}
 
               <button 
-                onClick={() => setIsCreateModalOpen(true)}
-                className="shrink-0 bg-[#253656] text-white py-2 px-4 rounded-xl hover:bg-[#BD272D] transition-colors text-sm font-bold shadow-sm flex items-center gap-2"
+                onClick={() => {
+                  setNewEventName('');
+                  setNewEventSlug('');
+                  setIsCreateModalOpen(true);
+                }}
+                className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-colors shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5"
               >
-                + Buat Baru
+                <Plus className="w-4 h-4" />
+                Buat Baru
               </button>
             </div>
           </div>
@@ -205,22 +228,43 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               <p className="text-sm text-slate-500 mt-1">Masukkan nama acara baru. Pengaturan form & sukses akan disalin dari form saat ini.</p>
             </div>
             <div className="p-5">
-              <label className="block text-sm font-bold text-slate-700 mb-2">Nama Acara</label>
-              <input 
-                type="text" 
-                value={newEventName}
-                onChange={(e) => setNewEventName(e.target.value)}
-                placeholder='contoh: "Seminar Nasional 2026"'
-                className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && newEventName.trim()) {
-                    router.post('/admin/events', { name: newEventName.trim() });
-                    setIsCreateModalOpen(false);
-                    setNewEventName('');
-                  }
-                }}
-              />
+              <div className="mb-4">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Acara <span className="text-red-500">*</span></label>
+                <input 
+                  type="text" 
+                  value={newEventName}
+                  onChange={(e) => setNewEventName(e.target.value)}
+                  placeholder='contoh: "Seminar Nasional 2026"'
+                  className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                  autoFocus
+                />
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Link Form (Opsional)</label>
+                <div className="flex items-center">
+                  <span className="bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl px-3 py-2 text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-none">
+                    /e/
+                  </span>
+                  <input 
+                    type="text" 
+                    value={newEventSlug}
+                    onChange={(e) => {
+                      // Allow only alphanumeric and hyphens
+                      const val = e.target.value.replace(/[^a-z0-9-]/gi, '').toLowerCase();
+                      setNewEventSlug(val);
+                    }}
+                    placeholder='otomatis-dibuat'
+                    className="w-full border-slate-200 rounded-r-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newEventName.trim()) {
+                        router.post('/admin/events', { name: newEventName.trim(), slug: newEventSlug.trim() });
+                        setIsCreateModalOpen(false);
+                      }
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-1.5">Biarkan kosong untuk link acak. Hanya huruf, angka, dan strip (-).</p>
+              </div>
             </div>
             <div className="p-4 bg-slate-50 flex justify-end gap-3">
               <button 
@@ -235,15 +279,85 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               <button 
                 onClick={() => {
                   if (newEventName.trim()) {
-                    router.post('/admin/events', { name: newEventName.trim() });
+                    router.post('/admin/events', { name: newEventName.trim(), slug: newEventSlug.trim() });
                     setIsCreateModalOpen(false);
-                    setNewEventName('');
                   }
                 }}
                 disabled={!newEventName.trim()}
                 className="px-4 py-2 text-sm font-bold text-white bg-[#BD272D] hover:bg-[#991f24] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-[#BD272D]/20"
               >
                 Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Custom Edit Event Modal */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-fade-in-up">
+            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-black text-slate-800 text-lg">Edit Acara / Form</h3>
+              <p className="text-sm text-slate-500 mt-1">Ubah nama dan link form untuk acara ini.</p>
+            </div>
+            <div className="p-5">
+              <div className="mb-4">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Nama Acara <span className="text-red-500">*</span></label>
+                <input 
+                  type="text" 
+                  value={editEventName}
+                  onChange={(e) => setEditEventName(e.target.value)}
+                  placeholder='contoh: "Seminar Nasional 2026"'
+                  className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                  autoFocus
+                />
+              </div>
+              <div className="mb-2">
+                <label className="block text-sm font-bold text-slate-700 mb-2">Link Form <span className="text-red-500">*</span></label>
+                <div className="flex items-center">
+                  <span className="bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl px-3 py-2 text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-none">
+                    /e/
+                  </span>
+                  <input 
+                    type="text" 
+                    value={editEventSlug}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^a-z0-9-]/gi, '').toLowerCase();
+                      setEditEventSlug(val);
+                    }}
+                    className="w-full border-slate-200 rounded-r-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm font-mono text-blue-700"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && editEventName.trim() && editEventSlug.trim()) {
+                        router.put(`/admin/events/${currentEvent?.id}`, { name: editEventName.trim(), slug: editEventSlug.trim() });
+                        setIsEditModalOpen(false);
+                      }
+                    }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500 mt-1.5 flex items-center gap-1">
+                  💡 <span className="italic">URL: {window.location.origin}/e/{editEventSlug || '...'}</span>
+                </p>
+              </div>
+            </div>
+            <div className="p-4 bg-slate-50 flex justify-end gap-3">
+              <button 
+                onClick={() => setIsEditModalOpen(false)}
+                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 rounded-xl transition-colors"
+              >
+                Batal
+              </button>
+              <button 
+                onClick={() => {
+                  if (editEventName.trim() && editEventSlug.trim()) {
+                    router.put(`/admin/events/${currentEvent?.id}`, { name: editEventName.trim(), slug: editEventSlug.trim() });
+                    setIsEditModalOpen(false);
+                  }
+                }}
+                disabled={!editEventName.trim() || !editEventSlug.trim()}
+                className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-blue-600/20"
+              >
+                Simpan Perubahan
               </button>
             </div>
           </div>
