@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { CheckCircle2, FileText, Gift, Save, Ticket, Plus, Trash2, GripVertical, Image as ImageIcon } from "lucide-react";
@@ -29,6 +29,31 @@ export default function SuccessConfig({ config }: { config: any }) {
   });
 
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setFormData({
+      success_message: config.success_message || "",
+      e_materi_type: config.e_materi_type || "url",
+      e_materi_url: config.e_materi_url || "",
+      show_merchandise: config.show_merchandise ?? true,
+      show_digital_ticket: config.show_digital_ticket ?? true,
+      tts_enabled: config.tts_enabled ?? true,
+      tts_text: config.tts_text || "Terima kasih sudah mengisi buku tamu kami. Selamat menikmati pameran!",
+      show_live_stats: config.show_live_stats ?? false,
+      show_games_banner: config.show_games_banner ?? true,
+      stat_tahun_berdiri: config.stat_tahun_berdiri || "2017",
+      stat_kelompok_riset: config.stat_kelompok_riset || "3",
+      stat_publikasi: config.stat_publikasi || "100+",
+      stat_nama_univ: config.stat_nama_univ || "UNPAD",
+      e_materi_file: null as File | null,
+      merchandise_display_mode: config.merchandise_display_mode || "carousel",
+      merchandise_photo_title: config.merchandise_photo_title || "Koleksi Merchandise",
+      merchandise_photo_desc: config.merchandise_photo_desc || "Dapatkan Tote Bag, Mug Keramik, atau Lanyard edisi terbatas khusus pengunjung booth. Silakan tunjukkan halaman ini ke staf kami.",
+      merchandise_photo_url: config.merchandise_photo_url || "",
+      merchandise_photo: null as File | null,
+      merchandise_items: config.merchandise_items || [],
+    });
+  }, [config]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

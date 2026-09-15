@@ -1,6 +1,7 @@
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { Head, useForm } from "@inertiajs/react";
 import { Save, Monitor } from "lucide-react";
+import { useEffect } from "react";
 
 export default function LandingConfig({ config }: { config: any }) {
   const { data, setData, post, processing, errors } = useForm({
@@ -10,6 +11,16 @@ export default function LandingConfig({ config }: { config: any }) {
     title_line2: config?.title_line2 || '',
     description_html: config?.description_html || '',
   });
+
+  useEffect(() => {
+    setData({
+      badge_text: config?.badge_text || '',
+      title_line1: config?.title_line1 || '',
+      title_gradient: config?.title_gradient || '',
+      title_line2: config?.title_line2 || '',
+      description_html: config?.description_html || '',
+    });
+  }, [config]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();

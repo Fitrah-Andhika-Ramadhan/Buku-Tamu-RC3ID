@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { router } from "@inertiajs/react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { Save, Plus, Trash2, CheckCircle2, FileText, Link } from "lucide-react";
@@ -35,6 +35,20 @@ export default function FormHeaderConfig({ config }: { config: FormHeaderConfig 
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    setFormData({
+      title_line1: config.title_line1 || "Form Buku Tamu",
+      title_line2: config.title_line2 || "Booth RC3ID",
+      description: config.description || "",
+      social_links: config.social_links || [],
+      show_banner: config.show_banner ?? true,
+      show_welcome_qr: config.show_welcome_qr ?? true,
+      banner_image_path: config.banner_image_path || null,
+    });
+    setBannerPreviewUrl(config.banner_image_path || null);
+    setBannerFile(null);
+  }, [config]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
