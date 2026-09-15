@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { AdminLayoutWrapper } from '@/Components/AdminLayoutWrapper';
-import { Save, Plus, Trash2, GripVertical, CheckCircle2, Sparkles, Loader2, X } from 'lucide-react';
+import { Save, Plus, Trash2, GripVertical, CheckCircle2, Sparkles, Loader2, X, Undo2 } from 'lucide-react';
 import axios from 'axios';
 
 interface FormField {
@@ -24,8 +24,22 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
     const [showAiModal, setShowAiModal] = useState(false);
     const [aiPrompt, setAiPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
+    const [history, setHistory] = useState<FormField[][]>([]);
+
+    const saveHistory = (currentFields: FormField[]) => {
+        setHistory(prev => [...prev, [...currentFields]]);
+    };
+
+    const handleUndo = () => {
+        if (history.length === 0) return;
+        const previousState = history[history.length - 1];
+        setHistory(prev => prev.slice(0, -1));
+        setFields(previousState);
+        setData('fields', previousState);
+    };
 
     const addField = () => {
+        saveHistory(fields);
         const newField: FormField = {
             id: Date.now().toString(),
             type: 'text',
@@ -40,12 +54,14 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
     };
 
     const updateField = (id: string, updates: Partial<FormField>) => {
+        saveHistory(fields);
         const updated = fields.map(f => (f.id === id ? { ...f, ...updates } : f));
         setFields(updated);
         setData('fields', updated);
     };
 
     const removeField = (id: string) => {
+        saveHistory(fields);
         const updated = fields.filter(f => f.id !== id);
         setFields(updated);
         setData('fields', updated);
@@ -55,6 +71,7 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
         if (direction === 'up' && index === 0) return;
         if (direction === 'down' && index === fields.length - 1) return;
 
+        saveHistory(fields);
         const newIndex = direction === 'up' ? index - 1 : index + 1;
         const updated = [...fields];
         const temp = updated[index];
@@ -88,6 +105,7 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
         try {
             const response = await axios.post('/admin/form-builder/generate-ai', { prompt: aiPrompt });
             if (response.data.success && response.data.data) {
+                saveHistory(fields);
                 const newFields = response.data.data;
                 const updated = [...fields, ...newFields];
                 setFields(updated);
@@ -130,6 +148,14 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
                             <span className="text-sm font-bold">Tersimpan!</span>
                         </div>
                     )}
+                    <button
+                        onClick={handleUndo}
+                        disabled={history.length === 0}
+                        className="inline-flex items-center gap-2 px-3 py-2.5 bg-white text-slate-500 font-bold rounded-xl shadow-sm hover:text-slate-800 border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+                        title="Batalkan perubahan terakhir (Undo)"
+                    >
+                        <Undo2 className="w-4 h-4" />
+                    </button>
                     <button
                         onClick={() => setShowAiModal(true)}
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-all"
