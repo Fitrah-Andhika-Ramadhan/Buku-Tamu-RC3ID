@@ -531,6 +531,7 @@ class AdminController extends Controller
                 'HTTP-Referer' => config('app.url'),
             ])->timeout(30)->post('https://openrouter.ai/api/v1/chat/completions', [
                 'model' => 'google/gemini-2.5-flash',
+                'max_tokens' => 2000,
                 'messages' => [
                     [
                         'role' => 'system',
