@@ -480,7 +480,8 @@ class AdminController extends Controller
         
         $meeting = \App\Models\Meeting::where('event_id', $event->id)->first();
 
-        if (!$meeting) {
+        // If meeting doesn't exist OR it exists but has no Zoom link (from old Jitsi era)
+        if (!$meeting || empty($meeting->zoom_join_url)) {
             try {
                 // Call Zoom API
                 $zoomData = $zoomService->createMeeting(
@@ -488,17 +489,25 @@ class AdminController extends Controller
                     duration: 120 // 2 hours default
                 );
 
-                $meeting = \App\Models\Meeting::create([
-                    'id' => (string) Str::uuid(),
-                    'event_id' => $event->id,
-                    'title' => 'Meeting ' . $event->name,
-                    'room_slug' => Str::slug($event->name) . '-' . rand(1000, 9999),
-                    'host_id' => auth()->id(),
-                    'is_active' => true,
-                    'zoom_meeting_id' => (string) $zoomData['id'],
-                    'zoom_join_url' => $zoomData['join_url'],
-                    'zoom_start_url' => $zoomData['start_url'],
-                ]);
+                if (!$meeting) {
+                    $meeting = \App\Models\Meeting::create([
+                        'id' => (string) Str::uuid(),
+                        'event_id' => $event->id,
+                        'title' => 'Meeting ' . $event->name,
+                        'room_slug' => Str::slug($event->name) . '-' . rand(1000, 9999),
+                        'host_id' => auth()->id(),
+                        'is_active' => true,
+                        'zoom_meeting_id' => (string) $zoomData['id'],
+                        'zoom_join_url' => $zoomData['join_url'],
+                        'zoom_start_url' => $zoomData['start_url'],
+                    ]);
+                } else {
+                    $meeting->update([
+                        'zoom_meeting_id' => (string) $zoomData['id'],
+                        'zoom_join_url' => $zoomData['join_url'],
+                        'zoom_start_url' => $zoomData['start_url'],
+                    ]);
+                }
             } catch (\Exception $e) {
                 return redirect()->back()->with('error', 'Gagal membuat Zoom Meeting: ' . $e->getMessage());
             }
