@@ -68,6 +68,15 @@ Route::get('/bersih-cache', function () {
 
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    Route::get('/run-migrations-secret', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            return redirect('/admin')->with('success', 'Migrasi database berhasil dijalankan di server!');
+        } catch (\Exception $e) {
+            return redirect('/admin')->with('error', 'Gagal menjalankan migrasi: ' . $e->getMessage());
+        }
+    });
+
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::post('/peserta/manual', [AdminController::class, 'storeManual'])->name('admin.peserta.manual');
