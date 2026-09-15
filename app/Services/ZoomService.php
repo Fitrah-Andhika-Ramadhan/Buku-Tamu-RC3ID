@@ -19,6 +19,21 @@ class ZoomService
         $this->accountId = env('ZOOM_ACCOUNT_ID');
         $this->clientId = env('ZOOM_CLIENT_ID');
         $this->clientSecret = env('ZOOM_CLIENT_SECRET');
+
+        // Fallback for Shared Hosting where env() might be cached by PHP-FPM
+        if (!$this->accountId || !$this->clientId) {
+            $envPath = base_path('.env');
+            if (file_exists($envPath)) {
+                $envContent = file_get_contents($envPath);
+                preg_match('/^ZOOM_ACCOUNT_ID=(.*)$/m', $envContent, $m1);
+                preg_match('/^ZOOM_CLIENT_ID=(.*)$/m', $envContent, $m2);
+                preg_match('/^ZOOM_CLIENT_SECRET=(.*)$/m', $envContent, $m3);
+                
+                $this->accountId = trim($m1[1] ?? '');
+                $this->clientId = trim($m2[1] ?? '');
+                $this->clientSecret = trim($m3[1] ?? '');
+            }
+        }
     }
 
     /**
