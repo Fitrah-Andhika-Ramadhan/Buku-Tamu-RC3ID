@@ -5,6 +5,13 @@ import { Suspense, useState, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 
 export default function LandingPage({ event, totalParticipants, totalAttending, totalInstitutions, showWelcomeQr = true }: { event?: any, totalParticipants: number, totalAttending: number, totalInstitutions: number, showWelcomeQr?: boolean }) {
+  const lc = event?.landing_config || {};
+  const badgeText = lc.badge_text || "RC3ID pada B-IDEAs 2026 Exhibition";
+  const titleLine1 = lc.title_line1 || "ADVANCING";
+  const titleGradient = lc.title_gradient || "EARLY DETECTION";
+  const titleLine2 = lc.title_line2 || "FOR BETTER INFECTIOUS DISEASE CONTROL";
+  const descriptionHtml = lc.description_html || `<strong>RC3ID UNPAD</strong> hadir di <strong>B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue.<br/>Daftarkan diri Anda dan langsung <strong class="text-[#BD272D]">klaim merchandise</strong> riset kami!`;
+  
   return (
     <div className="min-h-screen flex flex-col w-full bg-transparent text-[#253656] font-sans selection:bg-[#BD272D] selection:text-white relative">
       {/* Premium Animated Mesh Gradient Background */}
@@ -54,22 +61,23 @@ export default function LandingPage({ event, totalParticipants, totalAttending, 
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#BD272D] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#BD272D]"></span>
               </span>
-              RC3ID pada B-IDEAs 2026 Exhibition
+              {badgeText}
             </div>
 
             <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] 2xl:text-[6.5rem] font-black text-[#253656] leading-[1.05] mb-8 tracking-tighter w-full drop-shadow-sm">
-              <span className="block 2xl:inline-block 2xl:mr-6 mb-2 2xl:mb-0">ADVANCING</span> 
+              <span className="block 2xl:inline-block 2xl:mr-6 mb-2 2xl:mb-0">{titleLine1}</span> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#BD272D] via-rose-500 to-[#BD272D] animate-gradient-x drop-shadow-lg inline-block">
-                EARLY DETECTION
+                {titleGradient}
               </span> 
-              <span className="block mt-4 text-2xl sm:text-3xl md:text-[2.5rem] 2xl:text-[3rem] opacity-90 text-[#6C7C98] font-black tracking-tight">FOR BETTER INFECTIOUS DISEASE CONTROL</span>
+              <span className="block mt-4 text-2xl sm:text-3xl md:text-[2.5rem] 2xl:text-[3rem] opacity-90 text-[#6C7C98] font-black tracking-tight">{titleLine2}</span>
             </h2>
 
             {/* Description */}
-              <p className="text-gray-600 text-lg md:text-xl 2xl:text-2xl font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl 2xl:max-w-4xl mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <strong className="text-[#253656] font-black">RC3ID UNPAD</strong> hadir di <strong className="text-[#253656] font-black">B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue.<br/>
-                Daftarkan diri Anda dan langsung <strong className="text-[#BD272D]">klaim merchandise</strong> riset kami!
-              </p>
+              <p 
+                className="text-gray-600 text-lg md:text-xl 2xl:text-2xl font-['Plus_Jakarta_Sans'] leading-relaxed max-w-2xl 2xl:max-w-4xl mb-12 animate-fade-in-up" 
+                style={{ animationDelay: '0.2s' }}
+                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+              ></p>
 
             {/* Feature Badges */}
             <div className="flex flex-wrap justify-center xl:justify-start gap-4 mb-12">

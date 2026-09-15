@@ -1,11 +1,12 @@
 "use client";
 
 import { Link, usePage, router } from "@inertiajs/react";
-import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database, LayoutList } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, Menu, X, Activity, QrCode, FileText, CheckCircle2, Layout, Database, LayoutList, Monitor } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard, desc: "Statistik & Ringkasan" },
+  { name: "Landing Page", href: "/admin/landing-config", icon: Monitor, desc: "Atur Tampilan Depan" },
   { name: "Data Peserta", href: "/admin/peserta", icon: Users, desc: "Kelola & Validasi Kehadiran" },
   { name: "Form Builder", href: "/admin/form-builder", icon: Activity, desc: "Atur Form Dinamis" },
   { name: "Header Form", href: "/admin/form-header", icon: Layout, desc: "Judul & Sosmed Form" },

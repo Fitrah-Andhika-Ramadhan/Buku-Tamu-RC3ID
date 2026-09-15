@@ -70,10 +70,14 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::post('/events/set-front', [AdminController::class, 'setFrontEvent'])->name('admin.events.set-front');
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
+    Route::post('/form-builder/generate-ai', [AdminController::class, 'generateFormAi'])->name('admin.form.builder.generate-ai');
+    Route::post('/settings/openrouter-key', [AdminController::class, 'saveOpenRouterKey'])->name('admin.settings.openrouter');
     Route::get('/success-config', [AdminController::class, 'successConfig'])->name('admin.success.config');
     Route::post('/success-config', [AdminController::class, 'saveSuccessConfig'])->name('admin.success.config.save');
     Route::get('/form-header', [AdminController::class, 'formHeaderConfig'])->name('admin.form.header');
     Route::post('/form-header', [AdminController::class, 'saveFormHeaderConfig'])->name('admin.form.header.save');
+    Route::get('/landing-config', [AdminController::class, 'landingConfig'])->name('admin.landing.config');
+    Route::post('/landing-config', [AdminController::class, 'saveLandingConfig'])->name('admin.landing.config.save');
     Route::post('/scan', [AdminController::class, 'scan'])->name('admin.scan');
     Route::get('/qr-generator', function() {
         return \Inertia\Inertia::render('Admin/QrGenerator');

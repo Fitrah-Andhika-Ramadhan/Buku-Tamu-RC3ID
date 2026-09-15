@@ -16,6 +16,7 @@ class Event extends Model
         'form_fields',
         'form_header',
         'success_config',
+        'landing_config',
         'is_active',
     ];
 
@@ -23,6 +24,7 @@ class Event extends Model
         'form_fields' => 'array',
         'form_header' => 'array',
         'success_config' => 'array',
+        'landing_config' => 'array',
         'is_active' => 'boolean',
     ];
 

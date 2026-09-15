@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { AdminLayoutWrapper } from '@/Components/AdminLayoutWrapper';
-import { Save, Plus, Trash2, GripVertical, CheckCircle2 } from 'lucide-react';
+import { Save, Plus, Trash2, GripVertical, CheckCircle2, Sparkles, Loader2, X } from 'lucide-react';
+import axios from 'axios';
 
 interface FormField {
     id: string;
@@ -19,6 +20,10 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
     const { data, setData, post, processing, recentlySuccessful } = useForm({
         fields: formFields || [],
     });
+
+    const [showAiModal, setShowAiModal] = useState(false);
+    const [aiPrompt, setAiPrompt] = useState("");
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const addField = () => {
         const newField: FormField = {
@@ -65,6 +70,37 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
         post(route('admin.form.builder.save'));
     };
 
+    const handleGenerateAi = async () => {
+        if (!aiPrompt.trim()) return;
+        setIsGenerating(true);
+        try {
+            const response = await axios.post('/admin/form-builder/generate-ai', { prompt: aiPrompt });
+            if (response.data.success && response.data.data) {
+                const newFields = response.data.data;
+                const updated = [...fields, ...newFields];
+                setFields(updated);
+                setData('fields', updated);
+                setShowAiModal(false);
+                setAiPrompt("");
+                alert("Berhasil menghasilkan form menggunakan AI!");
+            }
+        } catch (error: any) {
+            console.error(error);
+            const data = error.response?.data;
+            if (data && data.error_code === 'API_KEY_MISSING') {
+                const key = prompt('Fitur ini membutuhkan API Key OpenRouter. Masukkan API Key Anda:');
+                if (key) {
+                    await axios.post('/admin/settings/openrouter-key', { key });
+                    alert('API Key berhasil disimpan! Silakan coba generate lagi.');
+                }
+            } else {
+                alert(data?.message || 'Terjadi kesalahan saat memproses dengan AI.');
+            }
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
     return (
         <AdminLayoutWrapper>
             <Head title="Form Builder" />
@@ -82,6 +118,13 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
                             <span className="text-sm font-bold">Tersimpan!</span>
                         </div>
                     )}
+                    <button
+                        onClick={() => setShowAiModal(true)}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold rounded-xl shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+                    >
+                        <Sparkles className="w-4 h-4" />
+                        Generate Form AI
+                    </button>
                     <button
                         onClick={addField}
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-[#253656] font-bold rounded-xl shadow-sm hover:shadow-md border border-gray-200 hover:-translate-y-0.5 active:scale-[0.98] transition-all"
@@ -244,6 +287,56 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
                     </div>
                 )}
             </div>
+
+            {/* AI Modal */}
+            {showAiModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-100">
+                        <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center">
+                                    <Sparkles className="w-5 h-5 text-indigo-600" />
+                                </div>
+                                <div>
+                                    <h3 className="font-black text-slate-800 text-lg">Generate Form AI</h3>
+                                    <p className="text-xs text-slate-500">Otomatis buat pertanyaan form dengan AI.</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setShowAiModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 transition-colors">
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+                        <div className="p-5">
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Jelaskan form yang Anda inginkan</label>
+                            <textarea 
+                                value={aiPrompt}
+                                onChange={(e) => setAiPrompt(e.target.value)}
+                                rows={4}
+                                placeholder="Misal: Buatkan formulir registrasi untuk peserta seminar medis, butuh nama, email, nomor SIP, dan spesialisasi."
+                                className="w-full border-slate-200 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 text-sm p-3"
+                                autoFocus
+                            />
+                        </div>
+                        <div className="p-4 bg-slate-50 flex justify-end gap-3 border-t border-slate-100">
+                            <button 
+                                onClick={() => setShowAiModal(false)}
+                                disabled={isGenerating}
+                                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 rounded-xl transition-colors"
+                            >
+                                Batal
+                            </button>
+                            <button 
+                                onClick={handleGenerateAi}
+                                disabled={!aiPrompt.trim() || isGenerating}
+                                className="flex items-center gap-2 px-5 py-2 text-sm font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-indigo-500/20"
+                            >
+                                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                                {isGenerating ? 'Memproses AI...' : 'Generate Form'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayoutWrapper>
     );
 }

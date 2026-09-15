@@ -300,6 +300,46 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Success page settings saved successfully.');
     }
 
+    public function landingConfig()
+    {
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return Inertia::render('Admin/LandingConfig', ['config' => []]);
+        }
+        
+        $currentConfig = $event->landing_config ?? [];
+        return Inertia::render('Admin/LandingConfig', [
+            'config' => !empty($currentConfig) ? $currentConfig : [
+                'badge_text' => 'RC3ID pada B-IDEAs 2026 Exhibition',
+                'title_line1' => 'ADVANCING',
+                'title_gradient' => 'EARLY DETECTION',
+                'title_line2' => 'FOR BETTER INFECTIOUS DISEASE CONTROL',
+                'description_html' => '<strong>RC3ID UNPAD</strong> hadir di <strong>B-IDEAs 2026 Exhibition</strong> membawa inovasi riset deteksi dini penyakit infeksi — Tuberkulosis, HIV, dan Dengue.<br/> Daftarkan diri Anda dan langsung <strong class="text-[#BD272D]">klaim merchandise</strong> riset kami!',
+            ]
+        ]);
+    }
+
+    public function saveLandingConfig(Request $request)
+    {
+        $event = $this->getCurrentEvent();
+        if (!$event) {
+            return redirect()->back()->with('error', 'No active event found.');
+        }
+
+        $validated = $request->validate([
+            'badge_text' => 'nullable|string',
+            'title_line1' => 'nullable|string',
+            'title_gradient' => 'nullable|string',
+            'title_line2' => 'nullable|string',
+            'description_html' => 'nullable|string',
+        ]);
+
+        $event->landing_config = $validated;
+        $event->save();
+
+        return redirect()->back()->with('success', 'Landing page settings saved successfully.');
+    }
+
     public function formHeaderConfig()
     {
         $event = $this->getCurrentEvent();
@@ -452,5 +492,87 @@ class AdminController extends Controller
         );
 
         return response()->json(['success' => true]);
+    }
+    public function saveOpenRouterKey(Request $request)
+    {
+        $request->validate([
+            'key' => 'required|string'
+        ]);
+
+        Setting::updateOrCreate(
+            ['key' => 'openrouter_api_key'],
+            ['value' => $request->key]
+        );
+
+        return response()->json(['success' => true]);
+    }
+
+    public function generateFormAi(Request $request)
+    {
+        $request->validate([
+            'prompt' => 'required|string|max:1000'
+        ]);
+
+        $apiKey = Setting::where('key', 'openrouter_api_key')->value('value');
+        
+        if (!$apiKey) {
+            return response()->json([
+                'success' => false,
+                'error_code' => 'API_KEY_MISSING',
+                'message' => 'API Key OpenRouter belum diatur.'
+            ], 400);
+        }
+
+        try {
+            $systemPrompt = 'You are an AI that generates form fields. Always respond in valid JSON format only, without markdown wrappers like ```json. Return an object with a "fields" array. Each field MUST have: id (unique string timestamp), type (text, email, tel, textarea, radio, checkbox), label (string), name (string, lowercase snake_case), required (boolean), options (array of strings, only for radio/checkbox, leave empty otherwise). Example: {"fields": [{"id":"123","type":"text","label":"Nama","name":"nama","required":true}]}';
+
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'HTTP-Referer' => config('app.url'),
+            ])->timeout(30)->post('https://openrouter.ai/api/v1/chat/completions', [
+                'model' => 'google/gemini-2.5-flash',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => $systemPrompt
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => 'Buatkan field untuk: ' . $request->prompt
+                    ]
+                ]
+            ]);
+
+            if (!$response->successful()) {
+                throw new \Exception('Failed to communicate with OpenRouter API: ' . $response->body());
+            }
+
+            $result = $response->json();
+            $content = $result['choices'][0]['message']['content'] ?? '';
+            
+            // Cleanup markdown if AI ignores the instruction
+            $content = preg_replace('/```json\s*/', '', $content);
+            $content = preg_replace('/```\s*/', '', $content);
+            $content = trim($content);
+
+            $data = json_decode($content, true);
+
+            if (!isset($data['fields']) || !is_array($data['fields'])) {
+                throw new \Exception('Invalid JSON format received from AI.');
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $data['fields']
+            ]);
+            
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('AI Form Generation Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error_code' => 'GENERAL_ERROR',
+                'message' => 'Gagal membuat form: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
