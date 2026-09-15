@@ -510,7 +510,7 @@ class AdminController extends Controller
     public function generateFormAi(Request $request)
     {
         $request->validate([
-            'prompt' => 'required|string|max:1000'
+            'prompt' => 'required|string'
         ]);
 
         $apiKey = Setting::where('key', 'openrouter_api_key')->value('value');
