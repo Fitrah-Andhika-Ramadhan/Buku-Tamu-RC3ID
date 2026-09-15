@@ -70,6 +70,18 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
         post(route('admin.form.builder.save'));
     };
 
+    const handleSetApiKey = async () => {
+        const key = prompt('Masukkan API Key OpenRouter Anda:');
+        if (key) {
+            try {
+                await axios.post('/admin/settings/openrouter-key', { key });
+                alert('API Key berhasil disimpan! Silakan coba generate lagi.');
+            } catch (e) {
+                alert('Gagal menyimpan API Key.');
+            }
+        }
+    };
+
     const handleGenerateAi = async () => {
         if (!aiPrompt.trim()) return;
         setIsGenerating(true);
@@ -302,9 +314,14 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
                                     <p className="text-xs text-slate-500">Otomatis buat pertanyaan form dengan AI.</p>
                                 </div>
                             </div>
-                            <button onClick={() => setShowAiModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 transition-colors">
-                                <X className="w-5 h-5" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button onClick={handleSetApiKey} className="text-xs font-bold text-slate-500 hover:text-indigo-600 bg-white px-3 py-1.5 rounded-lg border border-slate-200 transition-colors shadow-sm" title="Set API Key OpenRouter">
+                                    ⚙️ Set API Key
+                                </button>
+                                <button onClick={() => setShowAiModal(false)} className="text-slate-400 hover:text-slate-600 bg-white p-1.5 rounded-lg border border-slate-200 transition-colors shadow-sm">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
                         <div className="p-5">
                             <label className="block text-sm font-bold text-slate-700 mb-2">Jelaskan form yang Anda inginkan</label>
