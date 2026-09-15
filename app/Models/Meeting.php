@@ -13,7 +13,15 @@ class Meeting extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id', 'event_id', 'title', 'room_slug', 'host_id', 'is_active'
+        'id',
+        'event_id',
+        'title',
+        'room_slug',
+        'host_id',
+        'is_active',
+        'zoom_meeting_id',
+        'zoom_join_url',
+        'zoom_start_url'
     ];
 
     public function event()

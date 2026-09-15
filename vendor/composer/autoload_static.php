@@ -601,6 +601,7 @@ class ComposerStaticInit53b5d56b3b7e3cbac1713e68c8850f6c
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DbViewerController' => __DIR__ . '/../..' . '/app/Http/Controllers/DbViewerController.php',
         'App\\Http\\Controllers\\GoogleAuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/GoogleAuthController.php',
+        'App\\Http\\Controllers\\MeetingController' => __DIR__ . '/../..' . '/app/Http/Controllers/MeetingController.php',
         'App\\Http\\Controllers\\ParticipantController' => __DIR__ . '/../..' . '/app/Http/Controllers/ParticipantController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Middleware\\HandleInertiaRequests' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleInertiaRequests.php',

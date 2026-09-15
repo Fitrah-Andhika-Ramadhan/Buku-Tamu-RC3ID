@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\DbViewerController' => $baseDir . '/app/Http/Controllers/DbViewerController.php',
     'App\\Http\\Controllers\\GoogleAuthController' => $baseDir . '/app/Http/Controllers/GoogleAuthController.php',
+    'App\\Http\\Controllers\\MeetingController' => $baseDir . '/app/Http/Controllers/MeetingController.php',
     'App\\Http\\Controllers\\ParticipantController' => $baseDir . '/app/Http/Controllers/ParticipantController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Middleware\\HandleInertiaRequests' => $baseDir . '/app/Http/Middleware/HandleInertiaRequests.php',

@@ -474,20 +474,35 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Front event berhasil diatur.');
     }
 
-    public function launchMeeting(Request $request, $id)
+    public function launchMeeting(Request $request, $id, \App\Services\ZoomService $zoomService)
     {
         $event = \App\Models\Event::findOrFail($id);
         
-        $meeting = \App\Models\Meeting::firstOrCreate(
-            ['event_id' => $event->id],
-            [
-                'id' => (string) Str::uuid(),
-                'title' => 'Meeting ' . $event->name,
-                'room_slug' => Str::slug($event->name) . '-' . rand(1000, 9999),
-                'host_id' => auth()->id(),
-                'is_active' => true,
-            ]
-        );
+        $meeting = \App\Models\Meeting::where('event_id', $event->id)->first();
+
+        if (!$meeting) {
+            try {
+                // Call Zoom API
+                $zoomData = $zoomService->createMeeting(
+                    topic: 'Meeting ' . $event->name,
+                    duration: 120 // 2 hours default
+                );
+
+                $meeting = \App\Models\Meeting::create([
+                    'id' => (string) Str::uuid(),
+                    'event_id' => $event->id,
+                    'title' => 'Meeting ' . $event->name,
+                    'room_slug' => Str::slug($event->name) . '-' . rand(1000, 9999),
+                    'host_id' => auth()->id(),
+                    'is_active' => true,
+                    'zoom_meeting_id' => (string) $zoomData['id'],
+                    'zoom_join_url' => $zoomData['join_url'],
+                    'zoom_start_url' => $zoomData['start_url'],
+                ]);
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Gagal membuat Zoom Meeting: ' . $e->getMessage());
+            }
+        }
 
         // Instead of redirecting with Inertia back to admin, we redirect directly to the meeting room route
         return redirect()->route('meeting.room', ['slug' => $meeting->room_slug]);
