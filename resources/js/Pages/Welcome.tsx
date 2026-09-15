@@ -96,7 +96,7 @@ export default function LandingPage({ event, totalParticipants, totalAttending, 
               <div className="w-full sm:w-auto relative group">
                 {/* Glowing animated shadow */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#BD272D] to-rose-400 rounded-full blur-md opacity-60 group-hover:opacity-100 transition duration-500 group-hover:duration-200 animate-pulse pointer-events-none"></div>
-                <Link href="/buku-tamu" className="flex items-center justify-center relative w-full sm:w-auto h-16 md:h-18 px-12 md:px-16 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-[0.15em] uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden shadow-2xl shadow-[#BD272D]/40">
+                <Link href={event ? `/e/${event.slug}/buku-tamu` : "/buku-tamu"} className="flex items-center justify-center relative w-full sm:w-auto h-16 md:h-18 px-12 md:px-16 bg-gradient-to-r from-[#BD272D] to-[#991f24] text-white font-black tracking-[0.15em] uppercase rounded-full border border-white/20 hover:-translate-y-1 transition-all duration-300 text-sm md:text-lg overflow-hidden shadow-2xl shadow-[#BD272D]/40">
                   <span className="relative z-10 flex items-center">
                     Isi Buku Tamu Sekarang
                     <ArrowRight className="ml-4 w-6 h-6 group-hover:translate-x-2 transition-transform" />
@@ -119,7 +119,7 @@ export default function LandingPage({ event, totalParticipants, totalAttending, 
                {/* Animated border glow */}
                <div className="absolute -inset-1 bg-gradient-to-br from-[#BD272D]/40 to-[#253656]/30 rounded-[2.5rem] blur-lg opacity-60 group-hover:opacity-100 transition duration-700"></div>
                {showWelcomeQr ? (
-                 <WelcomeQrBox />
+                 <WelcomeQrBox event={event} />
                ) : (
                  <LiveStatsBox totalAttending={totalAttending} totalInstitutions={totalInstitutions} />
                )}
@@ -245,8 +245,8 @@ export function LiveStatsBox({ totalAttending, totalInstitutions }: { totalAtten
   );
 }
 
-export function WelcomeQrBox() {
-  const qrUrl = typeof window !== 'undefined' ? `${window.location.origin}/buku-tamu` : 'https://rc3id.unpad.ac.id/buku-tamu';
+export function WelcomeQrBox({ event }: { event?: any }) {
+  const qrUrl = typeof window !== 'undefined' ? `${window.location.origin}${event ? `/e/${event.slug}/buku-tamu` : '/buku-tamu'}` : 'https://rc3id.unpad.ac.id/buku-tamu';
   const [defaultSquareLogo, setDefaultSquareLogo] = useState<string | null>(null);
 
   // Helper to pad any image into a perfect square

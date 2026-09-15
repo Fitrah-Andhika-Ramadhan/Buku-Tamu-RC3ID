@@ -168,13 +168,14 @@ class ParticipantController extends Controller
         ];
 
         // Cache all stat queries — heavy queries only run once per 60 seconds total
-        $totalParticipants = Cache::remember('stat_total_participants', 60, fn() => Participant::count());
-        $totalAttending    = Cache::remember('stat_total_attending', 60, fn() => Participant::where('is_attending', true)->count());
-        $totalInstitutions = Cache::remember('stat_total_institutions', 60, fn() =>
-            Participant::whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution')
+        $totalParticipants = Cache::remember("stat_total_participants_{$eventId}", 60, fn() => Participant::where('event_id', $eventId)->count());
+        $totalAttending    = Cache::remember("stat_total_attending_{$eventId}", 60, fn() => Participant::where('event_id', $eventId)->where('is_attending', true)->count());
+        $totalInstitutions = Cache::remember("stat_total_institutions_{$eventId}", 60, fn() =>
+            Participant::where('event_id', $eventId)->whereNotNull('institution')->where('institution', '!=', '')->distinct('institution')->count('institution')
         );
-        $topInstitutionsData = Cache::remember('stat_top_institutions', 60, fn() =>
+        $topInstitutionsData = Cache::remember("stat_top_institutions_{$eventId}", 60, fn() =>
             Participant::select('institution as name', \DB::raw('count(*) as count'))
+                ->where('event_id', $eventId)
                 ->whereNotNull('institution')
                 ->where('institution', '!=', '')
                 ->groupBy('institution')

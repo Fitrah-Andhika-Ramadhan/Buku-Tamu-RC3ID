@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { AdminLayoutWrapper } from "@/Components/AdminLayoutWrapper";
 import { Download, Printer, QrCode as QRIcon, Check, RefreshCw } from "lucide-react";
 import { QRCodeCanvas } from "qrcode.react";
+import { usePage } from "@inertiajs/react";
 
 const COLORS_FG = [
   { color: "#253656", label: "Navy" },
@@ -19,15 +20,18 @@ const COLORS_BG = [
   { color: "#1a263d", label: "Gelap" },
 ];
 
-const PRESETS = [
-  { label: "Link Form Buku Tamu", value: () => `${window.location.origin}/buku-tamu` },
-  { label: "Website RC3ID", value: () => "https://rc3id.unpad.ac.id" },
-  { label: "Instagram @rc3id.unpad", value: () => "https://instagram.com/rc3id.unpad" },
-  { label: "YouTube RC3ID", value: () => "https://youtube.com/@RC3IDUniversitasPadjadjaran" },
-];
-
 export default function QrGenerator() {
-  const [qrValue, setQrValue] = useState(() => `${window.location.origin}/buku-tamu`);
+  const { currentEvent } = usePage().props as any;
+  const getDefaultUrl = () => currentEvent ? `${window.location.origin}/e/${currentEvent.slug}/buku-tamu` : `${window.location.origin}/buku-tamu`;
+
+  const PRESETS = [
+    { label: "Link Form Buku Tamu", value: () => getDefaultUrl() },
+    { label: "Website RC3ID", value: () => "https://rc3id.unpad.ac.id" },
+    { label: "Instagram @rc3id.unpad", value: () => "https://instagram.com/rc3id.unpad" },
+    { label: "YouTube RC3ID", value: () => "https://youtube.com/@RC3IDUniversitasPadjadjaran" },
+  ];
+
+  const [qrValue, setQrValue] = useState(() => getDefaultUrl());
   const [fgColor, setFgColor] = useState("#253656");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [showLogo, setShowLogo] = useState(true);
@@ -65,6 +69,10 @@ export default function QrGenerator() {
     // Generate a padded square version of the default logo
     padImageToSquare("/logo.svg", setDefaultSquareLogo);
   }, []);
+
+  useEffect(() => {
+    setQrValue(getDefaultUrl());
+  }, [currentEvent]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -249,7 +257,7 @@ export default function QrGenerator() {
 
             {/* Reset */}
             <button
-              onClick={() => { setFgColor("#253656"); setBgColor("#FFFFFF"); setShowLogo(true); setLabel("Scan untuk Isi Buku Tamu RC3ID"); setQrValue(`${window.location.origin}/buku-tamu`); }}
+              onClick={() => { setFgColor("#253656"); setBgColor("#FFFFFF"); setShowLogo(true); setLabel("Scan untuk Isi Buku Tamu RC3ID"); setQrValue(getDefaultUrl()); }}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-slate-200 bg-white rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors"
             >
               <RefreshCw className="w-4 h-4" /> Reset ke Default
