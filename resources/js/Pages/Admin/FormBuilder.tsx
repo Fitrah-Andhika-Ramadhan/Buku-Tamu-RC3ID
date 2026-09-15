@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import { AdminLayoutWrapper } from '@/Components/AdminLayoutWrapper';
 import { Save, Plus, Trash2, GripVertical, CheckCircle2, Sparkles, Loader2, X, Undo2 } from 'lucide-react';
@@ -25,6 +25,12 @@ export default function FormBuilder({ formFields }: { formFields: FormField[] })
     const [aiPrompt, setAiPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
     const [history, setHistory] = useState<FormField[][]>([]);
+
+    useEffect(() => {
+        setFields(formFields || []);
+        setData('fields', formFields || []);
+        setHistory([]);
+    }, [formFields]);
 
     const saveHistory = (currentFields: FormField[]) => {
         setHistory(prev => [...prev, [...currentFields]]);
