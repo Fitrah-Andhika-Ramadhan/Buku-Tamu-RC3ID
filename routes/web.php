@@ -12,11 +12,23 @@ Route::get('/buku-tamu', [ParticipantController::class, 'registerLegacy'])->name
 Route::post('/daftar-tamu', [ParticipantController::class, 'storeLegacy'])->middleware('throttle:10,1')->name('register.store');
 Route::get('/success', [ParticipantController::class, 'successLegacy'])->name('register.success');
 
+use App\Http\Controllers\GoogleAuthController;
+
+Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->name('google.login');
+Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('google.callback');
+
 // New Event-specific routes
 Route::get('/e/{slug}/buku-tamu', [ParticipantController::class, 'registerForm'])->name('event.register');
 Route::get('/e/{slug}', [ParticipantController::class, 'eventForm'])->name('event.form');
 Route::post('/e/{slug}/daftar', [ParticipantController::class, 'store'])->middleware('throttle:10,1')->name('event.store');
 Route::get('/e/{slug}/success', [ParticipantController::class, 'success'])->name('event.success');
+
+use App\Http\Controllers\MeetingController;
+Route::middleware(['auth'])->group(function () {
+    Route::get('/m/{slug}', [MeetingController::class, 'show'])->name('meeting.room');
+    Route::post('/m/{id}/notes', [MeetingController::class, 'saveNotes'])->name('meeting.notes.save');
+    Route::post('/m/{id}/ai-summary', [MeetingController::class, 'generateAiSummary'])->name('meeting.ai');
+});
 
 Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 
@@ -69,6 +81,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     Route::put('/events/{id}', [AdminController::class, 'updateEvent'])->name('admin.events.update');
     Route::post('/events/switch', [AdminController::class, 'switchEvent'])->name('admin.events.switch');
     Route::post('/events/set-front', [AdminController::class, 'setFrontEvent'])->name('admin.events.set-front');
+    Route::post('/events/{id}/meeting', [AdminController::class, 'launchMeeting'])->name('admin.events.meeting.launch');
     Route::get('/form-builder', [AdminController::class, 'formBuilder'])->name('admin.form.builder');
     Route::post('/form-builder', [AdminController::class, 'saveFormBuilder'])->name('admin.form.builder.save');
     Route::post('/form-builder/generate-ai', [AdminController::class, 'generateFormAi'])->name('admin.form.builder.generate-ai');

@@ -474,6 +474,25 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Front event berhasil diatur.');
     }
 
+    public function launchMeeting(Request $request, $id)
+    {
+        $event = \App\Models\Event::findOrFail($id);
+        
+        $meeting = \App\Models\Meeting::firstOrCreate(
+            ['event_id' => $event->id],
+            [
+                'id' => (string) Str::uuid(),
+                'title' => 'Meeting ' . $event->name,
+                'room_slug' => Str::slug($event->name) . '-' . rand(1000, 9999),
+                'host_id' => auth()->id(),
+                'is_active' => true,
+            ]
+        );
+
+        // Instead of redirecting with Inertia back to admin, we redirect directly to the meeting room route
+        return redirect()->route('meeting.room', ['slug' => $meeting->room_slug]);
+    }
+
     public function scanDocument(Request $request)
     {
         $request->validate([

@@ -187,18 +187,32 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               )}
               
               {currentEvent && (
-                <button 
-                  onClick={() => router.post('/admin/events/set-front', { event_id: currentEvent.id })}
-                  className={`shrink-0 py-2 px-3 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-1.5 border ${
-                    frontEventId === currentEvent.id 
-                    ? 'bg-green-50 text-green-700 border-green-200' 
-                    : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
-                  }`}
-                  title={frontEventId === currentEvent.id ? 'Saat ini tampil di halaman depan (Landing Page)' : 'Jadikan form ini tampil di halaman depan'}
-                >
-                  <div className={`w-2 h-2 rounded-full ${frontEventId === currentEvent.id ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
-                  {frontEventId === currentEvent.id ? 'Aktif di Beranda' : 'Tampilkan di Beranda'}
-                </button>
+                <>
+                  <button 
+                    onClick={() => router.post('/admin/events/set-front', { event_id: currentEvent.id })}
+                    className={`shrink-0 py-2 px-3 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-1.5 border ${
+                      frontEventId === currentEvent.id 
+                        ? 'bg-amber-100 border-amber-200 text-amber-800 cursor-default' 
+                        : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                    }`}
+                  >
+                    <Star className={`w-4 h-4 ${frontEventId === currentEvent.id ? 'fill-amber-500 text-amber-500' : ''}`} />
+                    {frontEventId === currentEvent.id ? 'Event Utama' : 'Jadikan Utama'}
+                  </button>
+
+                  <a 
+                    href={`/admin/events/${currentEvent.id}/meeting`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      router.post(`/admin/events/${currentEvent.id}/meeting`);
+                    }}
+                    className="shrink-0 py-2 px-4 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-2 border bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100"
+                    title="Buka Ruang Meeting Video untuk Acara ini"
+                  >
+                    <Monitor className="w-4 h-4" />
+                    Ruang Meeting
+                  </a>
+                </>
               )}
 
               <button 
