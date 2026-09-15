@@ -10,15 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class MeetingController extends Controller
 {
-    public function show($slug)
+    public function show(Request $request, $slug)
     {
         $meeting = Meeting::with('notes')->where('room_slug', $slug)->firstOrFail();
         $user = Auth::user();
 
         // Ensure user is logged in
         if (!$user) {
-            // Should be handled by middleware, but just in case
-            return redirect('/login');
+            // Set intended URL for Google Auth to redirect back to this meeting room
+            $request->session()->put('url.intended', url()->current());
+            
+            return Inertia::render('MeetingGuestJoin', [
+                'meeting' => $meeting
+            ]);
         }
 
         return Inertia::render('MeetingRoom', [

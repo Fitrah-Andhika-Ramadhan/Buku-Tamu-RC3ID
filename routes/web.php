@@ -24,8 +24,11 @@ Route::post('/e/{slug}/daftar', [ParticipantController::class, 'store'])->middle
 Route::get('/e/{slug}/success', [ParticipantController::class, 'success'])->name('event.success');
 
 use App\Http\Controllers\MeetingController;
+
+// Public Meeting routes (Auth check handled inside controller to show Guest Join page)
+Route::get('/m/{slug}', [MeetingController::class, 'show'])->name('meeting.room');
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/m/{slug}', [MeetingController::class, 'show'])->name('meeting.room');
     Route::post('/m/{id}/notes', [MeetingController::class, 'saveNotes'])->name('meeting.notes.save');
     Route::post('/m/{id}/ai-summary', [MeetingController::class, 'generateAiSummary'])->name('meeting.ai');
 });

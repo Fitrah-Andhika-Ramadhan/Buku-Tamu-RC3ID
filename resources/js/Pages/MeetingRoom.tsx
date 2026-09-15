@@ -54,26 +54,36 @@ export default function MeetingRoom({ meeting, user }: any) {
         }
     };
 
+    const [showNotes, setShowNotes] = useState(false);
+
     return (
-        <div className="flex h-screen bg-slate-950 font-['Outfit'] overflow-hidden">
+        <div className="flex flex-col md:flex-row h-screen bg-slate-950 font-['Outfit'] overflow-hidden relative">
             <Head title={`Ruang Rapat: ${meeting.title}`} />
             
-            {/* Left side: Video Conference (70%) */}
-            <div className="flex-1 flex flex-col relative h-full">
+            {/* Left side: Video Conference (100% on mobile, 70% on PC) */}
+            <div className={`flex-1 flex flex-col relative h-full transition-all duration-300`}>
                 {/* Custom Header Overlay */}
-                <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/80 to-transparent z-10 flex items-center px-6 pointer-events-none">
+                <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-black/80 to-transparent z-10 flex items-center justify-between px-6 pointer-events-none">
                     <div className="pointer-events-auto flex items-center gap-4">
                         <button onClick={() => window.history.back()} className="text-white hover:text-slate-300 transition-colors">
                             <ChevronLeft className="w-6 h-6" />
                         </button>
                         <div>
-                            <h1 className="text-white font-bold text-lg leading-tight">{meeting.title}</h1>
+                            <h1 className="text-white font-bold text-sm md:text-lg leading-tight truncate max-w-[200px] md:max-w-md">{meeting.title}</h1>
                             <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-300 font-medium">
                                 <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                                 Live Room
                             </div>
                         </div>
                     </div>
+                    
+                    {/* Mobile Toggle Notes Button */}
+                    <button 
+                        onClick={() => setShowNotes(!showNotes)}
+                        className="pointer-events-auto md:hidden bg-slate-800/80 hover:bg-slate-700 text-white p-2 rounded-lg backdrop-blur-md border border-slate-600 transition-colors"
+                    >
+                        <FileText className="w-5 h-5" />
+                    </button>
                 </div>
 
                 {/* Jitsi Meeting */}
@@ -83,9 +93,29 @@ export default function MeetingRoom({ meeting, user }: any) {
                         roomName={`RC3ID-${meeting.room_slug}`}
                         configOverwrite={{
                             startWithAudioMuted: true,
+                            startWithVideoMuted: false,
                             disableModeratorIndicator: true,
                             startScreenSharing: true,
-                            enableEmailInStats: false
+                            enableEmailInStats: false,
+                            prejoinPageEnabled: true, // Enable Pre-join screen
+                            fileRecordingsEnabled: true, // Enable recording
+                            localRecording: {
+                                enabled: true,
+                                format: 'flac'
+                            },
+                            toolbarButtons: [
+                                'camera', 'chat', 'closedcaptions', 'desktop',
+                                'download', 'embedmeeting', 'etherpad', 'feedback',
+                                'filmstrip', 'fullscreen', 'hangup', 'help',
+                                'highlight', 'invite', 'linktosalesforce',
+                                'livestreaming', 'microphone', 'mute-everyone',
+                                'mute-video-everyone', 'participants-pane',
+                                'profile', 'raisehand', 'recording',
+                                'security', 'select-background', 'settings',
+                                'shareaudio', 'sharedvideo', 'shortcuts',
+                                'stats', 'tileview', 'toggle-camera',
+                                'videoquality', 'whiteboard'
+                            ],
                         }}
                         interfaceConfigOverwrite={{
                             DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
@@ -106,10 +136,20 @@ export default function MeetingRoom({ meeting, user }: any) {
                 </div>
             </div>
 
-            {/* Right side: Live Notes (30%) */}
-            <div className="w-[400px] border-l border-slate-800 bg-slate-900 flex flex-col h-full shrink-0 shadow-2xl z-20">
-                <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 backdrop-blur-xl">
+            {/* Right side: Live Notes (Mobile: Overlay, PC: 400px side panel) */}
+            <div className={`
+                absolute md:relative top-0 right-0 h-full z-20 
+                w-full md:w-[400px] shrink-0 
+                bg-slate-900/95 md:bg-slate-900 backdrop-blur-3xl md:backdrop-blur-none
+                border-l border-slate-800 shadow-2xl flex flex-col 
+                transition-transform duration-300 ease-in-out
+                ${showNotes ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+            `}>
+                <div className="p-4 md:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 backdrop-blur-xl">
                     <div className="flex items-center gap-3">
+                        <button onClick={() => setShowNotes(false)} className="md:hidden text-slate-400 hover:text-white">
+                            <ChevronLeft className="w-6 h-6" />
+                        </button>
                         <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
                             <FileText className="w-5 h-5 text-blue-400" />
                         </div>
