@@ -12,7 +12,7 @@ class ParticipantController extends Controller
 {
     public function index()
     {
-        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->value('value');
+        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->first()?->value;
         if ($frontEventId) {
             $event = Event::find($frontEventId);
         } else {
@@ -34,7 +34,7 @@ class ParticipantController extends Controller
 
     public function registerLegacy()
     {
-        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->value('value');
+        $frontEventId = \App\Models\Setting::where('key', 'front_event_id')->first()?->value;
         if ($frontEventId) {
             $event = Event::find($frontEventId);
         } else {

@@ -576,7 +576,7 @@ class AdminController extends Controller
             'prompt' => 'required|string'
         ]);
 
-        $apiKey = Setting::where('key', 'openrouter_api_key')->value('value');
+        $apiKey = Setting::where('key', 'openrouter_api_key')->first()?->value;
         
         if (!$apiKey) {
             return response()->json([

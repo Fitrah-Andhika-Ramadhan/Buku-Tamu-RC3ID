@@ -55,7 +55,7 @@ class HandleInertiaRequests extends Middleware
             'events' => $events,
             'currentEvent' => $currentEvent,
             'frontEventId' => \Illuminate\Support\Facades\Schema::hasTable('settings') 
-                ? \App\Models\Setting::where('key', 'front_event_id')->value('value') 
+                ? \App\Models\Setting::where('key', 'front_event_id')->first()?->value 
                 : null,
             'flash' => [
                 'success' => fn () => $request->session()->get('success')

@@ -60,9 +60,9 @@ class MeetingController extends Controller
     public function generateAiSummary(Request $request, $id)
     {
         $meeting = Meeting::findOrFail($id);
-        $request->validate(['content_html' => 'required|string']);
+        $request->validate(['notes' => 'required|string']);
 
-        $apiKey = \App\Models\Setting::where('key', 'openrouter_api_key')->value('value');
+        $apiKey = \App\Models\Setting::where('key', 'openrouter_api_key')->first()?->value;
         
         if (!$apiKey) {
             return response()->json([

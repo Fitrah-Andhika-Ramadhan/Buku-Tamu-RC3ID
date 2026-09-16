@@ -15,7 +15,7 @@ class OcrService
      */
     public function scanDocument($file)
     {
-        $apiKey = \App\Models\Setting::where('key', 'gemini_api_key')->value('value') ?: env('GEMINI_API_KEY');
+        $apiKey = \App\Models\Setting::where('key', 'gemini_api_key')->first()?->value ?: env('GEMINI_API_KEY');
         
         if (empty($apiKey)) {
             Log::error('OCR failed: GEMINI_API_KEY is not set');
