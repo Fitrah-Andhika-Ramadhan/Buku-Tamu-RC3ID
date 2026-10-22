@@ -1,9 +1,9 @@
 import { Head, Link } from "@inertiajs/react";
 import { QRCodeCanvas } from "qrcode.react";
-import { Printer, Download, Share2, CheckCircle2 } from "lucide-react";
+import { Printer, Download, Share2, CheckCircle2, Video } from "lucide-react";
 import { useRef } from "react";
 
-export default function Ticket({ participant }: { participant: any }) {
+export default function Ticket({ participant, meeting_room_url }: { participant: any, meeting_room_url?: string | null }) {
   const ticketRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = () => {
@@ -104,19 +104,29 @@ export default function Ticket({ participant }: { participant: any }) {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 justify-center print:hidden">
-          <button 
-            onClick={handleDownload}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-white border border-slate-200 text-[#253656] hover:bg-slate-50 font-bold rounded-xl shadow-sm transition-colors"
-          >
-            <Printer className="w-4 h-4" /> Cetak Tiket
-          </button>
-          <button 
-            onClick={handleShare}
-            className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-[#BD272D] hover:bg-[#991f24] text-white font-bold rounded-xl shadow-md shadow-[#BD272D]/20 transition-colors"
-          >
-            <Share2 className="w-4 h-4" /> Bagikan
-          </button>
+        <div className="flex flex-col gap-3 justify-center print:hidden">
+          {meeting_room_url && (
+            <a 
+              href={meeting_room_url} 
+              className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md shadow-blue-500/20 transition-colors"
+            >
+              <Video className="w-5 h-5" /> Gabung Ruang Rapat Virtual
+            </a>
+          )}
+          <div className="flex items-center gap-3 w-full">
+            <button 
+              onClick={handleDownload}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-white border border-slate-200 text-[#253656] hover:bg-slate-50 font-bold rounded-xl shadow-sm transition-colors"
+            >
+              <Printer className="w-4 h-4" /> Cetak Tiket
+            </button>
+            <button 
+              onClick={handleShare}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-[#BD272D] hover:bg-[#991f24] text-white font-bold rounded-xl shadow-md shadow-[#BD272D]/20 transition-colors"
+            >
+              <Share2 className="w-4 h-4" /> Bagikan
+            </button>
+          </div>
         </div>
 
         {/* Benefit Info */}

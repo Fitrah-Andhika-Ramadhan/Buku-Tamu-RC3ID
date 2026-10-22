@@ -184,12 +184,16 @@ class ParticipantController extends Controller
                 ->get()
         );
 
+        $meeting = \App\Models\Meeting::where('event_id', $eventId)->where('is_active', true)->first();
+        $meetingRoomUrl = $meeting && !empty($meeting->zoom_join_url) ? route('meeting.room', ['slug' => $meeting->room_slug]) : null;
+
         return Inertia::render('Auth/Success', [
             'success_config'      => $config,
             'totalParticipants'   => $totalParticipants,
             'totalAttending'      => $totalAttending,
             'totalInstitutions'   => $totalInstitutions,
             'topInstitutionsData' => $topInstitutionsData,
+            'meeting_room_url'    => $meetingRoomUrl,
             'participant'         => $participant ? [
                 'id'           => $participant->id,
                 'full_name'    => $participant->full_name,
@@ -204,7 +208,11 @@ class ParticipantController extends Controller
     {
         $participant = Participant::findOrFail($id);
         
+        $meeting = \App\Models\Meeting::where('event_id', $participant->event_id)->where('is_active', true)->first();
+        $meetingRoomUrl = $meeting && !empty($meeting->zoom_join_url) ? route('meeting.room', ['slug' => $meeting->room_slug]) : null;
+
         return Inertia::render('Ticket', [
+            'meeting_room_url' => $meetingRoomUrl,
             'participant' => [
                 'id' => $participant->id,
                 'nama_lengkap' => $participant->full_name,

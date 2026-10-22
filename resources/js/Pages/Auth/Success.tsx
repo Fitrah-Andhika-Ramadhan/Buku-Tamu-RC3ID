@@ -1,5 +1,5 @@
 import { Link, Head, usePage } from "@inertiajs/react";
-import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Printer, Info, X } from "lucide-react";
+import { CheckCircle2, Gift, FileText, Download, ArrowLeft, Volume2, Ticket, Printer, Info, X, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LiveStatsBox } from "@/Pages/Welcome";
 import { useEffect, useRef, useState } from "react";
@@ -92,6 +92,7 @@ export default function SuccessPage() {
   };
 
   const participant = (props.participant as any) || null;
+  const meetingRoomUrl = (props.meeting_room_url as string) || null;
   const topInstitutionsData = (props.topInstitutionsData as { name: string, count: number }[]) || [];
 
   const [ttsPlaying, setTtsPlaying] = useState(false);
@@ -273,6 +274,19 @@ export default function SuccessPage() {
                 <Download className="w-4 h-4 lg:w-5 lg:h-5 ml-3 opacity-60" />
               </Button>
             </a>
+
+            {/* Join Zoom Meeting Button */}
+            {meetingRoomUrl && (
+              <a 
+                href={meetingRoomUrl} 
+                className="w-full sm:w-auto mt-4"
+              >
+                <Button className="w-full sm:w-auto h-12 lg:h-14 px-8 lg:px-10 bg-blue-600 hover:bg-blue-700 text-white font-bold text-base lg:text-lg rounded-xl shadow-xl shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1">
+                  <Video className="w-5 h-5 lg:w-6 lg:h-6 mr-3 text-white" />
+                  Gabung ke Ruang Rapat Virtual
+                </Button>
+              </a>
+            )}
 
             {/* Games Banner */}
             {config.show_games_banner !== false && (
