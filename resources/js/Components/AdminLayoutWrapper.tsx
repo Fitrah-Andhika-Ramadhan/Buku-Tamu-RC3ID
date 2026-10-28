@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, usePage, router } from "@inertiajs/react";
-import { LogOut, LayoutDashboard, FileText, Settings, Users, Monitor, ShieldCheck, CheckCircle2, Ticket, QrCode, Menu, LayoutList, Plus, Star, Database, Edit3, Activity, X, Layout } from "lucide-react";
+import { LogOut, LayoutDashboard, FileText, Settings, Users, Monitor, ShieldCheck, CheckCircle2, Ticket, QrCode, Menu, LayoutList, Plus, Star, Database, Edit3, Activity, X, Layout, Video } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { name: "Header Form", href: "/admin/form-header", icon: Layout, desc: "Judul & Sosmed Form" },
   { name: "Halaman Sukses", href: "/admin/success-config", icon: CheckCircle2, desc: "Atur Tampilan Sukses" },
   { name: "QR Generator", href: "/admin/qr-generator", icon: QrCode, desc: "Buat & Ekspor QR Code" },
+  { name: "Jadwal & Zoom", href: "/admin/zoom-tracker", icon: Video, desc: "Tracker & Jadwal Meet" },
   { name: "DB Viewer", href: "/admin/db-viewer", icon: Database, desc: "Lihat Data SQL" },
 ];
 
