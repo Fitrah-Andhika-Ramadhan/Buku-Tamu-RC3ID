@@ -38,6 +38,7 @@ type Schedule = {
   zoom_passcode: string | null;
   status: ScheduleStatus;
   notes: string | null;
+  source?: "manual" | "zoom";
 };
 type Stats = {
   total: number;
@@ -368,7 +369,7 @@ export default function ZoomTracker({ date, dayName, schedules, daySchedules, st
                 <tbody className="divide-y divide-slate-100">
                   {filteredSchedules.map((schedule) => (
                     <tr key={schedule.id} className="align-top hover:bg-slate-50">
-                      <td className="px-4 py-3"><p className="font-medium text-slate-800">{schedule.title}</p><p className="mt-0.5 text-xs text-slate-500">{schedule.division}{schedule.notes ? ` · ${schedule.notes}` : ""}</p></td>
+                      <td className="px-4 py-3"><p className="font-medium text-slate-800">{schedule.title}</p><p className="mt-0.5 text-xs text-slate-500">{schedule.source === "zoom" && <span className="mr-1 font-medium text-blue-700">Zoom</span>}{schedule.division}{schedule.notes ? ` · ${schedule.notes}` : ""}</p></td>
                       <td className="px-4 py-3"><p className="text-slate-700">{schedule.start_time}–{schedule.end_time}</p><p className="mt-0.5 text-xs text-slate-500">{schedule.is_recurring ? `Setiap ${schedule.day_of_week}` : schedule.meeting_date ? dateLabel(schedule.meeting_date) : "—"}</p></td>
                       <td className="px-4 py-3"><p className="inline-flex items-center gap-1.5 text-slate-700"><Users className="h-3.5 w-3.5 text-slate-500" />{schedule.pic_name}</p>{schedule.pic_contact && <p className="mt-0.5 text-xs text-slate-500">{schedule.pic_contact}</p>}</td>
                       <td className="px-4 py-3">{schedule.zoom_link ? <a href={schedule.zoom_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-700 hover:underline"><Link2 className="h-3.5 w-3.5" />Buka meeting<ExternalLink className="h-3 w-3" /></a> : <span className="text-xs text-slate-500">Belum ada link</span>}{schedule.zoom_id && <p className="mt-0.5 text-xs text-slate-500">ID: {schedule.zoom_id}</p>}</td>

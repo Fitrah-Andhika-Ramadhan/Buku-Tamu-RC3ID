@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncZoomScheduleToGoogleCalendar;
 use App\Models\ZoomSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -108,7 +109,8 @@ class ZoomTrackerController extends Controller
         $validated = $this->validateSchedule($request);
         $this->ensureAvailable($validated);
 
-        ZoomSchedule::create($this->normalizeScheduleData($validated));
+        $schedule = ZoomSchedule::create($this->normalizeScheduleData($validated));
+        $this->queueCalendarSync($schedule);
 
         return back()->with('success', 'Jadwal Zoom berhasil ditambahkan.');
     }
@@ -119,12 +121,17 @@ class ZoomTrackerController extends Controller
         $this->ensureAvailable($validated, $zoomSchedule->id);
 
         $zoomSchedule->update($this->normalizeScheduleData($validated));
+        $this->queueCalendarSync($zoomSchedule);
 
         return back()->with('success', 'Jadwal Zoom berhasil diperbarui.');
     }
 
     public function destroy(ZoomSchedule $zoomSchedule): RedirectResponse
     {
+        if (config('services.google_calendar.enabled') && $zoomSchedule->google_calendar_event_id) {
+            SyncZoomScheduleToGoogleCalendar::dispatch($zoomSchedule->id, $zoomSchedule->google_calendar_event_id)->afterResponse();
+        }
+
         $zoomSchedule->delete();
 
         return back()->with('success', 'Jadwal Zoom berhasil dihapus.');
@@ -205,7 +212,15 @@ class ZoomTrackerController extends Controller
             'zoom_passcode' => $schedule->zoom_passcode,
             'status' => $schedule->status,
             'notes' => $schedule->notes,
+            'source' => $schedule->source ?? 'manual',
         ];
+    }
+
+    private function queueCalendarSync(ZoomSchedule $schedule): void
+    {
+        if (config('services.google_calendar.enabled')) {
+            SyncZoomScheduleToGoogleCalendar::dispatch($schedule->id)->afterResponse();
+        }
     }
 
     private function timeToMinutes(string $time): int

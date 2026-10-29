@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\ZoomWebhookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
+
+Route::post('/webhooks/zoom', [ZoomWebhookController::class, 'handle'])->name('webhooks.zoom');
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ZoomTrackerController;
@@ -87,32 +90,6 @@ Route::middleware(['auth', 'verified', 'admin-panel-account'])->prefix('admin')-
         } catch (\Exception $e) {
             return redirect('/admin')->with('error', 'Gagal menjalankan migrasi: ' . $e->getMessage());
         }
-    });
-
-    Route::get('/setup-zoom-secret', function () {
-        $envPath = base_path('.env');
-        if (!file_exists($envPath)) {
-            return redirect('/admin')->with('error', 'File .env tidak ditemukan di server.');
-        }
-
-        $envContent = file_get_contents($envPath);
-        
-        $accId = base64_decode('anZzdWotX3ZUNDI5ZkRvcWJGS2YxZw==');
-        $clientId = base64_decode('OTZLV1VnMmpRN0M5UXhTNjFiV1pwQQ==');
-        $clientSecret = base64_decode('a2NTaExicW1sZkRMSktiNDgyT2w4UndWMUlzdHRkUXg=');
-
-        $envString = "\n# Zoom Server-to-Server OAuth\nZOOM_ACCOUNT_ID={$accId}\nZOOM_CLIENT_ID={$clientId}\nZOOM_CLIENT_SECRET={$clientSecret}\n";
-
-        // Remove old if exists
-        $envContent = preg_replace('/^ZOOM_.*$/m', '', $envContent);
-        $envContent = preg_replace('/# Zoom Server-to-Server OAuth\n/m', '', $envContent);
-        
-        // Append new
-        $envContent = rtrim($envContent) . "\n" . $envString;
-        
-        file_put_contents($envPath, $envContent);
-
-        return redirect('/admin')->with('success', 'Berhasil memasukkan API Kunci Zoom secara otomatis ke server!');
     });
 
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');

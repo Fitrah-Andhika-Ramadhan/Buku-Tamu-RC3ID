@@ -28,11 +28,17 @@ class ZoomSchedule extends Model
         'zoom_passcode',
         'status',
         'notes',
+        'source',
+        'zoom_source_meeting_id',
+        'google_calendar_event_id',
+        'google_calendar_synced_at',
+        'google_calendar_sync_error',
     ];
 
     protected $casts = [
         'is_recurring' => 'boolean',
         'meeting_date' => 'date:Y-m-d',
+        'google_calendar_synced_at' => 'datetime',
     ];
 
     public static $dayMap = [

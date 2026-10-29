@@ -41,4 +41,19 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/google/callback'),
     ],
 
+    'zoom' => [
+        'account_id' => env('ZOOM_ACCOUNT_ID'),
+        'client_id' => env('ZOOM_CLIENT_ID'),
+        'client_secret' => env('ZOOM_CLIENT_SECRET'),
+        'webhook_secret_token' => env('ZOOM_WEBHOOK_SECRET_TOKEN'),
+    ],
+
+    'google_calendar' => [
+        'enabled' => (bool) env('GOOGLE_CALENDAR_ENABLED', false),
+        'calendar_id' => env('GOOGLE_CALENDAR_ID'),
+        'service_account_email' => env('GOOGLE_CALENDAR_SERVICE_ACCOUNT_EMAIL'),
+        'private_key' => env('GOOGLE_CALENDAR_PRIVATE_KEY'),
+        'timezone' => env('GOOGLE_CALENDAR_TIMEZONE', env('APP_TIMEZONE', 'Asia/Jakarta')),
+    ],
+
 ];

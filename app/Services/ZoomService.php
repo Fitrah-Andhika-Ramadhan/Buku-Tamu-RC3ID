@@ -16,31 +16,9 @@ class ZoomService
 
     public function __construct()
     {
-        $this->accountId = env('ZOOM_ACCOUNT_ID');
-        $this->clientId = env('ZOOM_CLIENT_ID');
-        $this->clientSecret = env('ZOOM_CLIENT_SECRET');
-
-        // Fallback for Shared Hosting where env() might be cached by PHP-FPM
-        if (!$this->accountId || !$this->clientId) {
-            $envPath = base_path('.env');
-            if (file_exists($envPath)) {
-                $envContent = file_get_contents($envPath);
-                preg_match('/^ZOOM_ACCOUNT_ID=(.*)$/m', $envContent, $m1);
-                preg_match('/^ZOOM_CLIENT_ID=(.*)$/m', $envContent, $m2);
-                preg_match('/^ZOOM_CLIENT_SECRET=(.*)$/m', $envContent, $m3);
-                
-                $this->accountId = trim($m1[1] ?? '');
-                $this->clientId = trim($m2[1] ?? '');
-                $this->clientSecret = trim($m3[1] ?? '');
-            }
-        }
-        
-        // Final fallback if .env is missing or unreadable
-        if (!$this->accountId || !$this->clientId) {
-            $this->accountId = base64_decode('anZzdWotX3ZUNDI5ZkRvcWJGS2YxZw==');
-            $this->clientId = base64_decode('OTZLV1VnMmpRN0M5UXhTNjFiV1pwQQ==');
-            $this->clientSecret = base64_decode('a2NTaExicW1sZkRMSktiNDgyT2w4UndWMUlzdHRkUXg=');
-        }
+        $this->accountId = config('services.zoom.account_id');
+        $this->clientId = config('services.zoom.client_id');
+        $this->clientSecret = config('services.zoom.client_secret');
     }
 
     /**
@@ -48,6 +26,10 @@ class ZoomService
      */
     protected function getAccessToken()
     {
+        if (!$this->accountId || !$this->clientId || !$this->clientSecret) {
+            throw new Exception('Konfigurasi Zoom belum lengkap.');
+        }
+
         if (Cache::has('zoom_access_token')) {
             return Cache::get('zoom_access_token');
         }
