@@ -16,7 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        //
+        $middleware->alias([
+            'admin-panel-account' => \App\Http\Middleware\EnsureAdminPanelAccount::class,
+            'zoom-tracker-account' => \App\Http\Middleware\EnsureZoomTrackerAccount::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

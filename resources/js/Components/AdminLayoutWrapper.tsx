@@ -18,7 +18,9 @@ const navItems = [
 
 export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) {
   const { url: pathname } = usePage();
-  const { events, currentEvent, frontEventId } = usePage().props as any;
+  const { events, currentEvent, frontEventId, auth } = usePage().props as any;
+  const isZoomOnlyAccount = auth?.user?.role === "zoom_manager";
+  const visibleNavItems = isZoomOnlyAccount ? navItems.filter((item) => item.href === "/admin/zoom-tracker") : navItems;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -32,72 +34,57 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] flex font-['Outfit'] selection:bg-[#BD272D] selection:text-white relative overflow-hidden">
-      {/* VIBEDESK STYLE: Dynamic Background Elements */}
-      <div className="fixed inset-0 z-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
-      <div className="fixed left-[10%] top-[10%] z-0 h-[400px] w-[400px] rounded-full bg-[#BD272D] opacity-[0.10] blur-[100px] animate-pulse pointer-events-none"></div>
-      <div className="fixed right-[-5%] bottom-[10%] z-0 h-[500px] w-[500px] rounded-full bg-[#253656] opacity-[0.08] blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: "2s" }}></div>
-      <div className="fixed bottom-1/2 left-[20%] z-0 h-[300px] w-[300px] rounded-full bg-cyan-500 opacity-[0.03] blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: "4s" }}></div>
-
+    <div className="flex min-h-screen bg-slate-100 font-sans text-slate-800 selection:bg-[#BD272D]/15 selection:text-[#253656]">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden backdrop-blur-sm transition-opacity"
+          className="fixed inset-0 z-40 bg-slate-900/30 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Floating Sidebar */}
-      <div className={`fixed top-0 left-0 h-screen w-72 p-4 z-50 flex flex-col transform transition-transform duration-500 ease-out lg:sticky lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <aside className="w-full h-full bg-white/70 backdrop-blur-3xl border border-white rounded-[2rem] shadow-2xl shadow-[#253656]/5 flex flex-col overflow-hidden relative group">
-          {/* Decorative Sidebar Glow */}
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#BD272D]/20 rounded-full blur-[50px] pointer-events-none group-hover:bg-[#BD272D]/30 transition-colors duration-1000"></div>
-
+      <div className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col transition-transform duration-200 lg:sticky lg:translate-x-0 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <aside className="flex h-full w-full flex-col overflow-hidden border-r border-slate-300 bg-white">
           {/* Logo */}
-          <div className="p-6 border-b border-gray-200/50 flex items-center justify-between relative z-10">
-            <Link href="/admin" className="flex items-center gap-3">
-              <img src="/logo.svg" alt="RC3ID" className="h-10 w-auto hover:scale-105 transition-transform" />
+          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <Link href={isZoomOnlyAccount ? "/admin/zoom-tracker" : "/admin"} className="flex items-center gap-3">
+              <img src="/logo.svg" alt="RC3ID" className="h-8 w-auto" />
             </Link>
-            <button className="lg:hidden text-gray-400 hover:text-[#BD272D] p-1.5 rounded-xl hover:bg-red-50 transition-colors" onClick={() => setIsSidebarOpen(false)}>
+            <button className="rounded p-1.5 text-slate-500 hover:bg-slate-100 lg:hidden" onClick={() => setIsSidebarOpen(false)}>
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Status Badge */}
-          <div className="px-6 py-4 bg-gradient-to-r from-[#253656]/5 to-transparent border-b border-gray-200/50">
-            <div className="flex items-center gap-3">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 shadow-sm shadow-green-500"></span>
-              </span>
-              <span className="text-xs font-black text-[#253656] uppercase tracking-[0.2em]">Sistem Aktif</span>
+          <div className="border-b border-slate-200 px-5 py-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <span className="h-2 w-2 rounded-full bg-emerald-600"></span>
+              <span>Sistem aktif</span>
             </div>
           </div>
 
           {/* Nav */}
-          <div className="flex-1 p-5 overflow-y-auto space-y-8 scrollbar-hide relative z-10">
+          <div className="flex-1 space-y-6 overflow-y-auto p-3">
             <div>
-              <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] mb-4 px-2">Main Menu</p>
-              <nav className="space-y-2">
-                {navItems.map((item) => {
+              <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Menu</p>
+              <nav className="space-y-1">
+                {visibleNavItems.map((item) => {
                   const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsSidebarOpen(false)}
-                      className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
+                      className={`flex items-center gap-3 border-l-2 px-3 py-2.5 transition-colors ${
                         isActive
-                          ? "bg-gradient-to-r from-[#253656] to-[#1a263d] text-white shadow-xl shadow-[#253656]/20 scale-[1.02]"
-                          : "text-[#6C7C98] hover:bg-white hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
+                          ? "border-[#BD272D] bg-slate-100 text-[#253656]"
+                          : "border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                       }`}
                     >
-                      <div className={`w-10 h-10 rounded-[1rem] flex items-center justify-center shrink-0 transition-colors shadow-inner ${isActive ? "bg-white/10" : "bg-gray-50 border border-gray-100 group-hover:bg-[#253656]/5 group-hover:border-[#253656]/10"}`}>
-                        <item.icon className={`w-5 h-5 ${isActive ? "text-white drop-shadow-sm" : "text-gray-400 group-hover:text-[#BD272D]"}`} />
-                      </div>
-                      <div>
-                        <div className={`font-bold text-sm tracking-wide leading-none ${isActive ? "text-white" : "group-hover:text-[#253656]"}`}>{item.name}</div>
-                        <div className={`text-xs mt-1 font-['Plus_Jakarta_Sans'] font-medium ${isActive ? "text-white/70" : "text-gray-400"}`}>{item.desc}</div>
+                      <item.icon className={`h-4 w-4 shrink-0 ${isActive ? "text-[#BD272D]" : "text-slate-400"}`} />
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium leading-5">{item.name}</div>
+                        <div className="mt-0.5 truncate text-xs text-slate-400">{item.desc}</div>
                       </div>
                     </Link>
                   );
@@ -105,60 +92,56 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               </nav>
             </div>
 
-            {/* Event Info */}
-            <div className="p-5 bg-gradient-to-br from-[#BD272D]/5 to-transparent rounded-[1.5rem] border border-[#BD272D]/10 group hover:border-[#BD272D]/30 transition-colors">
-              <div className="flex items-center gap-2 mb-3">
-                <Activity className="w-5 h-5 text-[#BD272D] group-hover:scale-110 transition-transform" />
-                <span className="text-sm font-black text-[#253656] tracking-tight">B-IDEAs 2026</span>
+            {!isZoomOnlyAccount && (
+              <div className="border-t border-slate-200 px-2 pt-4">
+                <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <Activity className="h-4 w-4 text-[#BD272D]" />
+                  <span>B-IDEAs 2026</span>
+                </div>
+                <p className="text-xs leading-relaxed text-slate-500">RC3ID UNPAD Exhibition — Digital Guestbook System</p>
               </div>
-              <p className="text-xs font-['Plus_Jakarta_Sans'] font-medium text-[#6C7C98] leading-relaxed">RC3ID UNPAD Exhibition — Digital Guestbook System</p>
-            </div>
+            )}
           </div>
 
           {/* Logout */}
-          <div className="p-5 border-t border-gray-200/50 bg-white/50 relative z-10">
+          <div className="border-t border-slate-200 p-3">
             <Link
               href="/logout"
               method="post"
               as="button"
-              className="flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold text-gray-500 hover:bg-red-50 hover:text-[#BD272D] hover:shadow-md hover:border-red-100 border border-transparent transition-all duration-300 w-full group active:scale-[0.98]"
+              className="flex w-full items-center gap-3 rounded px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-rose-50 hover:text-[#BD272D]"
             >
-              <div className="w-10 h-10 rounded-[1rem] bg-gray-50 group-hover:bg-white flex items-center justify-center transition-colors shadow-inner border border-gray-100">
-                <LogOut className="w-5 h-5" />
-              </div>
-              <span className="tracking-wide">Keluar (Logout)</span>
+              <LogOut className="h-4 w-4" />
+              <span>Keluar</span>
             </Link>
           </div>
         </aside>
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-hidden relative">
+      <main className="flex min-h-screen flex-1 flex-col overflow-hidden bg-slate-100">
         {/* Mobile Header */}
-        <header className="lg:hidden bg-white/80 backdrop-blur-xl border-b border-gray-200/50 px-5 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+        <header className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-300 bg-white px-4 py-3 lg:hidden">
           <div className="flex items-center gap-4">
-            <button onClick={() => setIsSidebarOpen(true)} className="p-2.5 rounded-xl bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-[#BD272D] transition-colors border border-gray-200/50 active:scale-[0.98]">
+            <button onClick={() => setIsSidebarOpen(true)} className="rounded border border-slate-300 bg-white p-2 text-slate-600 hover:bg-slate-50">
               <Menu className="w-5 h-5" />
             </button>
             <img src="/logo.svg" alt="RC3ID" className="h-8 w-auto" />
           </div>
-          <div className="flex items-center gap-2 text-xs font-black text-[#253656] bg-[#253656]/5 border border-[#253656]/10 px-4 py-2 rounded-xl tracking-widest uppercase">
-            <span className="w-2 h-2 rounded-full bg-green-500 shadow-sm shadow-green-500"></span>
-            Admin
-          </div>
+          <span className="text-xs font-medium text-slate-600">Admin</span>
         </header>
 
-        <div className="flex-1 overflow-auto p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 animate-fade-in slide-in-from-bottom-4 duration-700 ease-out">
+        <div className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
           
           {/* Event Switcher */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm no-print">
+          {!isZoomOnlyAccount && <div className="mb-6 flex flex-col justify-between gap-3 border border-slate-300 bg-white p-4 sm:flex-row sm:items-center no-print">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0">
-                <LayoutList className="w-5 h-5 text-indigo-600" />
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center border border-slate-200 bg-slate-50">
+                <LayoutList className="h-4 w-4 text-slate-600" />
               </div>
               <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-wider mb-0.5">Mengelola Data Untuk:</p>
-                <p className="text-sm font-bold text-slate-700">{currentEvent?.name || 'Memuat...'}</p>
+                <p className="mb-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Mengelola data untuk</p>
+                <p className="text-sm font-semibold text-slate-800">{currentEvent?.name || 'Memuat...'}</p>
               </div>
             </div>
             
@@ -166,7 +149,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
               <select 
                 value={currentEvent?.id || ''} 
                 onChange={(e) => router.post('/admin/events/switch', { event_id: e.target.value })}
-                className="w-full sm:w-64 border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm py-2"
+                className="w-full border-slate-300 text-sm focus:border-[#BD272D] focus:ring-[#BD272D] sm:w-64"
               >
                 {(events || []).map((e: any) => (
                   <option key={e.id} value={e.id}>{e.name}</option>
@@ -180,7 +163,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                     setEditEventSlug(currentEvent.slug || '');
                     setIsEditModalOpen(true);
                   }}
-                  className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors border border-transparent hover:border-blue-100"
+                  className="border border-transparent p-2 text-slate-500 hover:border-slate-200 hover:bg-slate-50 hover:text-blue-700"
                   title="Edit Nama/Link Acara"
                 >
                   <Edit3 className="w-5 h-5" />
@@ -191,10 +174,10 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                 <>
                   <button 
                     onClick={() => router.post('/admin/events/set-front', { event_id: currentEvent.id })}
-                    className={`shrink-0 py-2 px-3 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-1.5 border ${
+                    className={`flex shrink-0 items-center gap-1.5 border px-3 py-2 text-sm font-medium transition-colors ${
                       frontEventId === currentEvent.id 
-                        ? 'bg-amber-100 border-amber-200 text-amber-800 cursor-default' 
-                        : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                        ? 'border-amber-300 bg-amber-50 text-amber-800 cursor-default'
+                        : 'border-slate-300 bg-white text-slate-600 hover:bg-slate-50'
                     }`}
                   >
                     <Star className={`w-4 h-4 ${frontEventId === currentEvent.id ? 'fill-amber-500 text-amber-500' : ''}`} />
@@ -207,7 +190,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                       e.preventDefault();
                       router.post(`/admin/events/${currentEvent.id}/meeting`);
                     }}
-                    className="shrink-0 py-2 px-4 rounded-xl transition-colors text-sm font-bold shadow-sm flex items-center gap-2 border bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100"
+                    className="flex shrink-0 items-center gap-2 border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                     title="Buka Ruang Meeting Video untuk Acara ini"
                   >
                     <Monitor className="w-4 h-4" />
@@ -222,13 +205,13 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   setNewEventSlug('');
                   setIsCreateModalOpen(true);
                 }}
-                className="w-full sm:w-auto px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-colors shadow-sm whitespace-nowrap flex items-center justify-center gap-1.5"
+                className="flex w-full items-center justify-center gap-1.5 whitespace-nowrap bg-[#253656] px-3 py-2 text-sm font-medium text-white hover:bg-[#1d2a43] sm:w-auto"
               >
                 <Plus className="w-4 h-4" />
                 Buat Baru
               </button>
             </div>
-          </div>
+          </div>}
 
           {children}
         </div>
@@ -237,9 +220,9 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
       {/* Custom Create Event Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-fade-in-up">
-            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="font-black text-slate-800 text-lg">Buat Acara / Form Baru</h3>
+          <div className="w-full max-w-md overflow-hidden border border-slate-300 bg-white shadow-lg">
+            <div className="border-b border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-lg font-semibold text-slate-800">Buat Acara / Form Baru</h3>
               <p className="text-sm text-slate-500 mt-1">Masukkan nama acara baru. Pengaturan form & sukses akan disalin dari form saat ini.</p>
             </div>
             <div className="p-5">
@@ -250,14 +233,14 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   value={newEventName}
                   onChange={(e) => setNewEventName(e.target.value)}
                   placeholder='contoh: "Seminar Nasional 2026"'
-                  className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                  className="w-full border-slate-300 text-sm focus:ring-[#BD272D]"
                   autoFocus
                 />
               </div>
               <div className="mb-2">
                 <label className="block text-sm font-bold text-slate-700 mb-2">Link Form (Opsional)</label>
                 <div className="flex items-center">
-                  <span className="bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl px-3 py-2 text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-none">
+                  <span className="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap border border-r-0 border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 sm:max-w-none">
                     /e/
                   </span>
                   <input 
@@ -269,7 +252,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                       setNewEventSlug(val);
                     }}
                     placeholder='otomatis-dibuat'
-                    className="w-full border-slate-200 rounded-r-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                    className="w-full border-slate-300 text-sm focus:ring-[#BD272D]"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && newEventName.trim()) {
                         router.post('/admin/events', { name: newEventName.trim(), slug: newEventSlug.trim() });
@@ -281,13 +264,13 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                 <p className="text-xs text-slate-500 mt-1.5">Biarkan kosong untuk link acak. Hanya huruf, angka, dan strip (-).</p>
               </div>
             </div>
-            <div className="p-4 bg-slate-50 flex justify-end gap-3">
+            <div className="flex justify-end gap-3 border-t border-slate-200 bg-slate-50 p-4">
               <button 
                 onClick={() => {
                   setIsCreateModalOpen(false);
                   setNewEventName('');
                 }}
-                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 rounded-xl transition-colors"
+                className="border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
               >
                 Batal
               </button>
@@ -299,7 +282,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   }
                 }}
                 disabled={!newEventName.trim()}
-                className="px-4 py-2 text-sm font-bold text-white bg-[#BD272D] hover:bg-[#991f24] rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-[#BD272D]/20"
+                className="px-4 py-2 text-sm font-medium text-white bg-[#BD272D] hover:bg-[#991f24] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Simpan
               </button>
@@ -311,9 +294,9 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
       {/* Custom Edit Event Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 animate-fade-in-up">
-            <div className="p-5 border-b border-slate-100 bg-slate-50/50">
-              <h3 className="font-black text-slate-800 text-lg">Edit Acara / Form</h3>
+          <div className="w-full max-w-md overflow-hidden border border-slate-300 bg-white shadow-lg">
+            <div className="border-b border-slate-200 bg-slate-50 p-5">
+              <h3 className="text-lg font-semibold text-slate-800">Edit Acara / Form</h3>
               <p className="text-sm text-slate-500 mt-1">Ubah nama dan link form untuk acara ini.</p>
             </div>
             <div className="p-5">
@@ -324,14 +307,14 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   value={editEventName}
                   onChange={(e) => setEditEventName(e.target.value)}
                   placeholder='contoh: "Seminar Nasional 2026"'
-                  className="w-full border-slate-200 rounded-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm"
+                  className="w-full border-slate-300 text-sm focus:ring-[#BD272D]"
                   autoFocus
                 />
               </div>
               <div className="mb-2">
                 <label className="block text-sm font-bold text-slate-700 mb-2">Link Form <span className="text-red-500">*</span></label>
                 <div className="flex items-center">
-                  <span className="bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl px-3 py-2 text-sm text-slate-500 whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-none">
+                  <span className="max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap border border-r-0 border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 sm:max-w-none">
                     /e/
                   </span>
                   <input 
@@ -341,7 +324,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                       const val = e.target.value.replace(/[^a-z0-9-]/gi, '').toLowerCase();
                       setEditEventSlug(val);
                     }}
-                    className="w-full border-slate-200 rounded-r-xl focus:ring-[#BD272D] focus:border-[#BD272D] text-sm font-mono text-blue-700"
+                    className="w-full border-slate-300 text-sm font-mono text-blue-700 focus:ring-[#BD272D]"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && editEventName.trim() && editEventSlug.trim()) {
                         router.put(`/admin/events/${currentEvent?.id}`, { name: editEventName.trim(), slug: editEventSlug.trim() });
@@ -355,10 +338,10 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                 </p>
               </div>
             </div>
-            <div className="p-4 bg-slate-50 flex justify-end gap-3">
+            <div className="flex justify-end gap-3 border-t border-slate-200 bg-slate-50 p-4">
               <button 
                 onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 hover:bg-slate-200/50 rounded-xl transition-colors"
+                className="border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
               >
                 Batal
               </button>
@@ -370,7 +353,7 @@ export function AdminLayoutWrapper({ children }: { children: React.ReactNode }) 
                   }
                 }}
                 disabled={!editEventName.trim() || !editEventSlug.trim()}
-                className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-blue-600/20"
+                className="px-4 py-2 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Simpan Perubahan
               </button>

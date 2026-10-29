@@ -55,7 +55,7 @@ type ScheduleForm = Omit<Schedule, "id"> & { id: number | null };
 
 const DAYS = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 const DIVISIONS = ["CnL", "WP1", "WP2", "WP3", "WP4", "WP5", "HR", "Manajemen", "Umum"];
-const fieldClass = "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#253656] focus:ring-2 focus:ring-[#253656]/10";
+const fieldClass = "mt-1.5 w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 outline-none focus:border-[#253656] focus:ring-1 focus:ring-[#253656]";
 const emptyForm = (date: string): ScheduleForm => ({
   id: null,
   title: "",
@@ -94,13 +94,13 @@ function StatusBadge({ status }: { status: ScheduleStatus }) {
     cancelled: "bg-slate-100 text-slate-500 ring-slate-500/10",
   };
   const labels = { confirmed: "Terkonfirmasi", tentative: "Tentatif", cancelled: "Dibatalkan" };
-  return <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ring-inset ${styles[status]}`}>{labels[status]}</span>;
+  return <span className={`inline-flex border px-2 py-0.5 text-xs font-medium ${styles[status]}`}>{labels[status]}</span>;
 }
 
 function ConflictSummary({ result }: { result: ConflictResult }) {
   if (result.has_conflict) {
     return (
-      <div className="flex gap-3 rounded-xl border border-rose-200 bg-rose-50 p-3.5 text-rose-800">
+      <div className="flex gap-3 border border-rose-200 bg-rose-50 p-3 text-rose-800">
         <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
         <div>
           <p className="text-sm font-bold">Slot ini bentrok</p>
@@ -113,7 +113,7 @@ function ConflictSummary({ result }: { result: ConflictResult }) {
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-emerald-800">
+      <div className="flex items-center gap-3 border border-emerald-200 bg-emerald-50 p-3 text-emerald-800">
       <CheckCircle2 className="h-5 w-5 shrink-0" />
       <div><p className="text-sm font-bold">Slot tersedia</p><p className="mt-0.5 text-xs text-emerald-700">Tidak ada jadwal lain yang tumpang tindih.</p></div>
     </div>
@@ -275,69 +275,69 @@ export default function ZoomTracker({ date, dayName, schedules, daySchedules, st
 
   return (
     <AdminLayoutWrapper>
-      <div className="mx-auto max-w-7xl space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mx-auto max-w-7xl space-y-5">
+        <div className="flex flex-col gap-3 border-b border-slate-300 pb-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-[#BD272D]">Operasional · Meeting Room</p>
-            <h1 className="mt-1 text-3xl font-black tracking-tight text-[#253656]">Jadwal & Zoom</h1>
-            <p className="mt-1 text-sm text-slate-500">Atur jadwal meeting dan pastikan tidak ada bentrok.</p>
+            <p className="text-xs font-medium text-slate-500">Operasional</p>
+            <h1 className="mt-1 text-2xl font-semibold text-[#253656]">Jadwal & Zoom</h1>
+            <p className="mt-1 text-sm text-slate-600">Daftar jadwal meeting dan pemeriksaan bentrok.</p>
           </div>
-          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#BD272D] px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-[#BD272D]/15 transition hover:bg-[#a71f25]">
+          <button onClick={openCreate} className="inline-flex items-center justify-center gap-2 rounded border border-[#253656] bg-[#253656] px-3 py-2 text-sm font-medium text-white hover:bg-[#1d2a43]">
             <Plus className="h-4 w-4" /> Tambah Jadwal
           </button>
         </div>
 
-        <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-500">Jadwal {dayName}</span><CalendarDays className="h-5 w-5 text-indigo-500" /></div>
-            <p className="mt-3 text-3xl font-black text-[#253656]">{stats.total}</p><p className="mt-1 text-xs text-slate-400">{dateLabel(date)}</p>
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="border border-slate-300 bg-white p-4">
+            <div className="flex items-center justify-between"><span className="text-sm text-slate-600">Jadwal {dayName}</span><CalendarDays className="h-4 w-4 text-slate-500" /></div>
+            <p className="mt-2 text-2xl font-semibold text-[#253656]">{stats.total}</p><p className="mt-1 text-xs text-slate-500">{dateLabel(date)}</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-500">Terkonfirmasi</span><CheckCircle2 className="h-5 w-5 text-emerald-500" /></div>
-            <p className="mt-3 text-3xl font-black text-emerald-700">{stats.confirmed}</p><p className="mt-1 text-xs text-slate-400">siap untuk meeting</p>
+          <div className="border border-slate-300 bg-white p-4">
+            <div className="flex items-center justify-between"><span className="text-sm text-slate-600">Terkonfirmasi</span><CheckCircle2 className="h-4 w-4 text-emerald-700" /></div>
+            <p className="mt-2 text-2xl font-semibold text-slate-800">{stats.confirmed}</p><p className="mt-1 text-xs text-slate-500">siap untuk meeting</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-500">Menunggu kepastian</span><Clock3 className="h-5 w-5 text-amber-500" /></div>
-            <p className="mt-3 text-3xl font-black text-amber-600">{stats.tentative}</p><p className="mt-1 text-xs text-slate-400">jadwal tentatif</p>
+          <div className="border border-slate-300 bg-white p-4">
+            <div className="flex items-center justify-between"><span className="text-sm text-slate-600">Menunggu kepastian</span><Clock3 className="h-4 w-4 text-amber-700" /></div>
+            <p className="mt-2 text-2xl font-semibold text-slate-800">{stats.tentative}</p><p className="mt-1 text-xs text-slate-500">jadwal tentatif</p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-500">Slot tersedia</span><Video className="h-5 w-5 text-sky-500" /></div>
-            <p className="mt-3 text-3xl font-black text-sky-700">{stats.availableSlots}<span className="ml-1 text-sm font-bold">/ 24</span></p><p className="mt-1 text-xs text-slate-400">slot 30 menit · 08.00–20.00</p>
+          <div className="border border-slate-300 bg-white p-4">
+            <div className="flex items-center justify-between"><span className="text-sm text-slate-600">Slot tersedia</span><Video className="h-4 w-4 text-slate-500" /></div>
+            <p className="mt-2 text-2xl font-semibold text-slate-800">{stats.availableSlots}<span className="ml-1 text-sm font-normal text-slate-500">/ 24</span></p><p className="mt-1 text-xs text-slate-500">slot 30 menit · 08.00–20.00</p>
           </div>
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <section className="grid gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
+          <div className="border border-slate-300 bg-white p-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div><h2 className="text-lg font-black text-[#253656]">Timeline Ketersediaan</h2><p className="mt-1 text-sm text-slate-500">Status ruang meeting per 30 menit.</p></div>
-              <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-600">
-                <CalendarDays className="h-4 w-4 text-slate-400" />
-                <input aria-label="Pilih tanggal timeline" type="date" value={date} onChange={(event) => changeDate(event.target.value)} className="border-0 bg-transparent p-0 text-sm font-semibold text-slate-700 outline-none focus:ring-0" />
+              <div><h2 className="text-base font-semibold text-slate-800">Ketersediaan per 30 menit</h2><p className="mt-1 text-xs text-slate-500">{dateLabel(date)} · pukul 08.00–20.00</p></div>
+              <label className="flex items-center gap-2 border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-600">
+                <CalendarDays className="h-4 w-4 text-slate-500" />
+                <input aria-label="Pilih tanggal timeline" type="date" value={date} onChange={(event) => changeDate(event.target.value)} className="border-0 bg-transparent p-0 text-sm text-slate-700 outline-none focus:ring-0" />
               </label>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8">
+            <div className="mt-4 grid grid-cols-3 gap-1 sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8">
               {Array.from({ length: 24 }, (_, index) => {
                 const start = 8 * 60 + index * 30;
                 const end = start + 30;
                 const booking = daySchedules.find((schedule) => toMinutes(schedule.start_time) < end && toMinutes(schedule.end_time) > start);
                 return (
-                  <div key={start} title={booking ? `${booking.title} · ${booking.start_time}–${booking.end_time}` : "Slot tersedia"} className={`min-h-[76px] rounded-xl border p-2.5 ${booking ? booking.status === "tentative" ? "border-amber-200 bg-amber-50" : "border-rose-200 bg-rose-50" : "border-emerald-100 bg-emerald-50/60"}`}>
-                    <div className="text-[11px] font-black tabular-nums text-slate-600">{formatTime(start)}</div>
-                    <div className={`mt-2 truncate text-[10px] font-bold ${booking ? booking.status === "tentative" ? "text-amber-700" : "text-rose-700" : "text-emerald-700"}`}>{booking ? booking.title : "Tersedia"}</div>
+                  <div key={start} title={booking ? `${booking.title} · ${booking.start_time}–${booking.end_time}` : "Slot tersedia"} className={`min-h-14 border px-2 py-1.5 ${booking ? booking.status === "tentative" ? "border-amber-300 bg-amber-50" : "border-rose-300 bg-rose-50" : "border-slate-200 bg-slate-50"}`}>
+                    <div className="text-xs font-medium tabular-nums text-slate-700">{formatTime(start)}</div>
+                    <div className={`mt-1 truncate text-[11px] ${booking ? booking.status === "tentative" ? "text-amber-800" : "text-rose-800" : "text-slate-500"}`}>{booking ? booking.title : "Kosong"}</div>
                   </div>
                 );
               })}
             </div>
-            <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold text-slate-500">
-              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm bg-emerald-400" /> Tersedia</span>
-              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm bg-rose-400" /> Terisi</span>
-              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-sm bg-amber-400" /> Tentatif</span>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-600">
+              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 border border-slate-300 bg-slate-50" /> Tersedia</span>
+              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 border border-rose-300 bg-rose-50" /> Terisi</span>
+              <span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 border border-amber-300 bg-amber-50" /> Tentatif</span>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-            <div className="flex items-start justify-between gap-3"><div><h2 className="text-lg font-black text-[#253656]">⚡ Cek Slot Cepat</h2><p className="mt-1 text-sm text-slate-500">Periksa sebelum mengajukan jadwal.</p></div>{quickLoading && <RefreshCw className="mt-1 h-4 w-4 animate-spin text-slate-400" />}</div>
-            <div className="mt-5 space-y-3">
+          <div className="border border-slate-300 bg-white p-4">
+            <div className="flex items-start justify-between gap-3"><div><h2 className="text-base font-semibold text-slate-800">Pemeriksa bentrok</h2><p className="mt-1 text-xs text-slate-500">Periksa tanggal dan jam sebelum menyimpan.</p></div>{quickLoading && <RefreshCw className="mt-1 h-4 w-4 animate-spin text-slate-500" />}</div>
+            <div className="mt-4 space-y-3">
               <label className="block text-xs font-bold text-slate-600">Tanggal<input type="date" value={quickDate} onChange={(event) => setQuickDate(event.target.value)} className={fieldClass} /></label>
               <div className="grid grid-cols-2 gap-3">
                 <label className="block text-xs font-bold text-slate-600">Mulai<input type="time" value={quickStart} onChange={(event) => setQuickStart(event.target.value)} className={fieldClass} /></label>
@@ -346,34 +346,34 @@ export default function ZoomTracker({ date, dayName, schedules, daySchedules, st
               {!timeRangeValid && <p className="text-xs font-semibold text-rose-600">Jam selesai harus setelah jam mulai.</p>}
               {quickError && <p className="text-xs font-semibold text-rose-600">{quickError}</p>}
               {quickResult && <ConflictSummary result={quickResult} />}
-              {!quickResult && !quickLoading && timeRangeValid && !quickError && <div className="rounded-xl border border-slate-100 bg-slate-50 p-3.5 text-xs leading-relaxed text-slate-500">Memeriksa jadwal untuk tanggal dan waktu yang dipilih…</div>}
+              {!quickResult && !quickLoading && timeRangeValid && !quickError && <div className="border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-600">Memeriksa jadwal untuk tanggal dan waktu yang dipilih…</div>}
             </div>
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex flex-col gap-4 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-            <div><h2 className="text-lg font-black text-[#253656]">Kelola Jadwal</h2><p className="mt-1 text-sm text-slate-500">{schedules.length} jadwal tercatat di tracker.</p></div>
+        <section className="overflow-hidden border border-slate-300 bg-white">
+          <div className="flex flex-col gap-3 border-b border-slate-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div><h2 className="text-base font-semibold text-slate-800">Daftar jadwal</h2><p className="mt-1 text-xs text-slate-500">{schedules.length} jadwal tercatat.</p></div>
             <div className="flex flex-col gap-2 sm:flex-row">
-              <label className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2"><Search className="h-4 w-4 text-slate-400" /><input aria-label="Cari jadwal" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari jadwal…" className="w-full border-0 p-0 text-sm outline-none focus:ring-0 sm:w-40" /></label>
-              <label className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2"><Filter className="h-4 w-4 text-slate-400" /><select aria-label="Filter jenis jadwal" value={filter} onChange={(event) => setFilter(event.target.value)} className="border-0 p-0 pr-7 text-sm font-semibold text-slate-600 outline-none focus:ring-0"><option value="all">Semua jadwal</option><option value="recurring">Rutin mingguan</option><option value="single">Tanggal tertentu</option></select></label>
+              <label className="flex items-center gap-2 border border-slate-300 px-2 py-1.5"><Search className="h-4 w-4 text-slate-500" /><input aria-label="Cari jadwal" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari jadwal…" className="w-full border-0 p-0 text-sm outline-none focus:ring-0 sm:w-40" /></label>
+              <label className="flex items-center gap-2 border border-slate-300 px-2 py-1.5"><Filter className="h-4 w-4 text-slate-500" /><select aria-label="Filter jenis jadwal" value={filter} onChange={(event) => setFilter(event.target.value)} className="border-0 p-0 pr-7 text-sm text-slate-700 outline-none focus:ring-0"><option value="all">Semua jadwal</option><option value="recurring">Rutin mingguan</option><option value="single">Tanggal tertentu</option></select></label>
             </div>
           </div>
           {filteredSchedules.length === 0 ? (
-            <div className="px-6 py-14 text-center"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-50 text-slate-400"><Video className="h-7 w-7" /></div><p className="mt-4 font-bold text-slate-700">{schedules.length ? "Tidak ada jadwal yang cocok" : "Belum ada jadwal Zoom"}</p><p className="mt-1 text-sm text-slate-500">{schedules.length ? "Ubah filter atau kata kunci pencarian." : "Tambahkan jadwal pertama untuk mulai memakai tracker."}</p>{!schedules.length && <button onClick={openCreate} className="mt-4 text-sm font-bold text-[#BD272D] hover:underline">Tambah jadwal</button>}</div>
+            <div className="px-4 py-8 text-center"><p className="text-sm font-medium text-slate-700">{schedules.length ? "Tidak ada jadwal yang cocok" : "Belum ada jadwal Zoom"}</p><p className="mt-1 text-xs text-slate-500">{schedules.length ? "Ubah filter atau kata kunci pencarian." : "Tambahkan jadwal untuk mulai memakai tracker."}</p>{!schedules.length && <button onClick={openCreate} className="mt-3 border border-[#253656] px-3 py-1.5 text-sm text-[#253656] hover:bg-slate-50">Tambah jadwal</button>}</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-[900px] w-full text-left text-sm">
-                <thead className="bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500"><tr><th className="px-5 py-3.5">Meeting</th><th className="px-5 py-3.5">Jadwal</th><th className="px-5 py-3.5">PIC</th><th className="px-5 py-3.5">Zoom</th><th className="px-5 py-3.5">Status</th><th className="px-5 py-3.5 text-right">Aksi</th></tr></thead>
+                <thead className="border-b border-slate-300 bg-slate-50 text-xs font-semibold text-slate-700"><tr><th className="px-4 py-2.5">Meeting</th><th className="px-4 py-2.5">Jadwal</th><th className="px-4 py-2.5">PIC</th><th className="px-4 py-2.5">Zoom</th><th className="px-4 py-2.5">Status</th><th className="px-4 py-2.5 text-right">Aksi</th></tr></thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredSchedules.map((schedule) => (
-                    <tr key={schedule.id} className="align-top transition hover:bg-slate-50/70">
-                      <td className="px-5 py-4"><p className="font-bold text-slate-800">{schedule.title}</p><p className="mt-1 text-xs text-slate-500">{schedule.division}{schedule.notes ? ` · ${schedule.notes}` : ""}</p></td>
-                      <td className="px-5 py-4"><p className="font-semibold text-slate-700">{schedule.start_time}–{schedule.end_time}</p><p className="mt-1 text-xs text-slate-500">{schedule.is_recurring ? `Setiap ${schedule.day_of_week}` : schedule.meeting_date ? dateLabel(schedule.meeting_date) : "—"}</p></td>
-                      <td className="px-5 py-4"><p className="inline-flex items-center gap-1.5 font-semibold text-slate-700"><Users className="h-3.5 w-3.5 text-slate-400" />{schedule.pic_name}</p>{schedule.pic_contact && <p className="mt-1 text-xs text-slate-500">{schedule.pic_contact}</p>}</td>
-                      <td className="px-5 py-4">{schedule.zoom_link ? <a href={schedule.zoom_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800"><Link2 className="h-3.5 w-3.5" />Buka meeting<ExternalLink className="h-3 w-3" /></a> : <span className="text-xs text-slate-400">Belum ada link</span>}{schedule.zoom_id && <p className="mt-1 text-[11px] text-slate-400">ID: {schedule.zoom_id}</p>}</td>
-                      <td className="px-5 py-4"><StatusBadge status={schedule.status} /></td>
-                      <td className="px-5 py-4"><div className="flex justify-end gap-1.5">{schedule.zoom_link && <button onClick={() => copyZoomLink(schedule)} title="Salin link Zoom" className="rounded-lg p-2 text-slate-400 transition hover:bg-indigo-50 hover:text-indigo-600">{copiedId === schedule.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}</button>}<button onClick={() => openEdit(schedule)} title="Edit jadwal" className="rounded-lg px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-100">Edit</button><button onClick={() => deleteSchedule(schedule)} title="Hapus jadwal" className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600"><Trash2 className="h-4 w-4" /></button></div></td>
+                    <tr key={schedule.id} className="align-top hover:bg-slate-50">
+                      <td className="px-4 py-3"><p className="font-medium text-slate-800">{schedule.title}</p><p className="mt-0.5 text-xs text-slate-500">{schedule.division}{schedule.notes ? ` · ${schedule.notes}` : ""}</p></td>
+                      <td className="px-4 py-3"><p className="text-slate-700">{schedule.start_time}–{schedule.end_time}</p><p className="mt-0.5 text-xs text-slate-500">{schedule.is_recurring ? `Setiap ${schedule.day_of_week}` : schedule.meeting_date ? dateLabel(schedule.meeting_date) : "—"}</p></td>
+                      <td className="px-4 py-3"><p className="inline-flex items-center gap-1.5 text-slate-700"><Users className="h-3.5 w-3.5 text-slate-500" />{schedule.pic_name}</p>{schedule.pic_contact && <p className="mt-0.5 text-xs text-slate-500">{schedule.pic_contact}</p>}</td>
+                      <td className="px-4 py-3">{schedule.zoom_link ? <a href={schedule.zoom_link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-blue-700 hover:underline"><Link2 className="h-3.5 w-3.5" />Buka meeting<ExternalLink className="h-3 w-3" /></a> : <span className="text-xs text-slate-500">Belum ada link</span>}{schedule.zoom_id && <p className="mt-0.5 text-xs text-slate-500">ID: {schedule.zoom_id}</p>}</td>
+                      <td className="px-4 py-3"><StatusBadge status={schedule.status} /></td>
+                      <td className="px-4 py-3"><div className="flex justify-end gap-1">{schedule.zoom_link && <button onClick={() => copyZoomLink(schedule)} title="Salin link Zoom" className="rounded p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800">{copiedId === schedule.id ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}</button>}<button onClick={() => openEdit(schedule)} title="Edit jadwal" className="rounded px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100">Edit</button><button onClick={() => deleteSchedule(schedule)} title="Hapus jadwal" className="rounded p-1.5 text-slate-500 hover:bg-rose-50 hover:text-rose-700"><Trash2 className="h-4 w-4" /></button></div></td>
                     </tr>
                   ))}
                 </tbody>
@@ -384,10 +384,10 @@ export default function ZoomTracker({ date, dayName, schedules, daySchedules, st
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-slate-950/50 p-3 backdrop-blur-sm sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) closeModal(); }}>
-          <div role="dialog" aria-modal="true" aria-labelledby="schedule-modal-title" className="my-auto max-h-[94vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
-            <div className="sticky top-0 z-10 flex items-start justify-between border-b border-slate-100 bg-white/95 p-5 backdrop-blur sm:p-6"><div><h2 id="schedule-modal-title" className="text-xl font-black text-[#253656]">{form.data.id ? "Edit Jadwal" : "Tambah Jadwal Zoom"}</h2><p className="mt-1 text-sm text-slate-500">Detail jadwal dan informasi meeting.</p></div><button type="button" onClick={closeModal} aria-label="Tutup dialog" className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><X className="h-5 w-5" /></button></div>
-            <form onSubmit={submitSchedule} className="space-y-5 p-5 sm:p-6">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-slate-900/40 p-3 sm:p-6" onMouseDown={(event) => { if (event.target === event.currentTarget) closeModal(); }}>
+          <div role="dialog" aria-modal="true" aria-labelledby="schedule-modal-title" className="my-auto max-h-[94vh] w-full max-w-3xl overflow-y-auto border border-slate-300 bg-white">
+            <div className="sticky top-0 z-10 flex items-start justify-between border-b border-slate-200 bg-white p-4 sm:p-5"><div><h2 id="schedule-modal-title" className="text-lg font-semibold text-[#253656]">{form.data.id ? "Edit Jadwal" : "Tambah Jadwal Zoom"}</h2><p className="mt-1 text-sm text-slate-500">Detail jadwal dan informasi meeting.</p></div><button type="button" onClick={closeModal} aria-label="Tutup dialog" className="p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"><X className="h-5 w-5" /></button></div>
+            <form onSubmit={submitSchedule} className="space-y-5 p-4 sm:p-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-xs font-bold text-slate-600 sm:col-span-2">Nama kegiatan / meeting *<input autoFocus required value={form.data.title} onChange={(event) => form.setData("title", event.target.value)} placeholder="Contoh: Rapat koordinasi mingguan" className={fieldClass} />{form.errors.title && <span className="mt-1 block text-xs text-rose-600">{form.errors.title}</span>}</label>
                 <label className="block text-xs font-bold text-slate-600">Divisi *<input list="zoom-divisions" required value={form.data.division} onChange={(event) => form.setData("division", event.target.value)} className={fieldClass} /><datalist id="zoom-divisions">{DIVISIONS.map((division) => <option key={division} value={division} />)}</datalist>{form.errors.division && <span className="mt-1 block text-xs text-rose-600">{form.errors.division}</span>}</label>
@@ -409,16 +409,16 @@ export default function ZoomTracker({ date, dayName, schedules, daySchedules, st
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-500"><RefreshCw className={`h-3.5 w-3.5 ${formConflictLoading ? "animate-spin" : ""}`} />Pemeriksaan bentrok langsung</div>
-                {!formTimeRangeValid && <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-700">Masukkan jam selesai setelah jam mulai.</p>}
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-600"><RefreshCw className={`h-3.5 w-3.5 ${formConflictLoading ? "animate-spin" : ""}`} />Pemeriksaan bentrok langsung</div>
+                {!formTimeRangeValid && <p className="border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">Masukkan jam selesai setelah jam mulai.</p>}
                 {formConflict && <ConflictSummary result={formConflict} />}
-                {formConflictError && <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700">{formConflictError}</p>}
-                {scheduleError && <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700">{scheduleError}</p>}
+                {formConflictError && <p className="border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{formConflictError}</p>}
+                {scheduleError && <p className="border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">{scheduleError}</p>}
               </div>
 
-              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:justify-end">
-                <button type="button" onClick={closeModal} className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50">Batal</button>
-                <button type="submit" disabled={form.processing || !formTimeRangeValid || formConflictLoading || Boolean(formConflict?.has_conflict)} className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#253656] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#1b2942] disabled:cursor-not-allowed disabled:opacity-50"><Check className="h-4 w-4" />{form.processing ? "Menyimpan…" : form.data.id ? "Simpan Perubahan" : "Simpan Jadwal"}</button>
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-200 pt-4 sm:flex-row sm:justify-end">
+                <button type="button" onClick={closeModal} className="border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Batal</button>
+                <button type="submit" disabled={form.processing || !formTimeRangeValid || formConflictLoading || Boolean(formConflict?.has_conflict)} className="inline-flex items-center justify-center gap-2 border border-[#253656] bg-[#253656] px-4 py-2 text-sm font-medium text-white hover:bg-[#1b2942] disabled:cursor-not-allowed disabled:opacity-50"><Check className="h-4 w-4" />{form.processing ? "Menyimpan…" : form.data.id ? "Simpan Perubahan" : "Simpan Jadwal"}</button>
               </div>
             </form>
           </div>

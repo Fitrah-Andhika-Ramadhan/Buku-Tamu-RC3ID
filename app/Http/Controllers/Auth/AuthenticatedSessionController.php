@@ -33,7 +33,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('admin.dashboard', absolute: false));
+        $defaultDestination = $request->user()->role === 'zoom_manager'
+            ? route('admin.zoom-tracker', absolute: false)
+            : route('admin.dashboard', absolute: false);
+
+        return redirect()->intended($defaultDestination);
     }
 
     /**

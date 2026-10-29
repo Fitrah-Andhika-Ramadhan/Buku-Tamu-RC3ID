@@ -38,6 +38,14 @@ Route::get('/p/{id}', [ParticipantController::class, 'ticket'])->name('ticket');
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ZoomTrackerController;
 
+Route::middleware(['auth', 'verified', 'zoom-tracker-account'])->prefix('admin')->group(function () {
+    Route::get('/zoom-tracker', [ZoomTrackerController::class, 'index'])->name('admin.zoom-tracker');
+    Route::get('/zoom-tracker/conflict', [ZoomTrackerController::class, 'checkConflict'])->name('admin.zoom-tracker.conflict');
+    Route::post('/zoom-tracker', [ZoomTrackerController::class, 'store'])->name('admin.zoom-tracker.store');
+    Route::put('/zoom-tracker/{zoomSchedule}', [ZoomTrackerController::class, 'update'])->name('admin.zoom-tracker.update');
+    Route::delete('/zoom-tracker/{zoomSchedule}', [ZoomTrackerController::class, 'destroy'])->name('admin.zoom-tracker.destroy');
+});
+
 Route::get('/install', function () {
     $output = [];
     try {
@@ -71,7 +79,7 @@ Route::get('/bersih-cache', function () {
 });
 
 
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified', 'admin-panel-account'])->prefix('admin')->group(function () {
     Route::get('/run-migrations-secret', function () {
         try {
             \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
@@ -108,11 +116,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
     });
 
     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/zoom-tracker', [ZoomTrackerController::class, 'index'])->name('admin.zoom-tracker');
-    Route::get('/zoom-tracker/conflict', [ZoomTrackerController::class, 'checkConflict'])->name('admin.zoom-tracker.conflict');
-    Route::post('/zoom-tracker', [ZoomTrackerController::class, 'store'])->name('admin.zoom-tracker.store');
-    Route::put('/zoom-tracker/{zoomSchedule}', [ZoomTrackerController::class, 'update'])->name('admin.zoom-tracker.update');
-    Route::delete('/zoom-tracker/{zoomSchedule}', [ZoomTrackerController::class, 'destroy'])->name('admin.zoom-tracker.destroy');
     Route::get('/peserta', [AdminController::class, 'peserta'])->name('admin.peserta');
     Route::post('/peserta/manual', [AdminController::class, 'storeManual'])->name('admin.peserta.manual');
     Route::post('/peserta/scan', [AdminController::class, 'scanDocument'])->name('admin.peserta.scan');

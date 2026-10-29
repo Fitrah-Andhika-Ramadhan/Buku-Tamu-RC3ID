@@ -18,7 +18,7 @@ class ZoomTrackerTest extends TestCase
 
     public function test_verified_admin_can_load_the_tracker(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']));
 
         $this->get('/admin/zoom-tracker?date=2026-11-02')
             ->assertOk()
@@ -33,7 +33,7 @@ class ZoomTrackerTest extends TestCase
 
     public function test_conflict_endpoint_detects_a_weekly_schedule_on_its_weekday(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']));
         $this->createSchedule([
             'title' => 'Rapat rutin WP1',
             'is_recurring' => true,
@@ -51,7 +51,7 @@ class ZoomTrackerTest extends TestCase
 
     public function test_conflict_endpoint_ignores_one_off_schedules_on_other_dates(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']));
         $this->createSchedule([
             'title' => 'Rapat tanggal tertentu',
             'meeting_date' => '2026-11-02',
@@ -67,7 +67,7 @@ class ZoomTrackerTest extends TestCase
 
     public function test_store_rejects_overlapping_single_and_weekly_schedules(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']));
         $this->createSchedule([
             'title' => 'Rapat CnL',
             'meeting_date' => '2026-11-02',
@@ -105,7 +105,7 @@ class ZoomTrackerTest extends TestCase
 
     public function test_update_does_not_conflict_with_the_schedule_being_edited(): void
     {
-        $this->actingAs(User::factory()->create());
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']));
         $schedule = $this->createSchedule([
             'title' => 'Rapat awal',
             'meeting_date' => '2026-11-02',
@@ -124,6 +124,33 @@ class ZoomTrackerTest extends TestCase
             'id' => $schedule->id,
             'title' => 'Rapat diperbarui',
         ]);
+    }
+
+    public function test_other_accounts_cannot_access_the_zoom_tracker(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'admin']))
+            ->get('/admin/zoom-tracker')
+            ->assertForbidden();
+    }
+
+    public function test_zoom_only_account_cannot_access_the_general_admin_panel(): void
+    {
+        $this->actingAs(User::factory()->create(['role' => 'zoom_manager']))
+            ->get('/admin')
+            ->assertForbidden();
+    }
+
+    public function test_zoom_only_account_is_sent_to_its_tracker_after_login(): void
+    {
+        User::factory()->create([
+            'email' => 'zoom-manager@example.test',
+            'role' => 'zoom_manager',
+        ]);
+
+        $this->post('/akses-internal-cnl', [
+            'email' => 'zoom-manager@example.test',
+            'password' => 'password',
+        ])->assertRedirect('/admin/zoom-tracker');
     }
 
     private function createSchedule(array $overrides = []): ZoomSchedule
